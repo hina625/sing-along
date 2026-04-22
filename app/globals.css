@@ -1,0 +1,1839 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Marcellus&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Marcellus", serif !important;
+}
+
+
+
+*,
+body,
+html {
+  font-family: "Rubik", sans-serif !important;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+body {
+  width: 100vw;
+  overflow-x: hidden;
+}
+
+/* ======== stream css overrides ======== */
+.str-video__call-stats {
+  max-width: 500px;
+  position: relative;
+}
+
+.str-video__speaker-layout__wrapper {
+  max-height: 700px;
+}
+
+.str-video__participant-details {
+  color: white;
+}
+
+.str-video__menu-container {
+  color: white;
+}
+
+.str-video__notification {
+  color: white;
+}
+
+.str-video__participant-list {
+  background-color: #1c1f2e;
+  padding: 10px;
+  border-radius: 10px;
+  color: white;
+  height: 100%;
+}
+
+.str-video__call-controls__button {
+  height: 40px;
+}
+
+.glassmorphism {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.glassmorphism2 {
+  background: rgba(18, 17, 17, 0.25);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* ==== clerk class override ===== */
+
+/* .cl-userButtonPopoverActionButtonIcon {
+  color: white;
+}
+
+.cl-logoBox {
+  height: 40px;
+}
+
+.cl-dividerLine {
+  background: #252a41;
+  height: 2px;
+}
+
+.cl-socialButtonsIconButton {
+  border: 3px solid #565761;
+}
+
+.cl-internal-wkkub3 {
+  color: white;
+}
+
+.cl-userButtonPopoverActionButton {
+  color: white;
+} */
+
+/* =============================== */
+
+@layer utilities {
+  .flex-center {
+    @apply flex justify-center items-center;
+  }
+
+  .flex-between {
+    @apply flex justify-between items-center;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* animation */
+
+.show-block {
+  width: 100%;
+  max-width: 350px;
+  display: block;
+  animation: show 0.7s forwards linear;
+}
+
+@keyframes show {
+  0% {
+    animation-timing-function: ease-in;
+    width: 0%;
+  }
+
+  100% {
+    animation-timing-function: ease-in;
+    width: 100%;
+  }
+}
+
+/* --- Advanced Visual Effects --- */
+
+@keyframes light-ray-rotate {
+  0% {
+    transform: rotate(0deg);
+    opacity: 0.1;
+  }
+
+  50% {
+    transform: rotate(180deg);
+    opacity: 0.3;
+  }
+
+  100% {
+    transform: rotate(360deg);
+    opacity: 0.1;
+  }
+}
+
+.light-ray-container {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(from 180deg at 50% 50%,
+      transparent 0deg,
+      rgba(212, 175, 55, 0.15) 15deg,
+      transparent 30deg,
+      rgba(90, 45, 130, 0.1) 45deg,
+      transparent 60deg);
+  animation: light-ray-rotate 20s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+  mix-blend-mode: color-dodge;
+}
+
+@keyframes soft-glow-pulse {
+  0% {
+    box-shadow: 0 0 20px rgba(90, 45, 130, 0.2), 0 0 40px rgba(212, 175, 55, 0.1);
+  }
+
+  50% {
+    box-shadow: 0 0 35px rgba(90, 45, 130, 0.4), 0 0 60px rgba(212, 175, 55, 0.2);
+  }
+
+  100% {
+    box-shadow: 0 0 20px rgba(90, 45, 130, 0.2), 0 0 40px rgba(212, 175, 55, 0.1);
+  }
+}
+
+.soft-glow {
+  animation: soft-glow-pulse 4s ease-in-out infinite;
+}
+
+.sidebar-glow {
+  position: relative;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sidebar-glow::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -1px;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(212, 175, 55, 0.8) 25%,
+    rgba(245, 124, 0, 0.9) 50%,
+    rgba(212, 175, 55, 0.8) 75%,
+    transparent 100%
+  );
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+  animation: border-pulse 4s ease-in-out infinite;
+}
+
+@keyframes border-pulse {
+  0%, 100% { opacity: 0.5; height: 70%; top: 15%; }
+  50% { opacity: 1; height: 100%; top: 0%; }
+}
+
+/* --- Royal & Joyful Design System --- */
+
+.btn-primary-worship {
+  background: linear-gradient(135deg, #5A2D82 0%, #D4AF37 100%) !important;
+  border-radius: 12px !important;
+  color: white !important;
+  box-shadow: 0 4px 15px rgba(90, 45, 130, 0.4);
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1) !important;
+  border: none !important;
+  font-weight: 600 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.btn-primary-worship:hover {
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+.btn-primary-worship:active {
+  transform: translateY(0px);
+}
+
+.btn-secondary-gold {
+  background: transparent !important;
+  border: 2px solid #D4AF37 !important;
+  color: #D4AF37 !important;
+  border-radius: 12px !important;
+  transition: all 0.3s ease !important;
+  font-weight: 600 !important;
+}
+
+.btn-secondary-gold:hover {
+  background: rgba(212, 175, 55, 0.1) !important;
+  transform: translateY(-1px);
+}
+
+.card-premium {
+  border-radius: 16px !important;
+  background: linear-gradient(135deg, rgba(31, 34, 38, 0.9), rgba(45, 50, 60, 0.9)) !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3) !important;
+  border: 1px solid rgba(212, 175, 55, 0.1) !important;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1) !important;
+}
+
+.card-premium:hover {
+  border-color: rgba(212, 175, 55, 0.4) !important;
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4) !important;
+}
+
+.card-gold {
+  background: linear-gradient(135deg, #F57C00 0%, #D4AF37 100%) !important;
+  box-shadow: 0 8px 25px rgba(245, 124, 0, 0.3) !important;
+}
+
+.card-purple {
+  background: linear-gradient(135deg, #5A2D82 0%, #8E24AA 100%) !important;
+  box-shadow: 0 8px 25px rgba(90, 45, 130, 0.3) !important;
+}
+
+.card-burgundy {
+  background: linear-gradient(135deg, #6D1A36 0%, #5A2D82 100%) !important;
+  box-shadow: 0 8px 25px rgba(109, 26, 54, 0.3) !important;
+}
+
+.card-teal {
+  background: linear-gradient(135deg, #00897B 0%, #00ACC1 100%) !important;
+  box-shadow: 0 8px 25px rgba(0, 137, 123, 0.3) !important;
+}
+
+
+.cl-internal-tftniu {
+  display: none !important;
+}
+
+.cl-internal-11ttlho:has(div:only-child) {
+  display: none !important;
+}
+
+.cl-internal-180wb59 {
+  display: none !important;
+}
+
+
+button.cl-formButtonPrimary.cl-button.🔒️.cl-internal-ttumny {
+  @apply !bg-foregroud-primary !border-none !shadow-sm;
+}
+
+.collapse {
+  visibility: visible;
+}
+
+
+
+
+
+.bg-image {
+  background: url('/images/bg.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  position: relative;
+}
+
+/* .bg-image::before
+{
+  content: '';
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 8rem;
+  clip-path: polygon(0 72%, 0% 100%, 100% 100%);
+} */
+.card-awesome {
+  --white: hsl(0, 0%, 100%);
+  --black: hsl(240, 15%, 9%);
+  --paragraph: hsl(0, 0%, 83%);
+  --line: hsl(240, 9%, 17%);
+  --primary: hsl(266, 92%, 58%);
+
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  padding: 1rem;
+  background-color: hsla(240, 15%, 9%, 1);
+  background-image: radial-gradient(at 88% 40%,
+      rgb(255, 255, 255) 0px,
+      transparent 85%),
+    radial-gradient(at 49% 30%, #1f2226 0px, transparent 85%),
+    radial-gradient(at 14% 26%, #1f2226 0px, transparent 85%),
+    radial-gradient(at 0% 64%, #16ecec 0px, transparent 85%),
+    radial-gradient(at 41% 94%, #1ebbc4 0px, transparent 85%),
+    radial-gradient(at 100% 99%, #7ff4fa 0px, transparent 85%);
+
+  border-radius: 1rem;
+  box-shadow: 0px -16px 24px 0px rgba(255, 255, 255, 0.25) inset;
+  cursor: pointer;
+  min-height: 34rem;
+  transition: all .3s;
+}
+
+
+.card-awesome-black {
+  --purple: #5A2D82;
+  --gold: #D4AF37;
+  --bg: #1A1A1A;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: var(--bg) !important;
+  background-image: radial-gradient(at 88% 40%, hsla(280, 50%, 20%, 0.5) 0px, transparent 85%),
+    radial-gradient(at 0% 64%, hsla(45, 70%, 50%, 0.2) 0px, transparent 85%);
+
+  border-radius: 12px;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  /* Layered Shadows for Depth */
+  box-shadow:
+    0 4px 20px -5px rgba(0, 0, 0, 0.5),
+    0 1px 1px rgba(255, 255, 255, 0.05) inset;
+
+  cursor: pointer;
+  transition: all .5s cubic-bezier(0.23, 1, 0.32, 1);
+  overflow: hidden;
+}
+
+.card-awesome-black::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.05),
+      transparent);
+  transition: 0.5s;
+}
+
+.card-awesome-black:hover::after {
+  left: 100%;
+}
+
+
+.warm-glassmorphism {
+  background: rgba(26, 26, 26, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.pattern-bg {
+  background-image: url('/images/golden-pattern.png');
+  background-repeat: repeat;
+  background-size: 300px;
+  opacity: 0.05;
+  pointer-events: none;
+}
+
+
+
+.card-awesome-black:hover,
+.card-awesome:hover {
+  /* Effect handled by Framer Motion in component */
+}
+
+
+.secvice-box {
+  position: absolute;
+  transition: all.3s;
+  transform: rotate(calc(360deg/6 * var(--i)));
+  transform-origin: 277px;
+  z-index: 100;
+}
+
+.secvice-box>div>div:hover {
+  transition: all .3s;
+  background: orange;
+}
+
+
+.secvice-box>div {
+  transform: rotate(calc(-360deg/6 * var(--i)));
+}
+
+/* .secvice-box h2
+{
+  transform-origin: right;
+  transform: rotate(calc(-360deg/6 * var(--i)));
+} */
+
+@media (max-width: 768px) {
+  .secvice-box {
+    transform-origin: 160px !important;
+  }
+}
+
+
+.contentBox {
+  position: absolute;
+  transition: all .3s;
+  opacity: 0;
+  display: none !important;
+  transition: all .4s;
+
+}
+
+.contentBox.active {
+  display: block !important;
+  opacity: 1;
+}
+
+
+.source-sans-3-font {
+  font-family: "Source Sans 3", sans-serif !important;
+}
+
+.text-gradient {
+  background: #5A2D82 !important;
+  /* Royal Purple */
+  background: linear-gradient(135deg, #5A2D82 0%, #D4AF37 50%, #6D1A36 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+
+.main-header {
+  @apply !font-bold;
+  background: linear-gradient(135deg, #F5F5F5 0%, #D4AF37 50%, #F57C00 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.main-para {
+  @apply text-para-color;
+  font-size: 18px !important;
+  font-weight: 400 !important;
+  line-height: 27px !important;
+}
+
+.gradient-insta {
+  background: #833ab4;
+  background: linear-gradient(to right,
+      #833ab4, #fd1d1d, #fcb045);
+}
+
+
+
+
+.blicking {
+  animation: blink 1s infinite;
+}
+
+/* Keyframes for blink effect */
+@keyframes blink {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.4;
+  }
+}
+
+
+
+.custom-avatar {
+  width: 50px !important;
+  height: 50px !important;
+  border-radius: 50%;
+}
+
+/* ========================================= */
+/* LiveKit Meeting - Google Meet Style UI    */
+/* ========================================= */
+
+/* Background */
+.lk-video-conference {
+  background-color: #1a1d22 !important;
+  /* Website dark theme */
+}
+
+/* --- Control Bar Strategy --- */
+.lk-control-bar {
+  background-color: transparent !important;
+  padding: 1.5rem !important;
+  border: none !important;
+  display: flex !important;
+  gap: 1.2rem !important;
+  justify-content: center !important;
+  align-items: center !important;
+  position: absolute !important;
+  bottom: 0 !important;
+  width: 100% !important;
+}
+
+/* Control Buttons - Rounded Pills (Google Meet Style) - Reduced Size */
+.lk-control-bar .lk-button {
+  background-color: rgba(60, 64, 67, 0.7) !important;
+  color: #fff !important;
+  border-radius: 50px !important;
+  padding: 8px 16px !important;
+  /* Reduced padding */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  transition: all 0.2s ease !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
+  font-size: 14px !important;
+  /* Smaller text */
+}
+
+.lk-control-bar .lk-button:hover {
+  background-color: rgba(95, 99, 104, 0.9) !important;
+  transform: translateY(-1px);
+}
+
+.lk-control-bar .lk-button svg {
+  width: 18px !important;
+  /* Smaller icons */
+  height: 18px !important;
+}
+
+/* Active / Muted State - Google Meet Red */
+.lk-control-bar .lk-button[aria-pressed="true"] {
+  background-color: #ea4335 !important;
+  color: white !important;
+  border-color: transparent !important;
+}
+
+.lk-control-bar .lk-button[aria-pressed="true"]:hover {
+  background-color: #d93025 !important;
+}
+
+/* Disconnect Button - Reduced Size */
+.lk-control-bar .lk-disconnect-button {
+  background-color: #ea4335 !important;
+  color: white !important;
+  border-radius: 50px !important;
+  padding: 8px 24px !important;
+  /* Reduced padding */
+  border: none !important;
+  font-weight: 600 !important;
+}
+
+
+.lk-participant-tile {
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  border: 2px solid transparent !important;
+  /* Default transparent border */
+  background-color: #1f2226 !important;
+  transition: border-color 0.2s ease !important;
+  position: relative !important;
+}
+
+/** 
+ * SPEAKING ANIMATION: Prominent Border (Google Meet Style)
+ * Thick gold border that pulses to indicate activity
+ */
+.lk-participant-tile[data-lk-speaking="true"] {
+  border-color: #A79369 !important;
+  /* Website Gold */
+  border-width: 4px !important;
+  /* Thicker border like Google Meet */
+  animation: theme-border-glow 1s infinite alternate ease-in-out !important;
+  z-index: 50 !important;
+  box-shadow: 0 0 15px rgba(167, 147, 105, 0.6) !important;
+}
+
+@keyframes theme-border-glow {
+  0% {
+    border-color: #A79369;
+    box-shadow: 0 0 10px rgba(167, 147, 105, 0.4);
+  }
+
+  100% {
+    border-color: #CFBF93;
+    box-shadow: 0 0 25px rgba(207, 191, 147, 0.8);
+  }
+}
+
+/* Metadata (Name/Mic state on tiles) */
+.lk-participant-metadata {
+  background: rgba(31, 34, 38, 0.75) !important;
+  backdrop-filter: blur(8px) !important;
+  border-radius: 6px !important;
+  margin: 8px !important;
+  padding: 4px 10px !important;
+}
+
+.lk-participant-name {
+  font-weight: 500 !important;
+  font-size: 0.9rem !important;
+  color: #fff !important;
+}
+
+/* Audio Indicator Icon inside Tile */
+.lk-audio-visualizer {
+  color: #A79369 !important;
+  /* Theme Gold */
+}
+
+/* ========================================= */
+/* Google Meet UI Clone Styles               */
+/* ========================================= */
+
+.meet-bg {
+  background-color: #202124 !important;
+}
+
+/* Participant Tile — Meet-style mic idle + speaking side bars */
+.meet-tile {
+  background-color: #3c4043 !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  isolation: isolate !important;
+}
+
+/* All-sides border clarity (closer to Google Meet) */
+.meet-tile[data-lk-mic="true"][data-lk-speaking="false"] {
+  box-shadow: inset 0 0 0 2px rgba(52, 168, 83, 0.22) !important;
+}
+
+/* Mic on, not speaking: soft animated side ticks (green tint) */
+.meet-tile[data-lk-mic="true"][data-lk-speaking="false"]::before,
+.meet-tile[data-lk-mic="true"][data-lk-speaking="false"]::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 10% !important;
+  bottom: 10% !important;
+  width: 3px !important;
+  border-radius: 2px !important;
+  z-index: 25 !important;
+  pointer-events: none !important;
+  background: linear-gradient(180deg,
+      rgba(52, 168, 83, 0.15),
+      rgba(129, 201, 149, 0.75) 45%,
+      rgba(52, 168, 83, 0.15)) !important;
+  animation: meet-mic-side-idle 2.4s ease-in-out infinite !important;
+}
+
+.meet-tile[data-lk-mic="true"][data-lk-speaking="false"]::before {
+  left: 4px !important;
+  animation-delay: 0s !important;
+}
+
+.meet-tile[data-lk-mic="true"][data-lk-speaking="false"]::after {
+  right: 4px !important;
+  animation-delay: 0.35s !important;
+}
+
+/* Speaking: bright blue side bars + outer glow (Google Meet–like) */
+.meet-tile[data-lk-speaking="true"] {
+  outline: 2px solid rgba(138, 180, 248, 0.55) !important;
+  outline-offset: -2px !important;
+  animation: meet-speaking-outer-glow 1s ease-in-out infinite !important;
+}
+
+.meet-tile[data-lk-speaking="true"]::before,
+.meet-tile[data-lk-speaking="true"]::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 6% !important;
+  bottom: 6% !important;
+  width: 4px !important;
+  border-radius: 2px !important;
+  z-index: 25 !important;
+  pointer-events: none !important;
+  background: linear-gradient(180deg,
+      #d2e3fc 0%,
+      #8ab4f8 35%,
+      #669df6 70%,
+      #8ab4f8 100%) !important;
+  box-shadow:
+    0 0 10px rgba(138, 180, 248, 0.9),
+    0 0 18px rgba(102, 157, 246, 0.45) !important;
+  animation: meet-speaking-side-bars 0.75s ease-in-out infinite alternate !important;
+}
+
+.meet-tile[data-lk-speaking="true"]::before {
+  left: 3px !important;
+}
+
+.meet-tile[data-lk-speaking="true"]::after {
+  right: 3px !important;
+  animation-delay: 0.12s !important;
+}
+
+@keyframes meet-mic-side-idle {
+
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scaleY(0.92);
+  }
+
+  50% {
+    opacity: 0.95;
+    transform: scaleY(1);
+  }
+}
+
+@keyframes meet-speaking-side-bars {
+  0% {
+    opacity: 0.85;
+    transform: scaleY(0.94);
+    filter: brightness(1);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scaleY(1.06);
+    filter: brightness(1.15);
+  }
+}
+
+@keyframes meet-speaking-outer-glow {
+
+  0%,
+  100% {
+    box-shadow:
+      inset 0 0 0 1px rgba(138, 180, 248, 0.25),
+      0 0 0 0 rgba(138, 180, 248, 0);
+  }
+
+  50% {
+    box-shadow:
+      inset 0 0 0 2px rgba(138, 180, 248, 0.55),
+      0 0 20px rgba(138, 180, 248, 0.35),
+      0 0 36px rgba(102, 157, 246, 0.2) !important;
+  }
+}
+
+.meet-name-tag {
+  position: absolute !important;
+  bottom: 12px !important;
+  left: 12px !important;
+  color: white !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6) !important;
+  z-index: 10 !important;
+}
+
+.meet-name-tag-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  max-width: calc(100% - 48px) !important;
+}
+
+.meet-hand-on-tile {
+  color: #f9ab00 !important;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.5)) !important;
+}
+
+.meet-hand-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.meet-dropdown-label {
+  font-weight: 500 !important;
+  color: #e8eaed !important;
+}
+
+/* Initial Avatar */
+.meet-initial-avatar {
+  width: 100px !important;
+  height: 100px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 3rem !important;
+  color: white !important;
+  user-select: none !important;
+  text-transform: uppercase !important;
+}
+
+/* Bottom Nav Bar — centered Meet-style control pill */
+.meet-bottom-bar {
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  min-height: 80px !important;
+  padding: 12px 20px 16px !important;
+  background: linear-gradient(to top, #202124 70%, rgba(32, 33, 36, 0.92) 100%) !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) !important;
+  align-items: center !important;
+  z-index: 1000 !important;
+}
+
+.meet-bar-left {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  color: #e8eaed !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  justify-self: start !important;
+  min-width: 0 !important;
+}
+
+.meet-bar-sep {
+  color: #5f6368 !important;
+  font-weight: 300 !important;
+  user-select: none !important;
+}
+
+.meet-meeting-code {
+  font-weight: 500 !important;
+  letter-spacing: 0.02em !important;
+}
+
+.meet-bar-center {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  justify-self: center !important;
+}
+
+.meet-controls-cluster {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  background-color: #3c4043 !important;
+  border-radius: 999px !important;
+  padding: 6px 10px 6px 8px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35) !important;
+}
+
+.meet-cluster-divider {
+  width: 1px !important;
+  height: 28px !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  margin: 0 2px !important;
+  flex-shrink: 0 !important;
+}
+
+.meet-bar-right {
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  justify-self: end !important;
+  justify-content: flex-end !important;
+}
+
+.meet-utility-active {
+  color: #8ab4f8 !important;
+  background: rgba(138, 180, 248, 0.15) !important;
+}
+
+.meet-utility-with-badge {
+  position: relative !important;
+}
+
+.meet-badge {
+  position: absolute !important;
+  top: 4px !important;
+  right: 4px !important;
+  min-width: 18px !important;
+  height: 18px !important;
+  padding: 0 5px !important;
+  border-radius: 999px !important;
+  background: #8ab4f8 !important;
+  color: #202124 !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  line-height: 18px !important;
+  text-align: center !important;
+}
+
+.meet-icon-button-active {
+  background-color: #8ab4f8 !important;
+  color: #202124 !important;
+}
+
+.reaction-tray-wrap {
+  position: absolute !important;
+  bottom: 100% !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  margin-bottom: 8px !important;
+  z-index: 1100 !important;
+  pointer-events: none !important;
+}
+
+.reaction-tray-wrap .reaction-tray {
+  pointer-events: auto !important;
+  position: relative !important;
+  bottom: auto !important;
+  left: auto !important;
+  transform: none !important;
+}
+
+/* Meet Control Buttons */
+.meet-icon-button {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: none !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s !important;
+  background-color: #3c4043 !important;
+  color: white !important;
+}
+
+.meet-icon-button:hover {
+  background-color: #4c5054 !important;
+}
+
+.meet-icon-button.active-red {
+  background-color: #ea4335 !important;
+}
+
+.meet-icon-button.active-red:hover {
+  background-color: #d93025 !important;
+}
+
+.meet-icon-button.hangup {
+  background-color: #ea4335 !important;
+  width: 56px !important;
+  border-radius: 28px !important;
+}
+
+.meet-icon-button.hangup:hover {
+  background-color: #d93025 !important;
+}
+
+.meet-icon-button svg {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+/* Right side Utility Buttons */
+.meet-utility-button {
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: white !important;
+  background: transparent !important;
+  border: none !important;
+  cursor: pointer !important;
+}
+
+.meet-utility-button:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Sidebar Panel (Chat/People) */
+.meet-sidebar {
+  width: 360px !important;
+  flex-shrink: 0 !important;
+  align-self: stretch !important;
+  min-height: 0 !important;
+  background-color: #202124 !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.1) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  transition: box-shadow 0.2s ease !important;
+  position: relative !important;
+  z-index: 100 !important;
+}
+
+.meet-sidebar-light {
+  background-color: #fff !important;
+  border-left: 1px solid #dadce0 !important;
+}
+
+.meet-sidebar-header {
+  padding: 16px 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  font-size: 18px !important;
+  font-weight: 400 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.meet-sidebar-header-light {
+  border-bottom-color: #dadce0 !important;
+  color: #202124 !important;
+}
+
+.meet-sidebar-heading {
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 10px !important;
+}
+
+.meet-sidebar-subcount {
+  font-size: 14px !important;
+  color: #9aa0a6 !important;
+  font-weight: 400 !important;
+}
+
+.meet-sidebar-close {
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 50% !important;
+  border: none !important;
+  background: transparent !important;
+  color: #e8eaed !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.meet-sidebar-close:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.meet-sidebar-close-light {
+  color: #5f6368 !important;
+}
+
+.meet-sidebar-close-light:hover {
+  background: rgba(60, 64, 67, 0.08) !important;
+}
+
+.meet-sidebar-content {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  padding: 16px 20px 24px !important;
+  min-height: 0 !important;
+}
+
+.meet-sidebar-content-light {
+  background: #fff !important;
+}
+
+.chat-panel-content {
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #dadce0;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #bdc1c6;
+}
+
+/* Chat Styles */
+.chat-message-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16px !important;
+}
+
+.chat-input-container {
+  padding: 24px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.chat-input {
+  width: 100% !important;
+  background: #3c4043 !important;
+  border: none !important;
+  border-radius: 24px !important;
+  padding: 12px 20px !important;
+  color: white !important;
+  outline: none !important;
+}
+
+/* Reaction Tray */
+.reaction-tray {
+  background-color: #3c4043 !important;
+  border-radius: 40px !important;
+  padding: 8px 16px !important;
+  display: flex !important;
+  gap: 8px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+  animation: slideUp 0.2s ease-out !important;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reaction-emoji {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 20px !important;
+  cursor: pointer !important;
+  transition: all 0.2s !important;
+}
+
+.reaction-emoji:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  transform: scale(1.2) !important;
+}
+
+/* Dropdown Polishing (Google Meet Style) */
+.meet-dropdown-content {
+  background-color: #3c4043 !important;
+  border-radius: 8px !important;
+  padding: 8px 0 !important;
+  min-width: 240px !important;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  /* Above fixed meet bar (z-index 1000) and sidebars — Radix portal must stay on top */
+  z-index: 100000 !important;
+}
+
+.meet-dropdown-item {
+  padding: 12px 24px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 16px !important;
+  color: white !important;
+  font-size: 14px !important;
+  cursor: pointer !important;
+  outline: none !important;
+}
+
+.meet-dropdown-item:hover {
+  background-color: rgba(255, 246, 246, 0.1) !important;
+}
+
+/* Chat Bubble Styles */
+.chat-bubble {
+  max-width: 85% !important;
+  padding: 10px 14px !important;
+  border-radius: 18px !important;
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+  word-wrap: break-word !important;
+  position: relative !important;
+}
+
+.chat-bubble-local {
+  background-color: #8ab4f8 !important;
+  color: #202124 !important;
+  align-self: flex-end !important;
+  border-bottom-right-radius: 4px !important;
+}
+
+.chat-bubble-remote {
+  background-color: #3c4043 !important;
+  color: white !important;
+  align-self: flex-start !important;
+  border-bottom-left-radius: 4px !important;
+}
+
+.chat-msg-sender {
+  font-size: 12px !important;
+  color: #9aa0a6 !important;
+  margin-bottom: 4px !important;
+  margin-left: 4px !important;
+}
+
+.chat-msg-sender-local {
+  text-align: right !important;
+  margin-right: 4px !important;
+}
+
+/* Split Button UI */
+.meet-split-button {
+  display: flex !important;
+  align-items: center !important;
+  background-color: #3c4043 !important;
+  border-radius: 20px !important;
+  overflow: hidden !important;
+  transition: background-color 0.2s !important;
+}
+
+.meet-split-button:hover {
+  background-color: #4c5054 !important;
+}
+
+.meet-split-button.active-red {
+  background-color: #ea4335 !important;
+}
+
+.meet-split-button.active-red:hover {
+  background-color: #d93025 !important;
+}
+
+.meet-split-button-main {
+  width: 40px !important;
+  height: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: none !important;
+  background: transparent !important;
+  color: white !important;
+  cursor: pointer !important;
+}
+
+.meet-split-button-arrow {
+  width: 20px !important;
+  height: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: none !important;
+  background: transparent !important;
+  color: white !important;
+  cursor: pointer !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.1) !important;
+  padding: 0 !important;
+}
+
+.meet-split-button-arrow:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Presentation / Sidebar Layout */
+.presentation-container {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 16px !important;
+  background: #202124 !important;
+}
+
+.presentation-main {
+  flex: 1 !important;
+  background: #000 !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.presentation-sidebar {
+  width: 240px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  padding: 16px !important;
+  overflow-y: auto !important;
+}
+
+/* Presentation UI Refinements */
+.presenting-placeholder {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background-color: #202124 !important;
+  color: white !important;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 8px !important;
+  text-align: center !important;
+  padding: 24px !important;
+}
+
+.presenting-placeholder-icon {
+  width: 48px !important;
+  height: 48px !important;
+  background-color: #8ab4f8 !important;
+  color: #202124 !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-bottom: 16px !important;
+}
+
+.presenting-placeholder-title {
+  font-size: 1.25rem !important;
+  font-weight: 500 !important;
+  margin-bottom: 8px !important;
+}
+
+.presenting-placeholder-subtitle {
+  font-size: 0.875rem !important;
+  color: #9aa0a6 !important;
+  margin-bottom: 24px !important;
+}
+
+.meet-status-overlay {
+  position: fixed !important;
+  bottom: 100px !important;
+  right: 24px !important;
+  background-color: #202124 !important;
+  border: 1px solid #3c4043 !important;
+  border-radius: 8px !important;
+  padding: 12px 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 16px !important;
+  z-index: 1000 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+}
+
+.stop-presenting-btn {
+  background-color: #ea4335 !important;
+  color: white !important;
+  padding: 6px 16px !important;
+  border-radius: 4px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  border: none !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s !important;
+}
+
+.stop-presenting-btn:hover {
+  background-color: #d93025 !important;
+}
+
+/* Pinned Tile Indicator */
+.tile-pin {
+  position: absolute !important;
+  top: 12px !important;
+  right: 12px !important;
+  background: rgba(32, 33, 36, 0.6) !important;
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 50% !important;
+  border: none !important;
+  color: #e8eaed !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  opacity: 0;
+  transition: opacity 0.2s !important;
+  cursor: pointer !important;
+}
+
+.meet-tile:hover .tile-pin,
+.thumb-tile:hover .tile-pin {
+  opacity: 1;
+}
+
+.tile-pin.active {
+  opacity: 1 !important;
+  background: #8ab4f8 !important;
+  color: #202124 !important;
+}
+
+/* Chat — light panel (Meet-style) */
+.meet-chat-empty {
+  line-height: 1.5 !important;
+}
+
+.chat-msg-sender-light {
+  color: #5f6368 !important;
+}
+
+.chat-bubble-on-light.chat-bubble-local {
+  background-color: #d3e3fd !important;
+  color: #202124 !important;
+}
+
+.chat-bubble-on-light.chat-bubble-remote {
+  background-color: #f1f3f4 !important;
+  color: #202124 !important;
+}
+
+.chat-input-container-light {
+  background: #fff !important;
+  border-top: 1px solid #dadce0 !important;
+  padding: 16px 20px !important;
+}
+
+.chat-input-light {
+  background: #f1f3f4 !important;
+  color: #202124 !important;
+  border-radius: 28px !important;
+}
+
+.chat-input-light::placeholder {
+  color: #70757a !important;
+}
+
+.meet-copy-link {
+  margin-top: 12px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 10px 16px !important;
+  border-radius: 999px !important;
+  border: 1px solid #dadce0 !important;
+  background: transparent !important;
+  color: #8ab4f8 !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+}
+
+.meet-copy-link:hover {
+  background: rgba(138, 180, 248, 0.08) !important;
+}
+
+.meet-info-label {
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: #9aa0a6 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  margin-bottom: 8px !important;
+}
+
+.meet-info-url {
+  font-size: 14px !important;
+  color: #e8eaed !important;
+  line-height: 1.5 !important;
+}
+
+.meet-sidebar-light .meet-info-url {
+  color: #202124 !important;
+}
+
+.meet-people-hint {
+  margin: 0 !important;
+}
+
+.meet-people-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 12px 10px !important;
+  border-radius: 8px !important;
+  transition: background 0.15s !important;
+}
+
+.meet-people-row:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+}
+
+.meet-people-avatar {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  background: linear-gradient(135deg, #1a73e8, #4285f4) !important;
+  color: #fff !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+}
+
+.meet-people-name {
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  color: #e8eaed !important;
+}
+
+.meet-people-you {
+  color: #9aa0a6 !important;
+  font-weight: 400 !important;
+}
+
+/* Stage & grid */
+.meet-video-grid {
+  display: grid !important;
+}
+
+.meet-presentation-wrap {
+  align-items: stretch !important;
+}
+
+.presentation-toolbar {
+  padding: 0 4px 10px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.presentation-toolbar-label {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: #e8eaed !important;
+}
+
+.presentation-sidebar-label {
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: #9aa0a6 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  margin-bottom: 8px !important;
+  padding-left: 4px !important;
+}
+
+.presentation-sidebar-tiles {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+}
+
+/* Filmstrip thumbnails */
+.thumb-tile {
+  aspect-ratio: 16 / 9 !important;
+  width: 100% !important;
+  max-height: 140px !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  position: relative !important;
+  background-color: #3c4043 !important;
+  flex-shrink: 0 !important;
+}
+
+.thumb-tile .meet-initial-avatar {
+  width: 56px !important;
+  height: 56px !important;
+  font-size: 1.5rem !important;
+}
+
+/* Thumbnail tiles: same mic / speaking treatment, slightly tighter */
+.thumb-tile[data-lk-mic="true"][data-lk-speaking="false"]::before,
+.thumb-tile[data-lk-mic="true"][data-lk-speaking="false"]::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 8% !important;
+  bottom: 8% !important;
+  width: 2px !important;
+  border-radius: 1px !important;
+  z-index: 25 !important;
+  pointer-events: none !important;
+  background: linear-gradient(180deg,
+      rgba(52, 168, 83, 0.2),
+      rgba(129, 201, 149, 0.7) 50%,
+      rgba(52, 168, 83, 0.2)) !important;
+  animation: meet-mic-side-idle 2.4s ease-in-out infinite !important;
+}
+
+.thumb-tile[data-lk-mic="true"][data-lk-speaking="false"]::before {
+  left: 3px !important;
+}
+
+.thumb-tile[data-lk-mic="true"][data-lk-speaking="false"]::after {
+  right: 3px !important;
+  animation-delay: 0.35s !important;
+}
+
+.thumb-tile[data-lk-speaking="true"] {
+  outline: 2px solid rgba(138, 180, 248, 0.5) !important;
+  outline-offset: -2px !important;
+  animation: meet-speaking-outer-glow 1s ease-in-out infinite !important;
+}
+
+.thumb-tile[data-lk-speaking="true"]::before,
+.thumb-tile[data-lk-speaking="true"]::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 5% !important;
+  bottom: 5% !important;
+  width: 3px !important;
+  border-radius: 2px !important;
+  z-index: 25 !important;
+  pointer-events: none !important;
+  background: linear-gradient(180deg, #d2e3fc, #8ab4f8, #669df6, #8ab4f8) !important;
+  box-shadow: 0 0 8px rgba(138, 180, 248, 0.85) !important;
+  animation: meet-speaking-side-bars 0.75s ease-in-out infinite alternate !important;
+}
+
+.thumb-tile[data-lk-speaking="true"]::before {
+  left: 2px !important;
+}
+
+.thumb-tile[data-lk-speaking="true"]::after {
+  right: 2px !important;
+  animation-delay: 0.12s !important;
+}
+
+.thumb-tile .meet-name-tag {
+  bottom: 8px !important;
+  left: 8px !important;
+  font-size: 12px !important;
+  padding: 2px 8px !important;
+  border-radius: 4px !important;
+  background: rgba(32, 33, 36, 0.75) !important;
+}
+
+.meet-status-text {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
+
+/* LiveKit official Chat inside Meet sidebar */
+.meet-lk-chat-host {
+  flex: 1 !important;
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.meet-lk-chat-host .lk-chat {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.meet-lk-chat-host .lk-chat-header {
+  display: none !important;
+}
+
+.meet-lk-chat-host .lk-chat-messages {
+  flex: 1 !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  background: #fff !important;
+  border-radius: 8px !important;
+  padding: 8px 4px !important;
+}
+
+.meet-lk-chat-host .lk-chat-form {
+  flex-shrink: 0 !important;
+  margin-top: 10px !important;
+  padding-top: 10px !important;
+  border-top: 1px solid #dadce0 !important;
+}
+
+.meet-lk-chat-host .lk-chat-form-input {
+  background: #f1f3f4 !important;
+  color: #202124 !important;
+  border-radius: 24px !important;
+}
+
+.meet-lk-chat-host .lk-chat-form-button {
+  background: #1a73e8 !important;
+  color: #fff !important;
+  border-radius: 24px !important;
+}
+
+/* Captions strip (above bottom bar) */
+.meet-captions-strip {
+  position: fixed !important;
+  left: 12px !important;
+  right: 12px !important;
+  bottom: 88px !important;
+  max-height: 120px !important;
+  z-index: 900 !important;
+  background: rgba(32, 33, 36, 0.95) !important;
+  border: 1px solid #3c4043 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
+.meet-captions-strip-head {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 6px 10px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.meet-captions-title {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #e8eaed !important;
+}
+
+.meet-captions-close {
+  border: none !important;
+  background: transparent !important;
+  color: #9aa0a6 !important;
+  cursor: pointer !important;
+  padding: 4px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.meet-captions-close:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #e8eaed !important;
+}
+
+.meet-captions-body {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  padding: 8px 12px !important;
+  font-size: 14px !important;
+  line-height: 1.45 !important;
+  color: #e8eaed !important;
+}
+
+.meet-captions-line {
+  margin: 0 0 6px !important;
+}
+
+.meet-captions-lk {
+  color: #e8eaed !important;
+}
+
+.meet-captions-local .meet-captions-label {
+  color: #8ab4f8 !important;
+  font-weight: 600 !important;
+  margin-right: 6px !important;
+}
+
+.meet-captions-hint {
+  margin: 0 !important;
+  font-size: 13px !important;
+  color: #9aa0a6 !important;
+  line-height: 1.4 !important;
+}
