@@ -37,7 +37,6 @@ const Sidebar = () => {
   };
 
   return (
-  return (
     <section className="sticky left-0 top-0 flex h-screen w-fit flex-col justify-between bg-background-3 shadow-md text-white max-sm:hidden lg:w-[264px] sidebar-glow overflow-hidden">
       <div className="flex flex-col gap-6 p-6">
         <Link href="/" className="flex items-center gap-1 mb-8">
@@ -53,8 +52,7 @@ const Sidebar = () => {
       <div className="flex flex-1 flex-col gap-6 overflow-y-auto no-scrollbar">
         {sidebarLinks.map((item) => {
           const isActive = pathname === item.route
-          const ss: number = item.Icon;
-          const Icon = icons[ss];
+          const Icon = icons[item.Icon.toString()];
           return (
             <Link
               href={item.route}
@@ -84,7 +82,7 @@ const Sidebar = () => {
       <div className='py-2 border-b border-t border-white/40 flex items-center justify-between !bg-[url("/images/green.jpg")] rounded-md p-2'>
         <div className='flex flex-col'>
           <h4 className='text-white/90 text-2xl mb-1'>{subscription}</h4>
-          <p className='text-white/70 text-xs'> No Cost ${planslist[subscription].price}/month</p>
+          <p className='text-white/70 text-xs'> No Cost ${planslist[subscription as keyof typeof planslist]?.price || 0}/month</p>
         </div>
         <Link href={'/plans'} className='block py-2 px-4 text-white/90 rounded-3xl hover:bg-black/30 text-sm '>Upgrade</Link>
       </div>
