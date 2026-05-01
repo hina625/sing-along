@@ -4,7 +4,7 @@ const MembersPage = () => {
   return (
     <section className='flex size-full flex-col gap-10 text-white'>
       <div className="flex items-center justify-center flex-col mt-24 mb-16">
-        <h2 className="mt-4 !text-6xl !text-white font-bold">
+        <h2 className="mt-4 text-4xl sm:text-5xl md:text-6xl !text-white font-bold">
           Members
         </h2>
         <p className="text-xl text-white/70 mt-4">Manage your community and team members here.</p>

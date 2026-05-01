@@ -71,10 +71,10 @@ const CallList = ({ type }: { type: 'ended' | 'upcoming' | 'recordings' }) => {
     <div className='flex items-center justify-center flex-wrap gap-5'>
       {
         meetings && meetings.map((room: IRoomDetails, idex: number) => (
-          <div className='w-[25rem] !min-h-[13rem] !shadow-md gradient-insta flex flex-col gap-2 rounded-md p-4 !bg-white border border-gray-100'>
-            <div className='flex items-start gap-2'>
-            <h3 className="text-white text-xl whitespace-pre">Meeting ID: </h3>
-            <h3 className="text-white text-xl">{room?.room_id}</h3>
+          <div className='w-full max-w-[25rem] !min-h-[13rem] !shadow-md gradient-insta flex flex-col gap-2 rounded-md p-4 !bg-white border border-gray-100'>
+            <div className='flex flex-wrap items-start gap-2'>
+            <h3 className="text-white text-xl">Meeting ID: </h3>
+            <h3 className="text-white text-xl break-all">{room?.room_id}</h3>
             </div>
             <p className="text-white/90 text-lg">Start Time: {formatDateTimeWithDayAndAmPm(new Date(room.start_time))}</p>
             <p className="text-white/90 text-lg">End Time: {formatDateTimeWithDayAndAmPm(new Date(room.end_time))}</p>

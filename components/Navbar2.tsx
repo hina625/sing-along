@@ -16,26 +16,28 @@ const Navbar2 = () => {
     <nav className="navbar navbar-expand-lg  !bg-transparent !absolute top-0 left-0 right-0">
       <div className="container">
         {/* Brand */}
-        <a className="#" href="/">
+        <a className="flex flex-col items-center justify-center" href="/">
           <img
             alt="Image placeholder"
             src="/images/full-logo.png"
             id="navbar-logo"
-            style={{ height: 70 }}
+            className='h-[65px] md:h-[90px]'
           />
+          <span className='text-[#F57C00] font-bold text-[12px] leading-tight md:hidden' style={{ fontFamily: "'Marcellus', serif" }}>Connect</span>
         </a>
-        <span className="text-center" style={{ marginLeft: 20 }}>
+        <span className="text-center hidden md:block" style={{ marginLeft: 10 }}>
           <h3
+            className='text-[14px] md:text-[18px]'
             style={{
-              color: "#F57C00", // Praise Orange
+              color: "#F57C00",
               marginBottom: 0,
               fontWeight: "bold",
-              lineHeight: '20px',
+              lineHeight: '1.2',
               fontFamily: "'Marcellus', serif"
             }}
           >
-            Sing Along <br />
-            <small style={{ fontSize: "12.5px", fontWeight: 600, color: "#D4AF37" }}>
+            Sing Along Connect <br />
+            <small className='text-[8px] md:text-[10px]' style={{ fontWeight: 600, color: "#D4AF37" }}>
               HallelujahGospelGlobally
             </small>
           </h3>
@@ -124,14 +126,14 @@ const Navbar2 = () => {
           {/* Button */}
           {isMounted && !user && (
             <a
-                className="navbar-btn btn btn-sm btn-primary !bg-foregroud-primary text-white !border-none hover:!scale-110 d-none d-lg-inline-block ml-3 !text-[18px] !font-medium hover:!font-normal"
-                href={`/sign-in?redirect_url=${process.env.NEXT_PUBLIC_BASE_URL}/dashboard`}
-              >
-                Sign In
-              </a>
+              className="navbar-btn btn btn-sm btn-primary !bg-foregroud-primary text-white !border-none hover:!scale-110 d-none d-lg-inline-block ml-3 !text-[18px] !font-medium hover:!font-normal"
+              href={`/sign-in?redirect_url=${process.env.NEXT_PUBLIC_BASE_URL}/dashboard`}
+            >
+              Sign In
+            </a>
           )}
-              
-            
+
+
 
           {/* Mobile button
       <div class="d-lg-none text-center">

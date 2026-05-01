@@ -135,7 +135,7 @@ const page = ({ searchParams }: props) => {
 
   return (
     <>
-      <section className="bg-background-3 py-8 antialiased  md:py-16 min-h-[100vh] flex items-center justify-center">
+      <section className="bg-background-3 py-8 antialiased md:py-16 min-h-[100vh] flex items-center justify-center overflow-x-hidden relative">
         <div className='absolute bottom-1 left-1 z-0'>
           <img src='/images/bottom-box-shape.png' />
         </div>
@@ -144,7 +144,7 @@ const page = ({ searchParams }: props) => {
         </div>
         <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
           <div className="mx-auto max-w-5xl">
-            <h2 className="text-xl font-semibold text-gradient sm:text-2xl">
+            <h2 className="text-xl md:text-3xl font-semibold text-gradient sm:text-2xl">
               Donate
             </h2>
             <div className="mt-6 sm:mt-8 lg:flex lg:items-start lg:gap-12">

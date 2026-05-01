@@ -29,7 +29,7 @@ export default function FeaturesPage() {
     ]
 
     return (
-        <div className='zeeshan'>
+        <div className='zeeshan overflow-x-hidden'>
             {/* Navbar */}
             <Navbar2 />
             <>
@@ -39,15 +39,15 @@ export default function FeaturesPage() {
                     <div className='absolute bottom-1 left-1 z-0'>
                         <img src='/images/bottom-box-shape.png' />
                     </div>
-                    <div className="container">
+                    <div className="container px-4 md:px-6">
                         <div className="row row-grid align-items-center">
                             <div className="col-lg-12">
                                 {/* Heading */}
-                                <h1 className="h1 text-gradient text-center text-lg-left my-4">
-                                    Our Features
-                                </h1>
+                                <h1 className="text-3xl md:text-5xl lg:text-6xl text-gradient text-center text-lg-left my-4">
+                                     Our Features
+                                 </h1>
                                 {/* Text */}
-                                <p className="lead text-white text-center text-lg-left opacity-8">
+                                <p className="text-base md:text-lg text-white text-center text-lg-left opacity-8">
                                     Our platform provides cutting-edge online meeting solutions for businesses of all sizes.
                                 </p>
                             </div>
@@ -80,17 +80,17 @@ export default function FeaturesPage() {
                         <img src='/images/bottom-line.png' />
                     </div>
 
-                    <div className="container">
+                    <div className="container px-4 md:px-6">
                         {/* Title */}
                         {/* Section title */}
                         <div className="row mb-5 justify-content-center text-center">
                             <div className="col-lg-12">
 
-                                <h2 className=" mt-4 text-gradient">
-                                    Reliable and Scalable Meeting Server Solutions
-                                </h2>
+                                <h2 className=" mt-4 text-gradient text-2xl md:text-4xl">
+                                     Reliable and Scalable Meeting Server Solutions
+                                 </h2>
                                 <div className="mt-2">
-                                    <p className="lead lh-180 text-white/80">
+                                    <p className="text-base md:text-lg lh-180 text-white/80">
                                         Empower your business with a robust meeting platform designed for seamless collaboration, high performance, and enhanced security.
 
                                         {" "}
@@ -102,15 +102,15 @@ export default function FeaturesPage() {
 
                         <div className="row">
                             <div className="col-lg-4">
-                                <div className="card text-center hover-translate-y-n10 hover-shadow-lg" style={{minHeight: '22rem'}}>
+                                <div className="card text-center hover-translate-y-n10 hover-shadow-lg min-h-[16rem] md:min-h-[22rem]">
                                     <div className="px-4 pb-4 pt-4">
-                                        <div className="py-4">
+                                        <div className="py-2 md:py-4">
                                             <div className="icon text-warning icon-sm mx-auto">
                                                 <VideoIcon size={30} />
                                             </div>
                                         </div>
                                         <h5 className="">High-Quality Video and Audio</h5>
-                                        <p className=" mt-2 mb-0 text-muted">
+                                        <p className="mt-2 mb-0 text-muted text-xs md:text-sm">
                                             Experience crystal-clear communication with ultra-low latency and smooth performance. Enjoy adaptive streaming that ensures uninterrupted video quality, HD audio and video for immersive calls, and noise suppression to eliminate distractions for seamless conversations.
                                         </p>
 
@@ -119,15 +119,15 @@ export default function FeaturesPage() {
                             </div>
 
                             <div className="col-lg-4">
-                                <div className="card text-center hover-translate-y-n10 hover-shadow-lg" style={{minHeight: '22rem'}}>
+                                <div className="card text-center hover-translate-y-n10 hover-shadow-lg min-h-[16rem] md:min-h-[22rem]">
                                     <div className="px-4 pb-4 pt-4">
-                                        <div className="py-4">
+                                        <div className="py-2 md:py-4">
                                             <div className="icon text-warning icon-sm mx-auto">
                                                 <EarthLock  size={30} />
                                             </div>
                                         </div>
                                         <h5 className="">End-to-End Encryption</h5>
-                                        <p className=" mt-2 mb-0 text-muted">
+                                        <p className="mt-2 mb-0 text-muted text-xs md:text-sm">
                                             Your meetings are always private and fully secure with advanced encryption protocols. Protect sensitive discussions with secure connections, maintain confidentiality, and manage access with role-based controls for every participant.
                                         </p>
 
@@ -137,15 +137,15 @@ export default function FeaturesPage() {
 
 
                             <div className="col-lg-4">
-                                <div className="card text-center hover-translate-y-n10 hover-shadow-lg" style={{minHeight: '22rem'}}>
+                                <div className="card text-center hover-translate-y-n10 hover-shadow-lg min-h-[16rem] md:min-h-[22rem]">
                                     <div className="px-4 pb-4 pt-4">
-                                        <div className="py-4">
+                                        <div className="py-2 md:py-4">
                                             <div className="icon text-warning icon-sm mx-auto">
                                                 <Bitcoin  size={30} />
                                             </div>
                                         </div>
                                         <h5 className="">Custom Branding</h5>
-                                        <p className=" mt-2 mb-0 text-muted">
+                                        <p className="mt-2 mb-0 text-muted text-xs md:text-sm">
                                             Showcase your brand with personalized meeting interfaces and features. Add your logo, customize colors, and create branded URLs, ensuring your platform aligns perfectly with your organization’s identity.
                                         </p>
 
@@ -153,15 +153,15 @@ export default function FeaturesPage() {
                                 </div>
                             </div>
                             <div className="col-lg-4">
-                                <div className="card text-center hover-translate-y-n10 hover-shadow-lg" style={{minHeight: '22rem'}}>
+                                <div className="card text-center hover-translate-y-n10 hover-shadow-lg min-h-[16rem] md:min-h-[22rem]">
                                     <div className="px-4 pb-4 pt-4">
-                                        <div className="py-4">
+                                        <div className="py-2 md:py-4">
                                             <div className="icon text-warning icon-sm mx-auto">
                                             <Feather size={30} />
                                             </div>
                                         </div>
                                         <h5 className="">Interactive Features</h5>
-                                        <p className=" mt-2 mb-0 text-muted">
+                                        <p className="mt-2 mb-0 text-muted text-xs md:text-sm">
                                             Enhance collaboration with intuitive tools designed for engagement. Share your screen, conduct live polls, manage Q&A sessions, or create breakout rooms for focused discussions, all within an easy-to-use interface.
                                         </p>
 
@@ -169,15 +169,15 @@ export default function FeaturesPage() {
                                 </div>
                             </div>
                             <div className="col-lg-4">
-                                <div className="card text-center hover-translate-y-n10 hover-shadow-lg" style={{minHeight: '22rem'}}>
+                                <div className="card text-center hover-translate-y-n10 hover-shadow-lg min-h-[16rem] md:min-h-[22rem]">
                                     <div className="px-4 pb-4 pt-4">
-                                        <div className="py-4">
+                                        <div className="py-2 md:py-4">
                                             <div className="icon text-warning icon-sm mx-auto">
                                             <SignalHigh size={30} />
                                             </div>
                                         </div>
                                         <h5 className="">Global Reach with Low Latency</h5>
-                                        <p className=" mt-2 mb-0 text-muted">
+                                        <p className="mt-2 mb-0 text-muted text-xs md:text-sm">
                                             Effortlessly connect with participants worldwide through optimized servers. Enjoy low-latency performance for smooth communication, 24/7 service reliability, and an uninterrupted meeting experience, no matter the location.
                                         </p>
 
@@ -185,15 +185,15 @@ export default function FeaturesPage() {
                                 </div>
                             </div>
                             <div className="col-lg-4">
-                                <div className="card text-center hover-translate-y-n10 hover-shadow-lg" style={{minHeight: '22rem'}}>
+                                <div className="card text-center hover-translate-y-n10 hover-shadow-lg min-h-[16rem] md:min-h-[22rem]">
                                     <div className="px-4 pb-4 pt-4">
-                                        <div className="py-4">
+                                        <div className="py-2 md:py-4">
                                             <div className="icon text-warning icon-sm mx-auto">
                                             <Disc3 size={30} />
                                             </div>
                                         </div>
                                         <h5 className="">Meeting Recording and Playback</h5>
-                                        <p className=" mt-2 mb-0 text-muted">
+                                        <p className="mt-2 mb-0 text-muted text-xs md:text-sm">
                                             Never miss a moment with built-in recording. Record meetings in the cloud or locally, and play back sessions anytime for review and reference.
                                         </p>
 
@@ -226,7 +226,7 @@ export default function FeaturesPage() {
                         </svg>
                     </div>
                     {/* Footer */}
-                    <div className="container pt-4">
+                    <div className="container px-4 md:px-6 pt-4">
                         <div className="row">
                             <div className="col-lg-4 mb-5 mb-lg-0">
                                 {/* Theme's logo */}
@@ -237,7 +237,7 @@ export default function FeaturesPage() {
                                         id="footer-logo"
                                     />
                                 </a>
-                                <p className="mt-4 text-sm opacity-8 pr-lg-4 !text-white !font-[400] !text-[18px] !leading-[27px]">
+                                <p className="mt-4 text-base md:text-lg opacity-8 pr-lg-4 !text-white !font-[400] !leading-[27px]">
                                     Sing Along is a video conferencing/meeting platform offered by
                                     Hallelujah Gospel Globally. We offer high-quality, secured, and
                                     hassle-free meetings.{" "}
@@ -303,7 +303,7 @@ export default function FeaturesPage() {
                             </div>
 
                         </div>
-                        <div className='flex items-center justify-end gap-8'>
+                        <div className='flex items-center justify-center md:justify-end flex-wrap gap-4 md:gap-8'>
 
                             <img src="https://hallelujahgospel.org/public/new/img/hallulia/bbb.png" width="85" className="p-0 m-0" />
                             <img src="https://hallelujahgospel.org/public/new/img/hallulia/access.png" width="65" className="p-0 m-0 me-2" />

@@ -7,21 +7,21 @@ import { IoMdInformationCircle, IoMdLock, IoMdPerson, IoMdGlobe } from 'react-ic
 
 const PrivacyPolicyPage = () => {
     return (
-        <div className='zeeshan min-h-screen !bg-bg-dark selection:bg-deep-gold/30'>
+        <div className='zeeshan min-h-screen !bg-bg-dark selection:bg-deep-gold/30 overflow-x-hidden'>
             <Navbar2 />
 
             {/* Hero Section */}
             <section className="slice !pt-[10rem] !pb-24 !bg-bg-dark relative overflow-hidden">
                 <div className="light-ray-container opacity-25"></div>
                 <div className="pattern-bg absolute inset-0 opacity-5"></div>
-                
+
                 <div className="container relative z-10 mx-auto px-6 text-center">
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 1, ease: "easeOut" }}
                     >
-                        <h1 className="main-header text-5xl md:text-7xl lg:text-8xl mb-6">
+                        <h1 className="main-header text-3xl md:text-7xl lg:text-8xl mb-6">
                             Privacy <span className="text-white">Policy</span>
                         </h1>
                         <p className="main-para max-w-2xl mx-auto text-xl opacity-80 leading-relaxed font-light">
@@ -42,14 +42,14 @@ const PrivacyPolicyPage = () => {
             <section className="slice slice-lg !bg-[#121212] relative py-20">
                 <div className="container relative z-10 mx-auto px-6">
                     <div className="flex flex-col md:flex-row items-center gap-16">
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0, x: -30 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
                             className="w-full md:w-1/2"
                         >
                             <span className="text-deep-gold font-bold tracking-widest text-xs mb-4 block uppercase">01 / Foundation</span>
-                            <h2 className="h1 text-gradient mb-6 leading-tight">Definitions & <br/>Scope</h2>
+                            <h2 className="text-2xl md:text-5xl text-gradient mb-6 leading-tight">Definitions & <br />Scope</h2>
                             <p className="main-para !text-white/80 mb-6 leading-relaxed">
                                 This Privacy Policy explains how Hallelujah Gospel Sing-Along collects and manages your information. "Services" refers to our video conferencing, collaboration tools, and software platforms.
                             </p>
@@ -64,28 +64,28 @@ const PrivacyPolicyPage = () => {
                                 </div>
                             </div>
                         </motion.div>
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0, scale: 0.9 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}
                             className="w-full md:w-1/2 grid grid-cols-2 gap-4"
                         >
-                             <div className="p-8 rounded-2xl bg-white/[0.03] border border-white/5 backdrop-blur-sm flex flex-col items-center text-center">
+                            <div className="p-8 rounded-2xl bg-white/[0.03] border border-white/5 backdrop-blur-sm flex flex-col items-center text-center">
                                 <h4 className="text-white font-bold mb-2">Policy</h4>
                                 <p className="text-[10px] text-white/40 uppercase tracking-widest">Core Document</p>
-                             </div>
-                             <div className="p-8 rounded-2xl bg-white/[0.03] border border-white/5 backdrop-blur-sm flex flex-col items-center text-center">
+                            </div>
+                            <div className="p-8 rounded-2xl bg-white/[0.03] border border-white/5 backdrop-blur-sm flex flex-col items-center text-center">
                                 <h4 className="text-white font-bold mb-2">Services</h4>
                                 <p className="text-[10px] text-white/40 uppercase tracking-widest">Meeting Suite</p>
-                             </div>
-                             <div className="p-8 rounded-2xl bg-white/[0.03] border border-white/5 backdrop-blur-sm flex flex-col items-center text-center">
+                            </div>
+                            <div className="p-8 rounded-2xl bg-white/[0.03] border border-white/5 backdrop-blur-sm flex flex-col items-center text-center">
                                 <h4 className="text-white font-bold mb-2">Users</h4>
                                 <p className="text-[10px] text-white/40 uppercase tracking-widest">Participants</p>
-                             </div>
-                             <div className="p-8 rounded-2xl bg-white/[0.03] border border-white/5 backdrop-blur-sm flex flex-col items-center text-center">
+                            </div>
+                            <div className="p-8 rounded-2xl bg-white/[0.03] border border-white/5 backdrop-blur-sm flex flex-col items-center text-center">
                                 <h4 className="text-white font-bold mb-2">Data</h4>
                                 <p className="text-[10px] text-white/40 uppercase tracking-widest">Personal Info</p>
-                             </div>
+                            </div>
                         </motion.div>
                     </div>
                 </div>
@@ -102,14 +102,14 @@ const PrivacyPolicyPage = () => {
             <section className="slice slice-lg !bg-bg-dark relative py-20">
                 <div className="container relative z-10 mx-auto px-6">
                     <div className="flex flex-col md:flex-row-reverse items-center gap-16">
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0, x: 30 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
                             className="w-full md:w-1/2"
                         >
                             <span className="text-royal-purple font-bold tracking-widest text-xs mb-4 block uppercase">02 / Processing</span>
-                            <h2 className="h1 text-gradient mb-6 leading-tight">Reasons for <br/>Processing</h2>
+                            <h2 className="text-2xl md:text-5xl text-gradient mb-6 leading-tight">Reasons for <br />Processing</h2>
                             <p className="main-para !text-white/80 mb-8 leading-relaxed">
                                 We process your information to fulfill contractual obligations, provide technical support, and ensure a personalized, secure meeting experience for your organization.
                             </p>
@@ -122,7 +122,7 @@ const PrivacyPolicyPage = () => {
                                 ))}
                             </ul>
                         </motion.div>
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0, x: -30 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
@@ -140,8 +140,8 @@ const PrivacyPolicyPage = () => {
                 </div>
             </section>
 
-             {/* Shape Separator */}
-             <div className="shape-container shape-line shape-position-top shape-orientation-inverse relative z-20">
+            {/* Shape Separator */}
+            <div className="shape-container shape-line shape-position-top shape-orientation-inverse relative z-20">
                 <svg width="2560px" height="100px" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 2560 100" className="fill-section-secondary">
                     <polygon points="2560 0 2560 100 0 100" fill='#121212' />
                 </svg>
@@ -152,7 +152,7 @@ const PrivacyPolicyPage = () => {
                 <div className="container relative z-10 mx-auto px-6">
                     <div className="text-center mb-16">
                         <span className="text-deep-gold font-bold tracking-widest text-xs mb-4 block uppercase">03 / Protection</span>
-                        <h2 className="h1 text-gradient mb-4">Your Data Rights</h2>
+                        <h2 className="text-2xl md:text-5xl text-gradient mb-4">Your Data Rights</h2>
                         <p className="text-white/60 max-w-xl mx-auto">Providing users with full control over their digital information in accordance with global privacy laws.</p>
                     </div>
 
@@ -165,7 +165,7 @@ const PrivacyPolicyPage = () => {
                             { title: "Portability", desc: "Transfer data in structured formats" },
                             { title: "Opt-Out", desc: "Withdraw consent from marketing" }
                         ].map((right, i) => (
-                            <motion.div 
+                            <motion.div
                                 key={i}
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
@@ -180,7 +180,7 @@ const PrivacyPolicyPage = () => {
                         ))}
                     </div>
 
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}

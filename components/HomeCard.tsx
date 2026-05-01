@@ -16,7 +16,7 @@ const HomeCard = ({ className, img, title, description, handleClick }: HomeCardP
   return (
     <section
       className={cn(
-        'card-premium px-4 py-6 flex flex-col justify-between w-full min-h-[260px] cursor-pointer max-w-[24rem]',
+        'card-premium px-4 py-6 flex flex-col justify-between w-full min-h-[260px] cursor-pointer max-w-full sm:max-w-[24rem]',
         className
       )}
       onClick={handleClick}

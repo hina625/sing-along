@@ -118,7 +118,7 @@ const page = ({searchParams}:props) => {
 
         <div className="container relative z-10 px-4">
           <div className="mx-auto max-w-5xl">
-            <h2 className="main-header text-4xl mb-8">
+            <h2 className="main-header text-3xl sm:text-4xl mb-8">
               Checkout
             </h2>
             

@@ -43,8 +43,7 @@ const page = () => {
     {/* SVG separator */}
     <div className="shape-container shape-line shape-position-bottom">
       <svg
-        width="2560px"
-        height="100px"
+        width="100%"
         xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink"
         preserveAspectRatio="none"
@@ -700,8 +699,7 @@ const page = () => {
           {/* SVG shape */}
           <div className="shape-container shape-line shape-position-top shape-orientation-inverse">
             <svg
-              width="2560px"
-              height="100px"
+              width="100%"
               xmlns="http://www.w3.org/2000/svg"
               xmlnsXlink="http://www.w3.org/1999/xlink"
               preserveAspectRatio="none"

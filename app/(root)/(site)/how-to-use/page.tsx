@@ -15,13 +15,13 @@ const HowToUsePage = () => {
                 <div className="light-ray-container opacity-25"></div>
                 <div className="pattern-bg absolute inset-0 opacity-5"></div>
                 
-                <div className="container relative z-10 mx-auto px-6 text-center">
+                <div className="container relative z-10 mx-auto px-4 md:px-6 text-center">
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 1, ease: "easeOut" }}
                     >
-                        <h1 className="main-header text-5xl md:text-7xl lg:text-8xl mb-6">
+                        <h1 className="main-header text-3xl md:text-7xl lg:text-8xl mb-6">
                             Master Your <br />
                             <span className="text-white">Performance</span>
                         </h1>
@@ -34,7 +34,7 @@ const HowToUsePage = () => {
 
             {/* Slice 1: Getting Started */}
             <section className="slice slice-lg !bg-bg-dark relative py-16">
-                <div className="container relative z-10 mx-auto px-6">
+                <div className="container relative z-10 mx-auto px-4 md:px-6">
                     <div className="flex flex-col md:flex-row items-center gap-16">
                         <motion.div 
                             initial={{ opacity: 0, x: -30 }}
@@ -42,8 +42,8 @@ const HowToUsePage = () => {
                             viewport={{ once: true }}
                             className="w-full md:w-1/2"
                         >
-                            <h2 className="h1 text-gradient mb-6">Creating Your Account</h2>
-                            <p className="main-para !text-white/80 mb-8 leading-relaxed">
+                            <h2 className="text-xl md:text-5xl text-gradient mb-4 md:mb-6">Creating Your Account</h2>
+                            <p className="text-base md:text-lg !text-white/80 mb-6 md:mb-8 leading-relaxed">
                                 Join the global community in seconds. Visit our secure login page or use the app's fast-registration to set up your profile.
                             </p>
                             <ul className="space-y-4">
@@ -83,7 +83,7 @@ const HowToUsePage = () => {
 
             {/* Slice 2: Hosting Meetings */}
             <section className="slice slice-lg !bg-[#121212] relative py-16">
-                <div className="container relative z-10 mx-auto px-6">
+                <div className="container relative z-10 mx-auto px-4 md:px-6">
                     <div className="flex flex-col md:flex-row-reverse items-center gap-16">
                         <motion.div 
                             initial={{ opacity: 0, x: 30 }}
@@ -92,8 +92,8 @@ const HowToUsePage = () => {
                             transition={{ duration: 0.8 }}
                             className="w-full md:w-1/2"
                         >
-                            <h2 className="h1 text-gradient mb-6">Hosting Your First Room</h2>
-                            <p className="main-para !text-white/80 mb-8 leading-relaxed">
+                            <h2 className="text-xl md:text-5xl text-gradient mb-4 md:mb-6">Hosting Your First Room</h2>
+                            <p className="text-base md:text-lg !text-white/80 mb-6 md:mb-8 leading-relaxed">
                                 Take control of your stage. Whether you're on the web or our mobile app, starting a meeting is just a click away.
                             </p>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -134,7 +134,7 @@ const HowToUsePage = () => {
 
             {/* Slice 3: Audience & Quality */}
             <section className="slice slice-lg !bg-bg-dark relative py-16">
-                <div className="container relative z-10 mx-auto px-6">
+                <div className="container relative z-10 mx-auto px-4 md:px-6">
                     <div className="flex flex-col md:flex-row items-center gap-16">
                         <motion.div 
                             initial={{ opacity: 0, y: 30 }}
@@ -142,27 +142,27 @@ const HowToUsePage = () => {
                             viewport={{ once: true }}
                             className="w-full md:w-1/2"
                         >
-                            <h2 className="h1 text-gradient mb-6">Interaction & Security</h2>
-                            <p className="main-para !text-white/80 mb-8 leading-relaxed">
+                            <h2 className="text-xl md:text-5xl text-gradient mb-4 md:mb-6">Interaction & Security</h2>
+                            <p className="text-base md:text-lg !text-white/80 mb-6 md:mb-8 leading-relaxed">
                                 Connect with your audience while maintaining complete privacy. Sing Along gives you tools to manage who joins and how they interact.
                             </p>
                             <div className="space-y-6">
                                 <div className="flex gap-4">
-                                    <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-deep-gold/20 flex items-center justify-center text-deep-gold">
-                                        <IoMdPeople size={24} />
+                                    <div className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 rounded-xl bg-deep-gold/20 flex items-center justify-center text-deep-gold">
+                                        <IoMdPeople size={20} />
                                     </div>
                                     <div>
-                                        <h4 className="text-white font-bold mb-1">Easy Sharing</h4>
-                                        <p className="text-sm text-white/60">Instantly generate and share secure links to invite your audience.</p>
+                                        <h4 className="text-white font-bold mb-1 text-base">Easy Sharing</h4>
+                                        <p className="text-xs md:text-sm text-white/60">Instantly generate and share secure links to invite your audience.</p>
                                     </div>
                                 </div>
                                 <div className="flex gap-4">
-                                    <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-royal-purple/20 flex items-center justify-center text-royal-purple">
-                                        <IoMdLock size={24} />
+                                    <div className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 rounded-xl bg-royal-purple/20 flex items-center justify-center text-royal-purple">
+                                        <IoMdLock size={20} />
                                     </div>
                                     <div>
-                                        <h4 className="text-white font-bold mb-1">Total Control</h4>
-                                        <p className="text-sm text-white/60">Lock your room to prevent unauthroized access from external users.</p>
+                                        <h4 className="text-white font-bold mb-1 text-base">Total Control</h4>
+                                        <p className="text-xs md:text-sm text-white/60">Lock your room to prevent unauthroized access from external users.</p>
                                     </div>
                                 </div>
                             </div>
@@ -181,21 +181,21 @@ const HowToUsePage = () => {
 
              {/* Final CTA Section */}
              <section className="py-20 !bg-[#121212] relative overflow-hidden">
-                <div className="container relative z-10 mx-auto px-6 text-center">
+                <div className="container relative z-10 mx-auto px-4 md:px-6 text-center">
                     <motion.div
                         initial={{ opacity: 0, scale: 0.95 }}
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
-                        className="max-w-3xl mx-auto p-8 rounded-3xl bg-white/[0.02] border border-white/5 shadow-2xl"
+                        className="max-w-3xl mx-auto p-5 md:p-8 rounded-3xl bg-white/[0.02] border border-white/5 shadow-2xl"
                     >
-                        <div className="flex-grow">
-                            <h2 className="text-4xl font-bold mb-6">Still have questions?</h2>
-                            <p className="text-white/60 mb-10">Our support team is available 24/7 to help you refine your experience.</p>
+                        <div className="flex flex-col items-center text-center">
+                            <h2 className="text-2xl md:text-4xl font-bold mb-4 md:mb-6 text-white">Still have questions?</h2>
+                            <p className="text-white/60 mb-6 md:mb-10 text-sm md:text-base">Our support team is available 24/7 to help you refine your experience.</p>
                             <motion.a 
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                                 href="/contact-us" 
-                                className="btn btn-primary !bg-gradient-to-r !from-[#6D1A36] !to-[#5A2D82] hover:!from-[#5A2D82] hover:!to-[#6D1A36] !border-none px-10 py-3 !font-bold transition-all shadow-xl shadow-burgundy/20"
+                                className="btn btn-primary !bg-gradient-to-r !from-[#6D1A36] !to-[#5A2D82] hover:!from-[#5A2D82] hover:!to-[#6D1A36] !border-none px-6 py-1.5 md:px-10 md:py-3 text-xs md:text-sm !font-bold transition-all shadow-xl shadow-burgundy/20 inline-flex items-center justify-center"
                             >
                                 Contact Support
                             </motion.a>

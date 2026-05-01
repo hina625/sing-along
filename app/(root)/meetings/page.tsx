@@ -105,14 +105,14 @@ const page = () => {
 
 
   return (
-    <section className='min-h-screen bg-background-4 p-6 relative'>
+    <section className='min-h-screen bg-background-4 p-4 md:p-6 relative overflow-x-hidden'>
       <div className='absolute top-1 left-1 z-0'>
         <img src='/images/left-plus.png' />
       </div>
       <div className='absolute bottom-0 right-0 z-0'>
         <img src='/images/bottom-line.png' />
       </div>
-      <h1 className='text-white text-center font-bold mb-10 mt-5' style={{ fontSize: '3rem' }}>Public Meetings</h1>
+      <h1 className='text-white text-center font-bold mb-10 mt-5 text-3xl md:text-5xl lg:text-6xl'>Public Meetings</h1>
       <div className='flex items-center justify-center flex-wrap gap-5'>
         {
           publicRooms && publicRooms.map((room: IRoomDetails, idex: number) => (

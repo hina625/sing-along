@@ -55,7 +55,7 @@ const page = () => {
                             <>
                                 {
                                     plan == 'starter' &&
-                                    <div className="w-[18rem]">
+                                    <div className="w-full max-w-[18rem]">
                                         <div
                                             className="card card-pricing card-awesome-black text-center px-3 border-0 hover-scale-110 scale-110"
                                             style={{ border: "1px solid" }}
@@ -108,7 +108,7 @@ const page = () => {
                                 }
                                 {
                                     plan != "starter" &&
-                                    <div className="w-[18rem]">
+                                    <div className="w-full max-w-[18rem]">
                                         <div
                                             className="card card-awesome-black card-pricing text-center px-3 hover-scale-110 bottom-0"
 

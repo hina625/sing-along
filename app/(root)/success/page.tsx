@@ -4,7 +4,7 @@ import React from 'react'
 
 const page = () => {
   return (
-    <div className=" h-screen flex items-center justify-center bg-background-1">
+    <div className="h-screen flex items-center justify-center bg-background-1 overflow-x-hidden">
       <div className="bg-gray-200 shadow-md rounded-md p-6  md:mx-auto flex items-center justify-center flex-col">
         <svg viewBox="0 0 24 24" className="text-green-600 w-16 h-16 mx-auto my-6 bg-white rounded-full">
             <path fill="currentColor"

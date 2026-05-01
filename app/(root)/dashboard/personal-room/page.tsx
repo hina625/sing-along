@@ -20,7 +20,7 @@ const Table = ({
       <h1 className="text-base font-medium text-sky-1 lg:text-xl xl:min-w-32">
         {title}:
       </h1>
-      <h1 className="truncate text-sm font-bold max-sm:max-w-[320px] lg:text-xl">
+      <h1 className="text-sm font-bold break-all lg:text-xl">
         {description}
       </h1>
     </div>
@@ -64,7 +64,7 @@ const PersonalRoom = () => {
         <Table title="Meeting ID" description={meetingId!} />
         <Table title="Invite Link" description={meetingLink} />
       </div>
-      <div className="flex gap-5">
+      <div className="flex flex-wrap gap-3">
         <Button className="bg-blue-1" onClick={startRoom}>
           Start Meeting
         </Button>

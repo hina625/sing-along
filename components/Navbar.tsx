@@ -20,23 +20,12 @@ const Navbar = () => {
       <Link href="/" className="flex items-center gap-1 z-20">
         <Image
           src="/icons/full-logo.png"
-          width={70}
-          height={70}
+          width={100}
+          height={100}
           alt="Sing Along logo"
-          className="max-sm:size-10"
+          className="max-sm:size-14"
         />
-        <span className="text-center" style={{ marginLeft: 20 }}>
-            <h3
-              style={{
-                color: "#eb6e0c",
-                marginBottom: 0,
-                fontWeight: "bold",
-                lineHeight: '20px'
-              }}
-            >
-              Sing Along
-            </h3>
-          </span>
+        
         
       </Link>
       <div className="flex-between gap-5 text-white">

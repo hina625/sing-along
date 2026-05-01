@@ -92,19 +92,19 @@ const FeaturesPage = () => {
             <section className="slice bg-cover bg-no-repeat !pt-[8rem] !bg-bg-dark relative overflow-hidden min-h-screen">
                 <div className="light-ray-container opacity-25"></div>
                 
-                <div className="container relative z-10 px-6 mx-auto">
+                <div className="container relative z-10 px-4 md:px-6 mx-auto">
                     <motion.div 
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8 }}
                         className="max-w-3xl"
                     >
-                        <h1 className="main-header text-4xl md:text-5xl lg:text-6xl mb-6">
+                        <h1 className="text-3xl md:text-5xl lg:text-6xl mb-6 text-white font-bold leading-tight">
                             Explore Our <br />
                             Exciting Upcoming <span className="text-deep-gold underline decoration-deep-gold/30">Features</span>
                         </h1>
 
-                        <p className="main-para text-lg md:text-xl opacity-90 max-w-2xl leading-relaxed">
+                        <p className="text-base md:text-xl !text-white opacity-90 max-w-2xl leading-relaxed">
                             We are thrilled to announce a range of exciting new features designed to enhance your experience and streamline your workflow. Get ready to explore the future of seamless, intuitive solutions!
                         </p>
                     </motion.div>
@@ -129,7 +129,7 @@ const FeaturesPage = () => {
                                 }}
                                 className={`card card-awesome-black ${index === 0 ? 'soft-glow' : ''} group relative`}
                             >
-                                <div className="card-body !p-6 flex flex-row items-center gap-6">
+                                <div className="card-body !p-4 md:!p-6 flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-4 md:gap-6">
                                     <div className="flex-shrink-0">
                                         <motion.div 
                                             whileHover={{ scale: 1.1, rotate: 3 }}
@@ -139,7 +139,7 @@ const FeaturesPage = () => {
                                         </motion.div>
                                     </div>
 
-                                    <div className="flex flex-col text-left">
+                                    <div className="flex flex-col">
                                         <h4 className="text-xl mb-1 !text-white font-bold tracking-wide">
                                             {feature.title}
                                         </h4>
@@ -165,12 +165,12 @@ const FeaturesPage = () => {
                     <img src='/images/left-plus.png' alt="" />
                 </div>
                 
-                <div className="container relative z-10 mx-auto px-6">
+                <div className="container relative z-10 mx-auto px-4 md:px-6">
                     <div className="flex items-center justify-center flex-col mb-8 text-center">
-                        <h2 className="main-header text-3xl md:text-4xl mb-3">
+                        <h2 className="text-xl md:text-4xl mb-3 text-white font-bold">
                             How It Works
                         </h2>
-                        <p className="main-para max-w-2xl !text-white/60 text-sm">
+                        <p className="text-xs md:text-sm max-w-2xl !text-white/60">
                             Experience engaging video and audio communication tools that are easy to use and navigate. Getting started is simple!
                         </p>
                     </div>
@@ -208,7 +208,7 @@ const FeaturesPage = () => {
                                     borderColor: "rgba(212, 175, 55, 0.4)",
                                     transition: { duration: 0.3 }
                                 }}
-                                className="relative p-6 rounded-xl bg-white/5 border border-white/10 group transition-all"
+                                className="relative p-4 md:p-6 rounded-xl bg-white/5 border border-white/10 group transition-all"
                             >
                                 <motion.div 
                                     whileHover={{ scale: 1.2, x: 5 }}
@@ -226,21 +226,21 @@ const FeaturesPage = () => {
 
             {/* CTA Section */}
             <section className="slice slice-lg !bg-bg-dark py-20 relative overflow-hidden">
-                <div className="container relative z-10 mx-auto px-6">
-                    <div className="flex flex-col md:flex-row items-center gap-12 bg-gradient-to-r from-royal-purple/20 to-burgundy/20 p-12 rounded-[2rem] border border-white/10">
+                <div className="container relative z-10 mx-auto px-4 md:px-6">
+                    <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12 bg-gradient-to-r from-royal-purple/20 to-burgundy/20 p-6 md:p-12 rounded-[2rem] border border-white/10 text-center md:text-left">
                         <div className="flex-grow">
-                            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-                                Ready to experience the <br />
+                            <h2 className="text-2xl md:text-5xl font-bold text-white mb-4 md:mb-6">
+                                Ready to experience the <br className="hidden md:block" />
                                 <span className="text-deep-gold">Future of Sing Along?</span>
                             </h2>
-                            <p className="text-xl text-white/70 mb-8 max-w-xl">
+                            <p className="text-base md:text-xl text-white/70 mb-6 md:mb-8 max-w-xl mx-auto md:mx-0">
                                 Join thousands of singers and creators who are already using our advanced AI-driven platform.
                             </p>
-                            <div className="flex flex-wrap gap-4">
-                                <a href="/plans" className="btn btn-primary !bg-royal-purple hover:!bg-burgundy !border-none px-8 py-4 !text-lg !font-bold transition-all shadow-xl shadow-royal-purple/20">
+                            <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-3 md:gap-4">
+                                <a href="/plans" className="btn btn-primary !bg-royal-purple hover:!bg-burgundy !border-none px-6 py-2 md:px-8 md:py-4 text-xs md:text-lg !font-bold transition-all shadow-xl shadow-royal-purple/20">
                                     Get Started Now
                                 </a>
-                                <a href="/contact-us" className="btn btn-secondary !border-white/20 !text-white px-8 py-4 !text-lg hover:bg-white/10 transition-all">
+                                <a href="/contact-us" className="btn btn-secondary !border-deep-gold/30 !text-deep-gold px-6 py-2 md:px-8 md:py-4 text-xs md:text-lg hover:!bg-deep-gold hover:!text-black transition-all">
                                     Contact Sales
                                 </a>
                             </div>

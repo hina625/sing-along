@@ -131,7 +131,7 @@ const MeetingPage = ({ params }: PropsType) => {
         <div className='absolute right-1 top-1 z-0'>
           <img src='/images/left-plus.png' alt="" />
         </div>
-        <div className="w-full max-w-md bg-background-3 rounded-lg shadow-md p-8 z-10">
+        <div className="w-full max-w-md bg-background-3 rounded-lg shadow-md p-6 sm:p-8 z-10">
           <h1 className="text-2xl font-bold mb-2 text-foregroud-primary blicking">Join as Guest</h1>
           <p className="text-white/80 mb-6">Enter your name to join as a guest.</p>
           <form onSubmit={handleGuestJoin} className="space-y-4">

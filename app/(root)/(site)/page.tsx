@@ -194,7 +194,7 @@ const page = () => {
   //   backgroundImage: `linear-gradient(to top right, rgba(0,0,0,.3), rgba(0,0,0,.3)), url('/images/bg-1.png')`,
   // }}
   return (
-    <div className='zeeshan'>
+    <div className='zeeshan overflow-x-hidden w-full'>
       {/* Navbar */}
       <Navbar2 />
       {/* Main content */}
@@ -211,9 +211,9 @@ const page = () => {
                   className="img-fluid mw-md-120" />
               </figure>
             </div>
-            <div className="col-12 col-md-7 col-lg-6 order-md-1 pr-md-5" style={{ flex: "xyz" }}>
+            <div className="col-12 col-md-7 col-lg-6 order-md-1 pr-md-5">
 
-              <h1 className="display-4 text-center  text-md-left mb-3 !font-bold !text-white">
+              <h1 className="text-3xl md:text-5xl lg:text-6xl text-center text-md-left mb-4 !font-bold !text-white leading-tight">
                 It's time to set up your <strong className="text-gradient">virtual meetings</strong>
               </h1>
               <p className="lead text-center text-md-left !font-[400] !text-white/90">
@@ -237,7 +237,7 @@ const page = () => {
         </div>
       </section>
 
-      <section className="slice slice-lg pt-lg-6 pb-0 pb-lg-6 !bg-bg-dark relative">
+      <section className="slice slice-lg pt-lg-6 pb-0 pb-lg-6 !bg-bg-dark relative overflow-hidden">
         <div className='absolute top-1 left-1 z-0'>
           <img src='/images/left-plus.png' />
         </div>
@@ -254,7 +254,7 @@ const page = () => {
           Get started
         </span>
           */}
-              <h2 className=" mt-4 main-header !text-white !text-4xl" style={{ color: 'white' }}>
+              <h2 className="mt-4 main-header !text-white text-2xl md:text-4xl leading-snug" style={{ color: 'white' }}>
                 Ready to use + carefully crafted performance for quality meetings
               </h2>
               <div className="mt-2">
@@ -377,7 +377,7 @@ const page = () => {
 
         <div className="flex items-center justify-center flex-col mb-12">
 
-          <h2 className=" mt-4 main-header !text-white">
+          <h2 className="mt-4 main-header !text-white text-2xl md:text-4xl">
             Why HG Sing Along
           </h2>
           <div className="mt-2">
@@ -468,35 +468,35 @@ const page = () => {
               (
                 <div className='content absolute inset-0 overflow-hidden items-center justify-center flex'>
                   <div className='contentBox active' id='content0'>
-                    <h1 className='!text-white !text-sm md:!text-4xl !font-[700] text-gradient'>Why HG SingAlong ?</h1>
+                    <h1 className='!text-white text-lg md:!text-4xl !font-[700] text-gradient'>Why HG SingAlong ?</h1>
                   </div>
                   <div className='contentBox' id='content1'>
-                    <p className='!text-white/80 max-w-[21rem] main-para text-center md:p-0 p-5 pt-6 text-xs'>
+                    <p className='!text-white/80 max-w-[21rem] main-para text-center md:p-0 p-5 pt-6 text-sm md:text-base'>
                       Experience exceptional audio quality that delivers every note with precision. Whether you're enjoying music, calls, or videos, the clarity will impress you.
                     </p>
                   </div>
                   <div className='contentBox' id='content2'>
-                    <p className='!text-white/80 max-w-[21rem] main-para text-center md:p-0 p-5 pt-6 text-xs'>
+                    <p className='!text-white/80 max-w-[21rem] main-para text-center md:p-0 p-5 pt-6 text-sm md:text-base'>
                       Our intuitive interface ensures that you can navigate and operate seamlessly, without the need for extensive instructions or technical know-how.
                     </p>
                   </div>
                   <div className='contentBox' id='content3'>
-                    <p className='!text-white/80 max-w-[21rem] main-para text-center md:p-0 p-5 pt-6 text-xs'>
+                    <p className='!text-white/80 max-w-[21rem] main-para text-center md:p-0 p-5 pt-6 text-sm md:text-base'>
                       Designed with teamwork in mind, our platform fosters collaboration, enabling you to work with others effortlessly and in real-time.
                     </p>
                   </div>
                   <div className='contentBox' id='content4'>
-                    <p className='!text-white/80 max-w-[21rem] main-para text-center md:p-0 p-5 pt-6 text-xs'>
+                    <p className='!text-white/80 max-w-[21rem] main-para text-center md:p-0 p-5 pt-6 text-sm md:text-base'>
                       Packed with cutting-edge features, our service provides all the tools you need to enhance your experience and productivity.
                     </p>
                   </div>
                   <div className='contentBox' id='content5'>
-                    <p className='!text-white/80 max-w-[21rem] main-para text-center md:p-0 p-5 pt-6 text-xs'>
+                    <p className='!text-white/80 max-w-[21rem] main-para text-center md:p-0 p-5 pt-6 text-sm md:text-base'>
                       Build and scale with ease. Our system is designed to grow with your needs, allowing for additional features and integrations as your requirements evolve.
                     </p>
                   </div>
                   <div className='contentBox' id='content6'>
-                    <p className='!text-white/80 max-w-[21rem] main-para text-center md:p-0 p-5 pt-6 text-xs'>
+                    <p className='!text-white/80 max-w-[21rem] main-para text-center md:p-0 p-5 pt-6 text-sm md:text-base'>
                       Your data and privacy are our top priorities. Enjoy peace of mind with our robust security features, ensuring that all your information stays safe and protected.
                     </p>
                   </div>
@@ -505,7 +505,7 @@ const page = () => {
               (
                 <div className='content absolute inset-0 overflow-hidden items-center justify-center flex'>
                   <div className='contentBox active' id='content0'>
-                    <h1 className='!text-white !text-sm md:!text-4xl !font-[700] text-gradient'>Why HG SingAlong ?</h1>
+                    <h1 className='!text-white text-lg md:!text-4xl !font-[700] text-gradient'>Why HG SingAlong ?</h1>
                   </div>
                   <div className='contentBox' id='content1'>
                     <p className='!text-white/80 max-w-[21rem] main-para text-center md:p-0 p-5 pt-6 !text-md'>
@@ -574,10 +574,10 @@ const page = () => {
         </div>
         {/* Container */}
 
-        <div className='flex items-center flex-col md:flex-row px-6'>
-          <div className="!p-8 w-full md:w-[50%] flex flex-col items-center justify-center md:block">
-            <h2 className="h1 text-white !font-[700] text-gradient">Are you ready to grow faster?</h2>
-            <h4 className="text-white mt-3 !font-[500]">
+        <div className='flex items-center flex-col md:flex-row px-3 md:px-6'>
+          <div className="px-2 py-8 w-full md:w-[50%] flex flex-col items-center justify-center md:block">
+            <h2 className="text-lg md:text-4xl lg:text-5xl text-white !font-[700] text-gradient leading-tight text-center md:text-left">Are you ready to grow faster?</h2>
+            <h4 className="text-white mt-3 !font-[500] text-center md:text-left">
               Activate any plan and get started
             </h4>
 
@@ -591,7 +591,7 @@ const page = () => {
 
 
           <div className='flex items-center justify-center w-full md:w-[50%]'>
-            <img src='/images/stamps.jpg' className='w-[22rem] hover:scale-110 transition-all cursor-pointer' />
+            <img src='/images/stamps.jpg' className='w-full max-w-[22rem] hover:scale-110 transition-all cursor-pointer' />
           </div>
         </div>
 
@@ -599,7 +599,7 @@ const page = () => {
 
 
 
-      <section className="slice !bg-bg-dark pt-7 relative">
+      <section className="slice !bg-bg-dark pt-7 relative overflow-hidden">
 
         <div className='absolute bottom-1 left-1 z-0'>
           <img src='/images/bottom-box-shape.png' />
@@ -617,7 +617,7 @@ const page = () => {
                     plan == 'starter' &&
                     <div className="w-[18rem]">
                       <div
-                        className="card card-pricing card-awesome-black text-center px-3 border-0 hover-scale-110 scale-110"
+                        className="card card-pricing card-awesome-black text-center px-3 border-0 hover-scale-110 md:scale-110"
                         style={{ border: "1px solid" }}
                       >
                         <div className="card-header py-5 border-0 delimiter-bottom">
@@ -776,7 +776,7 @@ const page = () => {
         </div>
         <div className="flex items-center justify-center flex-col mb-12">
 
-          <h2 className=" mt-4 main-header !text-white">
+          <h2 className="mt-4 main-header !text-white text-2xl md:text-4xl">
             How it works
           </h2>
           <div className="mt-2">
@@ -789,7 +789,7 @@ const page = () => {
         <div className='container'>
           <div className='w-full relative flex flex-wrap flex-col md:flex-row items-center gap-0 my-2'>
             <div className=' w-full md:w-[50%] p-4 md:hidden block'>
-              <div className="h1  !text-white/90 text-center !text-4xl">
+              <div className="h1 !text-white/90 text-center text-2xl md:text-4xl">
                 Create an account to host a meeting
               </div>
               <p className="leading-7 mt-3 font-[300] text-[1.125rem] main-para !text-white/80 text-center">
@@ -811,7 +811,7 @@ const page = () => {
 
 
             <div className=' w-full md:w-[50%] p-4 md:block hidden'>
-              <div className="h1 !text-4xl !text-white/90 ">
+              <div className="h1 text-2xl md:text-4xl !text-white/90 ">
                 Create an account to host a meeting
               </div>
               <p className="leading-7 mt-3 font-[300] text-[1.125rem] main-para !text-white/80">
@@ -859,7 +859,7 @@ const page = () => {
             </div>
 
             <div className=' w-full md:w-[50%] p-4 md:hidden block'>
-              <div className="h1 !text-white/90 text-center !text-4xl">
+              <div className="h1 !text-white/90 text-center text-2xl md:text-4xl">
                 Set up your meeting
               </div>
               <p className="leading-7 mt-3 font-[300] text-[1.125rem] main-para !text-white/80 text-center">
@@ -869,7 +869,7 @@ const page = () => {
             </div>
 
             <div className=' w-full md:w-[50%] p-4 hidden md:block'>
-              <div className="h1 !text-4xl !text-white/90">
+              <div className="h1 text-2xl md:text-4xl !text-white/90">
                 Set up your meeting
               </div>
               <p className="leading-7 mt-3 font-[300] text-[1.125rem] main-para !text-white/80">
@@ -881,7 +881,7 @@ const page = () => {
 
           <div className='w-full relative flex flex-wrap flex-col md:flex-row items-center gap-0 mt-2'>
             <div className=' w-full md:w-[50%] p-4 block md:hidden'>
-              <div className="h1  !text-white/90 text-center !text-4xl">
+              <div className="h1 !text-white/90 text-center text-2xl md:text-4xl">
                 Enter your meeting room
               </div>
               <p className="leading-7 mt-3 font-[300] text-[1.125rem] main-para !text-white/80 text-center">
@@ -894,7 +894,7 @@ const page = () => {
 
 
             <div className=' w-full md:w-[50%] p-4 hidden md:block'>
-              <div className="h1  !text-white/90 !text-4xl">
+              <div className="h1 !text-white/90 text-2xl md:text-4xl">
                 Enter your meeting room
               </div>
               <p className="leading-7 mt-3 font-[300] text-[1.125rem] main-para !text-white/80">
@@ -917,7 +917,7 @@ const page = () => {
 
       <div className="bg-background-3 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <h2 className="!text-6xl font-extrabold text-center mb-8 !bg-gradient-to-r !text-white !text-transparent !bg-clip-text">
+          <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-center mb-8 !bg-gradient-to-r !text-white !text-transparent !bg-clip-text leading-tight">
             Discover Our Products
           </h2>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -939,8 +939,8 @@ const page = () => {
 
                   <div className='flex items-center justify-center  px-4 pb-4 !pt-0 bg-white  w-full rounded-b-3xl relative flex-col'>
                     <img src={item.icon2} className='w-full h-full object-contain' />
-                    <h3 className="!text-4xl font-bold text-black">{item.title}</h3>
-                    <h5 className='px-3 py-2 bg-[#ff950b] text-black !text-2xl !font-normal rounded-lg'>{item.subtitle}</h5>
+                    <h3 className="text-2xl md:text-4xl font-bold text-black">{item.title}</h3>
+                    <h5 className='px-3 py-2 bg-[#ff950b] text-black text-lg md:text-2xl !font-normal rounded-lg'>{item.subtitle}</h5>
                   </div>
 
                 </div>
@@ -951,7 +951,7 @@ const page = () => {
       </div>
 
 
-      <section className="slice slice-sm !bg-background-3 relative">
+      <section className="slice slice-sm !bg-background-3 relative overflow-hidden">
         <div className='absolute bottom-1 left-1 z-0'>
           <img src='/images/bottom-box-shape.png' />
         </div>
@@ -959,12 +959,11 @@ const page = () => {
           <div className="row">
             <div className="col-lg-12" style={{ textAlign: "center" }}>
               <span
-                className="badge badge-primary !bg-foregroud-primary badge-pill !font-medium !text-4xl"
-                style={{ fontSize: 20 }}
+                className="badge badge-primary !bg-foregroud-primary badge-pill !font-medium text-lg md:text-2xl"
               >
                 Latest Public Meetings
               </span>
-              <p className="lh-180 mt-4 mb-5 main-para !text-white/80 !font-normal">
+              <p className="lh-180 mt-4 mb-5 main-para !text-white/80 !font-normal px-4 md:px-0">
                 We offer Public and Private meetings. Only Public meetings (live and
                 scheduled) will be displayed on our website so other users can join
                 those meetings.
@@ -975,8 +974,8 @@ const page = () => {
           <div className="row mx-lg-n4">
             <div className="col-md-12 ">
               <div className="card shadow-none " style={{ border: "1px solid" }}>
-                <div className="p-3 d-flex">
-                  <p style={{ fontWeight: "bold", marginBottom: 0 }}>
+                <div className="p-3 d-flex justify-content-center">
+                  <p style={{ fontWeight: "bold", marginBottom: 0 }} className='text-center'>
                     {
                       publicRooms.length == 0 ?
                         "No Public meeting is scheduled for this week!" :
@@ -1119,7 +1118,7 @@ const page = () => {
               </div>
 
             </div>
-            <div className='flex items-center justify-end gap-8'>
+            <div className='flex items-center justify-center md:justify-end flex-wrap gap-4 md:gap-8'>
 
               <img src="https://hallelujahgospel.org/public/new/img/hallulia/bbb.png" width="85" className="p-0 m-0" />
               <img src="https://hallelujahgospel.org/public/new/img/hallulia/access.png" width="65" className="p-0 m-0 me-2" />

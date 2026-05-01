@@ -598,9 +598,7 @@ const GoogleMeetBottomBar = ({
 
       try {
         if (bgMode === 'none') {
-          if (videoTrack.processor) {
-            await videoTrack.stopProcessor();
-          }
+          await videoTrack.stopProcessor();
           return;
         }
 
@@ -612,9 +610,7 @@ const GoogleMeetBottomBar = ({
           });
         }
 
-        if (videoTrack.processor !== processorRef.current) {
-          await videoTrack.setProcessor(processorRef.current);
-        }
+        await videoTrack.setProcessor(processorRef.current);
 
         // Switch modes if already applied
         await processorRef.current.switchTo({

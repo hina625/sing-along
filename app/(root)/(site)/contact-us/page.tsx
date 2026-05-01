@@ -7,7 +7,7 @@ import { IoMdMail, IoMdPin, IoMdCall } from 'react-icons/io'
 
 const ContactUsPage = () => {
   return (
-    <div className='zeeshan min-h-screen !bg-bg-dark selection:bg-deep-gold/30'>
+    <div className='zeeshan min-h-screen !bg-bg-dark selection:bg-deep-gold/30 overflow-x-hidden'>
       <Navbar2 />
 
       {/* Background Effects */}
@@ -17,7 +17,7 @@ const ContactUsPage = () => {
       </div>
 
       <div className="relative z-10 pt-[10rem] pb-24">
-        <div className="container mx-auto px-6">
+        <div className="container mx-auto px-2 md:px-6">
 
           {/* Header */}
           <motion.div
@@ -26,10 +26,10 @@ const ContactUsPage = () => {
             transition={{ duration: 0.8 }}
             className="text-center mb-12"
           >
-            <h1 className="main-header text-5xl md:text-6xl mb-4">
+            <h1 className="text-3xl md:text-5xl text-gradient mb-4 font-bold">
               Get in <span className="text-white">Touch</span>
             </h1>
-            <p className="main-para max-w-xl mx-auto opacity-70">
+            <p className="text-base max-w-xl mx-auto !text-white opacity-80">
               Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
             </p>
           </motion.div>
@@ -41,23 +41,23 @@ const ContactUsPage = () => {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="w-full max-w-2xl"
             >
-              <div className="card-awesome-black p-8 md:p-12 rounded-[2rem] border border-white/10 shadow-2xl relative overflow-hidden backdrop-blur-sm">
+              <div className="card-awesome-black p-3 md:p-12 rounded-[2rem] border border-white/10 shadow-2xl relative overflow-hidden backdrop-blur-sm">
 
                 <div className="absolute -top-24 -left-24 w-64 h-64 bg-royal-purple/10 blur-[80px] pointer-events-none"></div>
                 <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-deep-gold/10 blur-[80px] pointer-events-none"></div>
 
-                <form method="post" action="http://localhost/hgsingalong/contact-us" className="space-y-6">
+                <form method="post" action="http://localhost/hgsingalong/contact-us" className="space-y-3 md:space-y-6">
                   <input
                     type="hidden"
                     name="_token"
                     defaultValue="sPNoaGFatpeqYOkOhC0B0xvqouxAeQO6SHDjG7MW"
                   />
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6">
+                    <div className="space-y-1 md:space-y-2">
                       <label className="text-white/60 text-[10px] font-bold tracking-widest ml-1 uppercase">Full Name</label>
                       <input
-                        className="w-full bg-white/[0.05] border border-white/10 rounded-xl px-5 py-4 text-white placeholder:text-white/20 focus:outline-none focus:border-deep-gold/50 focus:bg-white/[0.08] transition-all"
+                        className="w-full bg-white/[0.05] border border-white/10 rounded-xl px-3 py-3 md:px-5 md:py-4 text-white placeholder:text-white/20 focus:outline-none focus:border-deep-gold/50 focus:bg-white/[0.08] transition-all"
                         type="text"
                         placeholder="Manan Rajpout"
                         name="name"
@@ -66,10 +66,10 @@ const ContactUsPage = () => {
                       />
 
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-1 md:space-y-2">
                       <label className="text-white/60 text-[10px] font-bold tracking-widest ml-1 uppercase">Email Address</label>
                       <input
-                        className="w-full bg-white/[0.05] border border-white/10 rounded-xl px-5 py-4 text-white placeholder:text-white/20 focus:outline-none focus:border-deep-gold/50 focus:bg-white/[0.08] transition-all"
+                        className="w-full bg-white/[0.05] border border-white/10 rounded-xl px-3 py-3 md:px-5 md:py-4 text-white placeholder:text-white/20 focus:outline-none focus:border-deep-gold/50 focus:bg-white/[0.08] transition-all"
                         type="email"
                         placeholder="example@gmail.com"
                         name="email"
@@ -94,7 +94,7 @@ const ContactUsPage = () => {
                   <div className="space-y-2">
                     <label className="text-white/60 text-[10px] font-bold tracking-widest ml-1 uppercase">Message</label>
                     <textarea
-                      className="w-full bg-white/[0.05] border border-white/10 rounded-xl px-5 py-4 text-white placeholder:text-white/20 focus:outline-none focus:border-deep-gold/50 focus:bg-white/[0.08] transition-all min-h-[160px] resize-none"
+                      className="w-full bg-white/[0.05] border border-white/10 rounded-xl px-3 py-3 md:px-5 md:py-4 text-white placeholder:text-white/20 focus:outline-none focus:border-deep-gold/50 focus:bg-white/[0.08] transition-all min-h-[120px] md:min-h-[160px] resize-none"
                       name="message"
                       placeholder="How can we help you today?"
                       rows={5}
@@ -103,12 +103,12 @@ const ContactUsPage = () => {
                     />
                   </div>
 
-                  <div className="flex justify-center mt-4">
+                  <div className="flex justify-center mt-2 md:mt-4">
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       type="submit"
-                      className="px-10 py-3 rounded-xl bg-gradient-to-r from-royal-purple to-burgundy text-white font-bold text-base shadow-xl shadow-royal-purple/20 border border-white/10 hover:border-white/30 transition-all"
+                      className="px-6 py-1.5 md:px-10 md:py-3 rounded-xl bg-gradient-to-r from-royal-purple to-burgundy text-white font-bold text-xs md:text-base shadow-xl shadow-royal-purple/20 border border-white/10 hover:border-white/30 transition-all"
                     >
                       Send Message
                     </motion.button>

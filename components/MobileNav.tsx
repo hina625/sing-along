@@ -13,7 +13,7 @@ import { BsCalendar2Minus } from "react-icons/bs";
 import { MdOutlineDashboard, MdSettings } from "react-icons/md";
 import { AiOutlineVideoCamera } from "react-icons/ai";
 import { RiVideoChatLine } from "react-icons/ri";
-import { FiUsers } from "react-icons/fi";
+import { FiUsers, FiMenu } from "react-icons/fi";
 import { BiDonateHeart } from "react-icons/bi";
 
 interface IconMap {
@@ -39,15 +39,9 @@ const MobileNav = () => {
     <section className="w-full max-w-[264px]">
       <Sheet>
         <SheetTrigger asChild>
-          <Image
-            src="/icons/hamburger.svg"
-            width={36}
-            height={36}
-            alt="hamburger icon"
-            className="cursor-pointer sm:hidden"
-          />
+          <FiMenu size={36} className="cursor-pointer sm:hidden text-white" />
         </SheetTrigger>
-        <SheetContent side="left" className="border-none bg-dark-1">
+        <SheetContent side="left" className="border-none bg-background-3">
           <Link href="/" className="flex items-center gap-1">
             <Image
               src="/icons/full-logo.png"
@@ -55,7 +49,6 @@ const MobileNav = () => {
               height={32}
               alt="Sing Along logo"
             />
-            <p className="text-[26px] font-extrabold text-white">Sing Along</p>
           </Link>
           <div className="flex h-[calc(100vh-72px)] flex-col justify-between overflow-y-auto">
             <SheetClose asChild>
@@ -76,7 +69,7 @@ const MobileNav = () => {
                           }
                         )}
                       >
-                        <span className={`${isActive ? 'text-white' : 'text-black/70'}`}>
+                        <span className={`${isActive ? 'text-white' : 'text-white/70'}`}>
 
                           {Icon}
                         </span>
