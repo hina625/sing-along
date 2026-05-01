@@ -16,6 +16,7 @@ import { planslist, sidebarLinks } from '@/constants';
 import { cn } from '@/lib/utils';
 import { useContext } from 'react';
 import { subscriptionContext } from '@/providers/SubscriptionProvider'
+import PartnerDialog from './PartnerDialog';
 
 const Sidebar = () => {
   const pathname = usePathname();
@@ -36,8 +37,17 @@ const Sidebar = () => {
   };
 
   return (
-    <section className="sticky left-0 top-0 flex h-screen w-fit flex-col justify-between bg-background-3 shadow-md p-6 pt-8 text-white max-sm:hidden lg:w-[264px] sidebar-glow">
-      <div className="flex flex-col gap-6 mb-8 mt-24">
+  return (
+    <section className="sticky left-0 top-0 flex h-screen w-fit flex-col justify-between bg-background-3 shadow-md text-white max-sm:hidden lg:w-[264px] sidebar-glow overflow-hidden">
+      <div className="flex flex-col gap-6 p-6">
+        <Link href="/" className="flex items-center gap-1 mb-8">
+          <Image
+            src="/icons/full-logo.png"
+            width={140}
+            height={140}
+            alt="Sing Along logo"
+          />
+        </Link>
       </div>
 
       <div className="flex flex-1 flex-col gap-6 overflow-y-auto no-scrollbar">
@@ -82,34 +92,35 @@ const Sidebar = () => {
       {
         subscription == "free" &&
         <>
-          <Link href={'/donate'} className='flex items-center justify-center mt-2'>
-            <button
-              className="relative btn-primary-worship py-3 w-full group overflow-hidden"
-            >
-              <span
-                className="absolute top-0 right-0 inline-block w-4 h-4 transition-all duration-500 ease-in-out bg-orange-700 rounded group-hover:-mr-4 group-hover:-mt-4"
+          <PartnerDialog>
+            <div className='flex items-center justify-center mt-2 cursor-pointer w-full'>
+              <button
+                className="relative btn-primary-worship py-3 w-full group overflow-hidden"
               >
                 <span
-                  className="absolute top-0 right-0 w-5 h-5 rotate-45 translate-x-1/2 -translate-y-1/2 bg-background-3"
-                ></span>
-              </span>
-              <span
-                className="absolute bottom-0 rotate-180 left-0 inline-block w-4 h-4 transition-all duration-500 ease-in-out bg-orange-700 rounded group-hover:-ml-4 group-hover:-mb-4"
-              >
+                  className="absolute top-0 right-0 inline-block w-4 h-4 transition-all duration-500 ease-in-out bg-orange-700 rounded group-hover:-mr-4 group-hover:-mt-4"
+                >
+                  <span
+                    className="absolute top-0 right-0 w-5 h-5 rotate-45 translate-x-1/2 -translate-y-1/2 bg-background-3"
+                  ></span>
+                </span>
                 <span
-                  className="absolute top-0 right-0 w-5 h-5 rotate-45 translate-x-1/2 -translate-y-1/2 bg-background-3"
+                  className="absolute bottom-0 rotate-180 left-0 inline-block w-4 h-4 transition-all duration-500 ease-in-out bg-orange-700 rounded group-hover:-ml-4 group-hover:-mb-4"
+                >
+                  <span
+                    className="absolute top-0 right-0 w-5 h-5 rotate-45 translate-x-1/2 -translate-y-1/2 bg-background-3"
+                  ></span>
+                </span>
+                <span
+                  className="absolute bottom-0 left-0 w-full h-full transition-all duration-500 ease-in-out delay-200 -translate-x-full bg-orange-600 rounded-md group-hover:translate-x-0"
                 ></span>
-              </span>
-              <span
-                className="absolute bottom-0 left-0 w-full h-full transition-all duration-500 ease-in-out delay-200 -translate-x-full bg-orange-600 rounded-md group-hover:translate-x-0"
-              ></span>
-              <span
-                className="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-white"
-              >Partnering with Us</span
-              >
-            </button>
-
-          </Link>
+                <span
+                  className="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-white"
+                >Partnering with Us</span
+                >
+              </button>
+            </div>
+          </PartnerDialog>
           <p className='text-xs font-light mt-1'>Working together, we can make an eternal impact.</p>
         </>
       }

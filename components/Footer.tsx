@@ -35,7 +35,7 @@ const Footer = () => {
                                 />
                             </a>
                             <p className="text-sm opacity-8 pr-lg-4 !text-white !font-[400] !text-[18px] !leading-[27px] mt-4">
-                                Sing Along is a video conferencing/meeting platform offered by
+                                SingAlong Connect is a video conferencing/meeting platform offered by
                                 Hallelujah Gospel Globally. We offer high-quality, secured, and
                                 hassle-free meetings.
                             </p>
@@ -112,7 +112,7 @@ const Footer = () => {
                                     target="_blank"
                                     rel="noreferrer"
                                 >
-                                    Sing Along
+                                    SingAlong Connect
                                 </a>
                                 . All rights reserved.
                             </div>

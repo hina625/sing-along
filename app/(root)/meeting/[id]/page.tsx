@@ -112,7 +112,7 @@ const MeetingPage = ({ params }: PropsType) => {
 
   return (
     (user || guest) ? (
-      <div className="h-screen w-full relative">
+      <div className="h-screen w-full relative overflow-hidden">
         <LiveKitMeeting 
           room={params.id} 
           identity={identity} 
@@ -124,7 +124,7 @@ const MeetingPage = ({ params }: PropsType) => {
         )}
       </div>
     ) : (
-      <div className="flex items-center justify-center min-h-screen bg-background-4 relative">
+      <div className="flex items-center justify-center min-h-screen bg-background-4 relative p-4">
         <div className='absolute bottom-1 left-1 z-0'>
           <img src='/images/bottom-box-shape.png' alt="" />
         </div>

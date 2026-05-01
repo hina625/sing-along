@@ -1837,3 +1837,119 @@ button.cl-formButtonPrimary.cl-button.🔒️.cl-internal-ttumny {
   color: #9aa0a6 !important;
   line-height: 1.4 !important;
 }
+
+/* ========================================= */
+/* Mobile Responsiveness for Meeting Page    */
+/* ========================================= */
+
+@media (max-width: 768px) {
+  /* Bottom Bar Optimization */
+  .meet-bottom-bar {
+    grid-template-columns: 1fr !important;
+    padding: 8px 12px 12px !important;
+    min-height: 70px !important;
+  }
+
+  .meet-bar-left, .meet-bar-sep {
+    display: none !important;
+  }
+
+  .meet-bar-right {
+    position: absolute !important;
+    bottom: 80px !important;
+    right: 12px !important;
+    gap: 8px !important;
+    background: rgba(32, 33, 36, 0.8) !important;
+    padding: 4px 8px !important;
+    border-radius: 24px !important;
+    backdrop-filter: blur(8px) !important;
+  }
+
+  .meet-utility-button {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .meet-controls-cluster {
+    gap: 6px !important;
+    padding: 4px 8px !important;
+  }
+
+  .meet-icon-button {
+    width: 36px !important;
+    height: 36px !important;
+  }
+
+  .meet-icon-button.hangup {
+    width: 48px !important;
+  }
+
+  .meet-split-button-main {
+    width: 36px !important;
+    height: 36px !important;
+  }
+
+  .meet-split-button-arrow {
+    width: 18px !important;
+    height: 36px !important;
+  }
+
+  /* Sidebar Optimization */
+  .meet-sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    z-index: 2000 !important;
+    border-left: none !important;
+  }
+
+  /* Captions Optimization */
+  .meet-captions-strip {
+    bottom: 76px !important;
+    max-height: 100px !important;
+  }
+
+  /* Participant Tiles */
+  .meet-tile .meet-initial-avatar {
+    width: 60px !important;
+    height: 60px !important;
+    font-size: 2rem !important;
+  }
+
+  .meet-name-tag {
+    font-size: 12px !important;
+    bottom: 8px !important;
+    left: 8px !important;
+  }
+
+  /* Presentation Mode */
+  .presentation-sidebar {
+    width: 100% !important;
+    height: 120px !important;
+    flex-direction: row !important;
+    padding: 8px !important;
+  }
+
+  .presentation-sidebar-tiles {
+    flex-direction: row !important;
+    width: 100% !important;
+    overflow-x: auto !important;
+  }
+
+  .thumb-tile {
+    width: 160px !important;
+    height: 90px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .meet-controls-cluster {
+    scale: 0.9;
+  }
+  
+  .meet-bar-right {
+    bottom: 70px !important;
+  }
+}

@@ -13,6 +13,8 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import MeetingModal from '@/components/MeetingModal'
+import Navbar2 from '@/components/Navbar2';
+import Footer from '@/components/Footer';
 
 
 interface props {
@@ -135,7 +137,8 @@ const page = ({ searchParams }: props) => {
 
   return (
     <>
-      <section className="bg-background-3 py-8 antialiased md:py-16 min-h-[100vh] flex items-center justify-center overflow-x-hidden relative">
+      <Navbar2 />
+      <section className="bg-background-3 !pt-[10rem] pb-8 antialiased md:pb-16 min-h-[100vh] overflow-x-hidden relative">
         <div className='absolute bottom-1 left-1 z-0'>
           <img src='/images/bottom-box-shape.png' />
         </div>
@@ -455,6 +458,7 @@ const page = ({ searchParams }: props) => {
          <p className='py-2 px-3 bg-gray-100 rounded-md font-normal text-center'>{id}</p>
       </MeetingModal>
 
+      <Footer />
     </>
   )
 }
