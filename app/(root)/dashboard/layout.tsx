@@ -17,7 +17,7 @@ const RootLayout = ({ children }: Readonly<{ children: ReactNode }>) => {
       <div className="flex">
         <Sidebar />
 
-        <section className="flex min-h-screen flex-1 flex-col px-6 pb-6 pt-28 max-md:pb-14 sm:px-14 bg-background-4 relative overflow-x-hidden">
+        <section className="flex min-h-screen flex-1 flex-col px-6 pb-6 pt-28 lg:pt-10 max-md:pb-14 sm:px-14 bg-background-4 relative overflow-x-hidden">
           <img src='/images/golden-pattern.png' className='absolute top-0 left-[50%] -translate-x-[50%] z-1 h-[40rem] max-w-none' />
           <div className="w-full z-20">{children}</div>
         </section>

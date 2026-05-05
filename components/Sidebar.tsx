@@ -39,13 +39,14 @@ const Sidebar = () => {
   return (
     <section className="sticky left-0 top-0 flex h-screen w-fit flex-col justify-between bg-background-3 shadow-md text-white max-sm:hidden lg:w-[264px] sidebar-glow overflow-hidden">
       <div className="flex flex-col gap-6 p-6">
-        <Link href="/" className="flex items-center gap-1 mb-8">
+        <Link href="/" className="flex flex-col items-center gap-1 mb-8 w-full">
           <Image
             src="/icons/full-logo.png"
             width={140}
             height={140}
             alt="Sing Along logo"
           />
+          <p className="text-[#F57C00] text-xl font-bold tracking-[0.2em] -mt-1 uppercase" style={{ fontFamily: "'Marcellus', serif" }}>CONNECT</p>
         </Link>
       </div>
 

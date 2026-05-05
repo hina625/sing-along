@@ -21,11 +21,7 @@ export const sidebarLinks = [
     route: '/dashboard/members',
     label: 'Members',
   },
-  {
-    Icon: 6,
-    route: '/donate',
-    label: 'Donations',
-  },
+
   {
     Icon: 3,
     route: '/dashboard/recordings',

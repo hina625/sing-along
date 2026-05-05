@@ -13,8 +13,8 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import MeetingModal from '@/components/MeetingModal'
-import Navbar2 from '@/components/Navbar2';
-import Footer from '@/components/Footer';
+import Navbar from '@/components/Navbar';
+import Sidebar from '@/components/Sidebar';
 
 
 interface props {
@@ -136,315 +136,207 @@ const page = ({ searchParams }: props) => {
   }
 
   return (
-    <>
-      <Navbar2 />
-      <section className="bg-background-3 !pt-[10rem] pb-8 antialiased md:pb-16 min-h-[100vh] overflow-x-hidden relative">
-        <div className='absolute bottom-1 left-1 z-0'>
-          <img src='/images/bottom-box-shape.png' />
-        </div>
-        <div className='absolute bottom-0 right-0 z-0'>
-          <img src='/images/bottom-line.png' />
-        </div>
-        <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
-          <div className="mx-auto max-w-5xl">
-            <h2 className="text-xl md:text-3xl font-semibold text-gradient sm:text-2xl">
-              Donate
-            </h2>
-            <div className="mt-6 sm:mt-8 lg:flex lg:items-start lg:gap-12">
-              <form
-                onSubmit={handlePayment}
-                className="w-full rounded-lg bg-background-4 p-4 shadow-sm  sm:p-6 lg:max-w-xl lg:p-8"
-              >
-                <div className="mb-6 grid grid-cols-2 gap-4">
-                  <div>
-                    <label
+    <main className="relative">
+      <Navbar />
 
-                      className="mb-2 block text-sm font-medium text-white dark:text-white"
-                    >
-                      First Name*{" "}
-                    </label>
-                    <div className="relative">
+      <div className="flex">
+        <Sidebar />
 
+        <section className="flex min-h-screen flex-1 flex-col px-6 pb-6 pt-48 lg:pt-44 max-md:pb-14 sm:px-14 bg-background-4 relative overflow-x-hidden">
+          <img src='/images/golden-pattern.png' className='absolute top-0 left-[50%] -translate-x-[50%] z-1 h-[40rem] max-w-none opacity-40' />
+          
+          <div className="w-full z-20 mt-4 md:mt-8">
+            <div className="mx-auto max-w-5xl">
+              <div className="flex items-center justify-between mb-8">
+                <h2 className="text-3xl md:text-5xl font-bold text-white">
+                  Support Our Ministry
+                </h2>
+                <div className="hidden md:block">
+                   <p className="text-white/60 text-sm">Empower our ministry with your support.</p>
+                </div>
+              </div>
+
+              <div className="mt-6 sm:mt-8 lg:flex lg:items-start lg:gap-12">
+                <form
+                  onSubmit={handlePayment}
+                  className="w-full rounded-2xl bg-background-3/40 backdrop-blur-xl border border-white/10 p-6 shadow-2xl sm:p-8 lg:max-w-xl lg:p-10 card-premium"
+                >
+                  <div className="mb-6 grid grid-cols-2 gap-6">
+                    <div>
+                      <label className="mb-2 block text-sm font-medium text-white/80">
+                        First Name*
+                      </label>
                       <input
-
-
                         type="text"
-                        className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-black focus:border-primary-500 focus:ring-primary0"
+                        className="block w-full rounded-xl border border-white/10 bg-white/5 p-3 text-sm text-white placeholder-white/30 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 outline-none transition-all"
                         placeholder="First Name"
                         required
                         value={firstname}
                         onChange={(e) => setFirstName(e.target.value)}
                       />
                     </div>
+                    <div>
+                      <label className="mb-2 block text-sm font-medium text-white/80">
+                        Last Name*
+                      </label>
+                      <input
+                        type="text"
+                        className="block w-full rounded-xl border border-white/10 bg-white/5 p-3 text-sm text-white placeholder-white/30 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 outline-none transition-all"
+                        placeholder="Last Name"
+                        required
+                        value={lastname}
+                        onChange={(e) => setLastName(e.target.value)}
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <label
-                      className="mb-2 flex items-center gap-1 text-sm font-medium text-white dark:text-white"
-                    >
-                      Last Name*
 
+                  <div className="mb-5">
+                    <label className="mb-2 block text-sm font-medium text-white/80">
+                      Email Address*
+                    </label>
+                    <input
+                      type="email"
+                      className="block w-full rounded-xl border border-white/10 bg-white/5 p-3 text-sm text-white placeholder-white/30 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 outline-none transition-all"
+                      placeholder="email@example.com"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </div>
 
+                  <div className="mb-5">
+                    <label className="mb-2 block text-sm font-medium text-white/80">
+                      Physical Address*
                     </label>
                     <input
                       type="text"
-
-                      aria-describedby="helper-text-explanation"
-                      className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-black focus:border-primary-500 focus:ring-primary0"
-                      placeholder="•••"
+                      className="block w-full rounded-xl border border-white/10 bg-white/5 p-3 text-sm text-white placeholder-white/30 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 outline-none transition-all"
+                      placeholder="Your Address"
                       required
-                      value={lastname}
-                      onChange={(e) => setLastName(e.target.value)}
-
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
                     />
                   </div>
-                </div>
 
-                <div className="col-span-2 sm:col-span-1 mb-5">
-                  <label
-                    className="mb-2 block text-sm font-medium text-white "
-                  >
-                    {" "}
-                    Email*{" "}
-                  </label>
-                  <input
-                    type="email"
-                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 pe-10 text-sm text-black focus:border-primary-500 focus:ring-primary-500"
-                    placeholder="Email"
-                    // pattern="^4[0-9]{12}(?:[0-9]{3})?$"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
-
-                <div className="col-span-2 sm:col-span-1 mb-5">
-                  <label
-                    className="mb-2 block text-sm font-medium text-white "
-                  >
-                    {" "}
-                    Address*{" "}
-                  </label>
-                  <input
-                    type="text"
-                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 pe-10 text-sm text-black focus:border-primary-500 focus:ring-primary-500"
-                    placeholder="Address"
-                    // pattern="^4[0-9]{12}(?:[0-9]{3})?$"
-                    required
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                  />
-                </div>
-
-                <div className="col-span-2 sm:col-span-1 mb-5">
-                  <label
-                    className="mb-2 block text-sm font-medium text-white "
-                  >
-                    {" "}
-                    Donation Amount*{" "}
-                  </label>
-                  <input
-                    type="number"
-                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 pe-10 text-sm text-black focus:border-primary-500 focus:ring-primary-500"
-                    placeholder="Amount"
-                    min={5}
-                    required
-                    value={donationAmount}
-                    onChange={(e) => setdonationAmount(+e.target.value)}
-                  />
-                </div>
-
-
-
-                <div className="col-span-2 sm:col-span-1 mb-5">
-                  <label
-                    htmlFor="card-number-input"
-                    className="mb-2 block text-sm font-medium text-white "
-                  >
-                    {" "}
-                    Card number*{" "}
-                  </label>
-                  <input
-                    type="text"
-                    id="card-number-input"
-                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 pe-10 text-sm text-black focus:border-primary-500 focus:ring-primary-500"
-                    placeholder="xxxx-xxxx-xxxx-xxxx"
-                    // pattern="^4[0-9]{12}(?:[0-9]{3})?$"
-                    required
-                    value={cardNumber}
-                    onChange={handleCardNumberChange}
-                  />
-                </div>
-
-
-
-                <div className="mb-6 grid grid-cols-2 gap-4">
-                  <div>
-                    <label
-                      htmlFor="card-expiration-input"
-                      className="mb-2 block text-sm font-medium text-white dark:text-white"
-                    >
-                      Card expiration*{" "}
+                  <div className="mb-6">
+                    <label className="mb-2 block text-sm font-medium text-white/80">
+                      Gift Amount ($)*
                     </label>
                     <div className="relative">
-                      <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3.5">
-                        <svg
-                          className="h-4 w-4 text-gray-500 dark:text-gray-400"
-                          aria-hidden="true"
-                          xmlns="http://www.w3.org/2000/svg"
-                          width={24}
-                          height={24}
-                          fill="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M5 5a1 1 0 0 0 1-1 1 1 0 1 1 2 0 1 1 0 0 0 1 1h1a1 1 0 0 0 1-1 1 1 0 1 1 2 0 1 1 0 0 0 1 1h1a1 1 0 0 0 1-1 1 1 0 1 1 2 0 1 1 0 0 0 1 1 2 2 0 0 1 2 2v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a2 2 0 0 1 2-2ZM3 19v-7a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Zm6.01-6a1 1 0 1 0-2 0 1 1 0 0 0 2 0Zm2 0a1 1 0 1 1 2 0 1 1 0 0 1-2 0Zm6 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0Zm-10 4a1 1 0 1 1 2 0 1 1 0 0 1-2 0Zm6 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0Zm2 0a1 1 0 1 1 2 0 1 1 0 0 1-2 0Z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </div>
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50">$</span>
                       <input
+                        type="number"
+                        className="block w-full rounded-xl border border-white/10 bg-white/5 p-3 pl-8 text-sm text-white placeholder-white/30 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 outline-none transition-all"
+                        placeholder="0.00"
+                        min={5}
+                        required
+                        value={donationAmount}
+                        onChange={(e) => setdonationAmount(+e.target.value)}
+                      />
+                    </div>
+                  </div>
 
-                        datepicker-format="mm/yy"
-                        id="card-expiration-input"
+                  <div className="mb-6">
+                    <label className="mb-2 block text-sm font-medium text-white/80">
+                      Card Number*
+                    </label>
+                    <input
+                      type="text"
+                      className="block w-full rounded-xl border border-white/10 bg-white/5 p-3 text-sm text-white placeholder-white/30 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 outline-none transition-all"
+                      placeholder="xxxx-xxxx-xxxx-xxxx"
+                      required
+                      value={cardNumber}
+                      onChange={handleCardNumberChange}
+                    />
+                  </div>
+
+                  <div className="mb-8 grid grid-cols-2 gap-6">
+                    <div>
+                      <label className="mb-2 block text-sm font-medium text-white/80">
+                        Expiration (MM/YY)*
+                      </label>
+                      <input
                         type="text"
-                        className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 ps-9 text-sm text-black focus:border-blue-500 focus:ring-blue-500  dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                        placeholder="12/23"
+                        className="block w-full rounded-xl border border-white/10 bg-white/5 p-3 text-sm text-white placeholder-white/30 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 outline-none transition-all"
+                        placeholder="12/25"
                         required
                         value={expire}
                         onChange={handleExpiryDateChange}
                       />
                     </div>
+                    <div>
+                      <label className="mb-2 block text-sm font-medium text-white/80">
+                        CVV*
+                      </label>
+                      <input
+                        type="number"
+                        className="block w-full rounded-xl border border-white/10 bg-white/5 p-3 text-sm text-white placeholder-white/30 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 outline-none transition-all"
+                        placeholder="•••"
+                        required
+                        value={cvv}
+                        onChange={(e) => setCvv(e.target.value)}
+                        maxLength={3}
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <label
-                      htmlFor="cvv-input"
-                      className="mb-2 flex items-center gap-1 text-sm font-medium text-white dark:text-white"
-                    >
-                      CVV*
-                      <button
-                        data-tooltip-target="cvv-desc"
-                        data-tooltip-trigger="hover"
-                        className="text-gray-400 hover:text-white dark:text-gray-500 dark:hover:text-white"
-                      >
-                        <svg
-                          className="h-4 w-4"
-                          aria-hidden="true"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="currentColor"
 
-
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm9.408-5.5a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2h-.01ZM10 10a1 1 0 1 0 0 2h1v3h-1a1 1 0 1 0 0 2h4a1 1 0 1 0 0-2h-1v-4a1 1 0 0 0-1-1h-2Z"
-                            clipRule="evenodd"
-                          />
+                  <button
+                    disabled={loading}
+                    type="submit"
+                    className="w-full py-4 rounded-xl bg-gradient-to-r from-orange-600 to-orange-400 text-white font-bold text-lg shadow-lg hover:shadow-orange-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {loading ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
-                      </button>
-                      <div
-                        id="cvv-desc"
-                        role="tooltip"
-                        className="tooltip invisible absolute z-10 inline-block rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium text-white opacity-0 shadow-sm transition-opacity duration-300 dark:bg-gray-700"
-                      >
-                        The last 3 digits on back of card
-                        <div className="tooltip-arrow" data-popper-arrow="" />
-                      </div>
-                    </label>
-                    <input
-                      type="number"
-                      id="cvv-input"
-                      aria-describedby="helper-text-explanation"
-                      className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-black focus:border-primary-500 focus:ring-primary0"
-                      placeholder="•••"
-                      required
-                      value={cvv}
-                      onChange={(e) => setCvv(e.target.value)}
-                      maxLength={3}
-                    />
+                        Processing...
+                      </span>
+                    ) : 'Send Your Gift'}
+                  </button>
+
+                  <div className="relative my-8 flex items-center">
+                    <div className="flex-grow border-t border-white/10"></div>
+                    <span className="mx-4 text-xs font-bold text-white/30 uppercase tracking-widest">or</span>
+                    <div className="flex-grow border-t border-white/10"></div>
                   </div>
-                </div>
-                <button
-                  disabled={loading}
-                  type="submit"
-                  className={`disabled:opacity-40 flex w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white bg-foregroud-primary focus:outline-none focus:ring-4  focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800`}
-                >
-                  {loading ? 'Loading...' : 'Pay now'}
-                </button>
 
-                <div className='w-full relative h-[1px] bg-gray-500 my-5 flex items-center justify-center'>
-                  <span className='text-white bg-background-4 block p-1'>OR</span>
-                </div>
+                  <Select value={paymentMethod} onValueChange={(value) => setPaymentMethod(value as 'cash'|'zelle'|'venmo')}>
+                    <SelectTrigger className="w-full h-12 rounded-xl bg-white/5 border-white/10 text-white focus:ring-orange-500">
+                      <SelectValue placeholder="Other Payment Methods" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-background-3 border-white/10 text-white">
+                      <SelectItem value="cash">Cash App</SelectItem>
+                      <SelectItem value="zelle">Zelle</SelectItem>
+                      <SelectItem value="venmo">Venmo</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </form>
 
-                <Select value={paymentMethod} onValueChange={(value) => setPaymentMethod(value as 'cash'|'zelle'|'venmo')}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Pay Using Another Method" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="cash">Cash App</SelectItem>
-                    <SelectItem value="zelle">Zelle</SelectItem>
-                    <SelectItem value="venmo">Venmo</SelectItem>
-                  </SelectContent>
-                </Select>
+                <div className="mt-8 grow lg:mt-0">
+                  <div className="rounded-2xl bg-gradient-to-br from-orange-600/20 to-orange-400/5 border border-white/10 p-8 shadow-xl">
+                    <h3 className="text-xl font-bold text-white mb-4">Our Mission</h3>
+                    <p className="text-white/80 leading-relaxed italic">
+                      "Join us in sustaining and expanding this powerful, God-ordained ministry. Your love gift not only supports this incredible work but also empowers us to reach more lives with His message of hope and transformation. Together, we can make an eternal impact!"
+                    </p>
+                  </div>
+                  
+                  <div className="mt-8 grid grid-cols-3 gap-6 items-center opacity-60 hover:opacity-100 transition-opacity">
+                    <img className="h-6 w-auto mx-auto grayscale invert" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/brand-logos/paypal.svg" alt="PayPal" />
+                    <img className="h-6 w-auto mx-auto grayscale invert" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/brand-logos/visa.svg" alt="Visa" />
+                    <img className="h-6 w-auto mx-auto grayscale invert" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/brand-logos/mastercard.svg" alt="Mastercard" />
+                  </div>
 
-              </form>
-
-
-              <div className="mt-6 grow sm:mt-8 lg:mt-0">
-                <div className="space-y-4 rounded-lg  bg-background-4 p-6 w-full md:w-[24rem]">
-                  <p className='text-white/80 leading-6'>
-                    *Join us in sustaining and expanding this powerful, God-ordained ministry. Your love gift not only supports this incredible work but also empowers us to reach more lives with His message of hope and transformation. Together, we can make an eternal impact!
+                  <p className="mt-8 text-sm text-white/40 text-center lg:text-left">
+                    Securely processed via <span className="text-orange-500/80 font-semibold">Authorize.net</span>
                   </p>
-                </div>
-                <div className="mt-6 flex items-center justify-center gap-8">
-                  <img
-                    className="h-8 w-auto dark:hidden"
-                    src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/brand-logos/paypal.svg"
-                    alt=""
-                  />
-                  <img
-                    className="hidden h-8 w-auto dark:flex"
-                    src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/brand-logos/paypal-dark.svg"
-                    alt=""
-                  />
-                  <img
-                    className="h-8 w-auto dark:hidden"
-                    src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/brand-logos/visa.svg"
-                    alt=""
-                  />
-                  <img
-                    className="hidden h-8 w-auto dark:flex"
-                    src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/brand-logos/visa-dark.svg"
-                    alt=""
-                  />
-                  <img
-                    className="h-8 w-auto dark:hidden"
-                    src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/brand-logos/mastercard.svg"
-                    alt=""
-                  />
-                  <img
-                    className="hidden h-8 w-auto dark:flex"
-                    src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/brand-logos/mastercard-dark.svg"
-                    alt=""
-                  />
                 </div>
               </div>
             </div>
-            <p className="mt-6 text-center text-gray-500 dark:text-gray-400 sm:mt-8 lg:text-left">
-              Payment processed by{" "}
-              <a
-                href="#"
-                title=""
-                className="font-medium text-primary-700 underline hover:no-underline dark:text-primary-500"
-              >
-                Authorizenet
-              </a>{" "}
-            </p>
           </div>
-        </div>
-      </section>
-
+        </section>
+      </div>
 
       <MeetingModal
         isOpen={!!paymentMethod}
@@ -453,13 +345,15 @@ const page = ({ searchParams }: props) => {
         className="text-center"
         isButtonShow={false}
       >
-         <p className='text-center'>{content}</p>
-         
-         <p className='py-2 px-3 bg-gray-100 rounded-md font-normal text-center'>{id}</p>
+         <div className="py-6 space-y-4">
+           <p className="text-lg text-white/80">{content}</p>
+           <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
+             <p className="text-3xl font-bold text-orange-500 tracking-wider">{id}</p>
+           </div>
+           <p className="text-sm text-white/40">Please screenshot your payment for confirmation.</p>
+         </div>
       </MeetingModal>
-
-      <Footer />
-    </>
+    </main>
   )
 }
 

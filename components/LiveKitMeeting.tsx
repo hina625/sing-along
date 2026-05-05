@@ -15,6 +15,7 @@ import {
   Chat,
   useTranscriptions,
   useChat,
+  useConnectionState,
 } from '@livekit/components-react';
 import { Track, Participant, Room, RoomEvent, ParticipantEvent, LocalVideoTrack } from 'livekit-client';
 import { BackgroundProcessor } from '@livekit/track-processors';
@@ -28,7 +29,7 @@ import {
   MonitorUp, Info, Users, MessageSquare, 
   LayoutTemplate, Shield, X, ChevronUp, 
   Pin, Monitor, AppWindow, Copy, Check, Send,
-  Sparkles, Image as ImageIcon, CircleDashed, Eraser
+  CircleDashed, Eraser
 } from 'lucide-react';
 
 import {
@@ -44,6 +45,14 @@ const HAND_RAISED_ATTR = 'lk_hand_raised';
 
 function isHandRaised(p: { attributes?: Record<string, string> }) {
   return p.attributes?.[HAND_RAISED_ATTR] === '1';
+}
+
+function formatRoomId(room: string) {
+  // Simple formatter to make it look like abc-defg-hij
+  const clean = room.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+  if (clean.length <= 4) return clean;
+  if (clean.length <= 7) return `${clean.slice(0, 3)}-${clean.slice(3)}`;
+  return `${clean.slice(0, 3)}-${clean.slice(3, 7)}-${clean.slice(7, 10)}`;
 }
 
 interface LiveKitMeetingProps {
@@ -98,6 +107,8 @@ const CustomTile = ({ trackRef, isThumb = false }: { trackRef: TrackReferenceOrP
   const participant = trackRef.participant;
   const [, bumpAttrs] = useReducer((n: number) => n + 1, 0);
 
+  if (!participant) return null;
+
   useEffect(() => {
     if (!participant) return;
     const onAttr = () => bumpAttrs();
@@ -117,8 +128,8 @@ const CustomTile = ({ trackRef, isThumb = false }: { trackRef: TrackReferenceOrP
   return (
     <div
       className={`${isThumb ? 'thumb-tile meet-tile' : 'meet-tile'} w-full h-full relative`}
-      data-lk-speaking={isSpeaking}
-      data-lk-mic={micOn}
+      data-lk-speaking={isSpeaking ? 'true' : 'false'}
+      data-lk-mic={micOn ? 'true' : 'false'}
     >
       {isLocalScreenShare ? (
         <PresentingPlaceholder />
@@ -278,8 +289,8 @@ const MeetCaptionsStrip = ({
         {lkLines.length === 0 && !browserCaption && (
           <p className="meet-captions-hint">
             {speechUnsupported
-              ? 'Room transcriptions will show here when your LiveKit pipeline sends them. Speech-to-text in the browser needs Chrome or Edge.'
-              : 'Listening to your microphone… Room transcriptions from LiveKit also appear here when available.'}
+              ? 'Room transcriptions will show here when the system sends them. Speech-to-text in the browser needs Chrome or Edge.'
+              : 'Listening to your microphone… Room transcriptions also appear here when available.'}
           </p>
         )}
       </div>
@@ -555,8 +566,8 @@ const GoogleMeetBottomBar = ({
   activePanel: 'chat' | 'people' | 'info' | null,
   setActivePanel: (panel: 'chat' | 'people' | 'info' | null) => void,
   participantCount: number,
-  captionsOn: boolean,
-  onCaptionsChange: (next: boolean) => void,
+  captionsOn?: boolean,
+  onCaptionsChange?: (next: boolean) => void,
 }) => {
   const { localParticipant } = useLocalParticipant();
   const [showReactions, setShowReactions] = useState(false);
@@ -592,9 +603,21 @@ const GoogleMeetBottomBar = ({
   const processorRef = useRef<any>(null);
 
   useEffect(() => {
+    let isMounted = true;
+    
     const applyProcessor = async () => {
-      const videoTrack = localParticipant.getTrackPublication(Track.Source.Camera)?.videoTrack as LocalVideoTrack;
-      if (!videoTrack) return;
+      const trackPub = localParticipant.getTrackPublication(Track.Source.Camera);
+      let videoTrack = trackPub?.videoTrack as LocalVideoTrack;
+      
+      // If camera just turned on, track might take a moment to publish
+      if (!videoTrack && camEnabled) {
+        // Wait a bit or wait for event? Let's just return, the event listener below will trigger a re-run
+        return;
+      }
+
+      if (!videoTrack || !camEnabled) {
+        return;
+      }
 
       try {
         if (bgMode === 'none') {
@@ -608,26 +631,74 @@ const GoogleMeetBottomBar = ({
             imagePath: bgImage,
             blurRadius: 20,
           });
+        } else {
+          await processorRef.current.switchTo({
+            mode: bgMode === 'blur' ? 'background-blur' : 'virtual-background',
+            imagePath: bgImage,
+            blurRadius: 20,
+          });
         }
 
-        await videoTrack.setProcessor(processorRef.current);
-
-        // Switch modes if already applied
-        await processorRef.current.switchTo({
-          mode: bgMode === 'blur' ? 'background-blur' : 'virtual-background',
-          imagePath: bgImage,
-          blurRadius: 20,
-        });
+        if (isMounted && videoTrack) {
+          await videoTrack.setProcessor(processorRef.current);
+        }
       } catch (err) {
         console.error('Failed to apply background processor:', err);
       }
     };
 
-    applyProcessor();
-  }, [bgMode, bgImage, localParticipant, localParticipant.isCameraEnabled]);
+    // Listen for track changes to re-apply processor
+    const handleTrackUpdate = () => applyProcessor();
+    localParticipant.on(ParticipantEvent.TrackPublished, handleTrackUpdate);
+    localParticipant.on(ParticipantEvent.TrackUnpublished, handleTrackUpdate);
 
-  const startShare = () => localParticipant.setScreenShareEnabled(true);
-  const stopShare = () => localParticipant.setScreenShareEnabled(false);
+    applyProcessor();
+    
+    return () => { 
+      isMounted = false;
+      localParticipant.off(ParticipantEvent.TrackPublished, handleTrackUpdate);
+      localParticipant.off(ParticipantEvent.TrackUnpublished, handleTrackUpdate);
+    };
+  }, [bgMode, bgImage, localParticipant, camEnabled]);
+
+  const toggleCamera = async () => {
+    try {
+      if (camEnabled) {
+        // If processor is active, stop it before disabling camera
+        const videoTrack = localParticipant.getTrackPublication(Track.Source.Camera)?.videoTrack as LocalVideoTrack;
+        if (videoTrack) await videoTrack.stopProcessor();
+      }
+      await localParticipant.setCameraEnabled(!camEnabled);
+    } catch (e: any) {
+      toast({
+        title: 'Camera Error',
+        description: e.message?.replace(/LiveKit/gi, 'System') || 'Could not toggle camera.',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const startShare = async () => {
+    try {
+      await localParticipant.setScreenShareEnabled(true);
+    } catch (e: any) {
+      if (e.message !== 'User cancelled screen sharing') {
+        toast({
+          title: 'Screen Share Failed',
+          description: 'Could not start screen sharing. Please check permissions.',
+          variant: 'destructive',
+        });
+      }
+    }
+  };
+
+  const stopShare = async () => {
+    try {
+      await localParticipant.setScreenShareEnabled(false);
+    } catch (e) {
+      console.error('Failed to stop screen share:', e);
+    }
+  };
 
   const refreshMicList = async () => {
     try {
@@ -679,7 +750,26 @@ const GoogleMeetBottomBar = ({
   return (
     <div className="meet-bottom-bar relative">
       <div className="reaction-tray-wrap">
-        {showReactions && <ReactionTray onSelect={() => setShowReactions(false)} />}
+        {showReactions && (
+          <ReactionTray 
+            onSelect={async (emoji) => {
+              setShowReactions(false);
+              try {
+                const encoder = new TextEncoder();
+                const data = encoder.encode(JSON.stringify({ type: 'reaction', emoji }));
+                await localParticipant.publishData(data, { reliable: true });
+                
+                // Show local feedback (toast or animation)
+                toast({
+                  description: `You sent ${emoji}`,
+                  className: "bg-white/10 border-none text-white w-fit mx-auto rounded-full px-4 py-1 mb-20",
+                });
+              } catch (err) {
+                console.error('Failed to send reaction:', err);
+              }
+            }} 
+          />
+        )}
       </div>
 
       <div className="meet-bar-left">
@@ -739,7 +829,7 @@ const GoogleMeetBottomBar = ({
               className="meet-split-button-main"
               title={camEnabled ? 'Turn off camera' : 'Turn on camera'}
               aria-pressed={camEnabled}
-              onClick={() => localParticipant.setCameraEnabled(!camEnabled)}
+              onClick={toggleCamera}
             >
               {camEnabled ? <Video /> : <VideoOff />}
             </button>
@@ -765,7 +855,21 @@ const GoogleMeetBottomBar = ({
                   <DropdownMenuItem 
                     key={device.deviceId || device.label} 
                     className="meet-dropdown-item"
-                    onClick={() => localParticipant.setCameraEnabled(true, { deviceId: device.deviceId })}
+                    onClick={async () => {
+                      try {
+                        // Stop current processor if switching cameras to prevent crashes
+                        const videoTrack = localParticipant.getTrackPublication(Track.Source.Camera)?.videoTrack as LocalVideoTrack;
+                        if (videoTrack) await videoTrack.stopProcessor();
+                        
+                        await localParticipant.setCameraEnabled(true, { deviceId: device.deviceId });
+                      } catch (e: any) {
+                        toast({
+                          title: 'Camera Switch Failed',
+                          description: e.message?.replace(/LiveKit/gi, 'System') || 'Could not switch to the selected camera.',
+                          variant: 'destructive',
+                        });
+                      }
+                    }}
                   >
                     <Video className="shrink-0" /> <span className="truncate">{device.label || 'Camera'}</span>
                   </DropdownMenuItem>
@@ -822,16 +926,29 @@ const GoogleMeetBottomBar = ({
 
           <span className="meet-cluster-divider" aria-hidden />
 
-          <button
-            type="button"
-            className={`meet-icon-button ${captionsOn ? 'meet-icon-button-active' : ''}`}
-            title={captionsOn ? 'Turn off captions' : 'Turn on captions'}
-            aria-pressed={captionsOn}
-            onClick={() => onCaptionsChange(!captionsOn)}
-          >
-            <Captions />
-          </button>
           <button type="button" className="meet-icon-button" title="React" onClick={() => setShowReactions(!showReactions)}><Smile /></button>
+
+          {/* Mobile More Options Menu */}
+          <div className="sm:hidden">
+            <DropdownMenu modal={false}>
+              <DropdownMenuTrigger asChild>
+                <button type="button" className="meet-icon-button meet-more-button" title="More options">
+                  <ChevronUp size={22} className="rotate-180" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="meet-dropdown-content" align="center" side="top" sideOffset={12}>
+                <DropdownMenuItem className="meet-dropdown-item" onClick={() => setActivePanel('chat')}>
+                  <MessageSquare size={18} className="mr-3" /> In-call messages
+                </DropdownMenuItem>
+                <DropdownMenuItem className="meet-dropdown-item" onClick={() => setActivePanel('people')}>
+                  <Users size={18} className="mr-3" /> People ({participantCount})
+                </DropdownMenuItem>
+                <DropdownMenuItem className="meet-dropdown-item" onClick={() => setActivePanel('info')}>
+                  <Info size={18} className="mr-3" /> Meeting details
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
           
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
@@ -909,9 +1026,8 @@ const GoogleMeetBottomBar = ({
         >
           <MessageSquare size={22} />
         </button>
-        <button type="button" className="meet-utility-button" title="Activities"><LayoutTemplate size={22} /></button>
-        <button type="button" className="meet-utility-button" title="Host controls"><Shield size={22} /></button>
       </div>
+
     </div>
   );
 };
@@ -919,18 +1035,46 @@ const GoogleMeetBottomBar = ({
 const GoogleMeetLayout = ({ room, onLeave }: { room: string, onLeave: () => void }) => {
   const { localParticipant } = useLocalParticipant();
   const lkRoom = useRoomContext();
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const [activePanel, setActivePanel] = useState<'chat' | 'people' | 'info' | null>(null);
   const [captionsOn, setCaptionsOn] = useState(false);
   const [, bumpPeopleUi] = useReducer((n: number) => n + 1, 0);
   const roomParticipants = useParticipants();
+  const { toast } = useToast();
 
   useEffect(() => {
     const onAttrs = () => bumpPeopleUi();
+    const onData = (payload: Uint8Array, participant?: Participant) => {
+      try {
+        const decoder = new TextDecoder();
+        const data = JSON.parse(decoder.decode(payload));
+        if (data.type === 'reaction') {
+          toast({
+            description: `${participant?.identity || 'Someone'} sent ${data.emoji}`,
+            className: "bg-white/10 border-none text-white w-fit mx-auto rounded-full px-4 py-1 mb-20",
+          });
+        }
+      } catch (e) {
+        console.error('Failed to parse incoming data:', e);
+      }
+    };
+
     lkRoom.on(RoomEvent.ParticipantAttributesChanged, onAttrs);
+    lkRoom.on(RoomEvent.DataReceived, onData);
+    
     return () => {
       lkRoom.off(RoomEvent.ParticipantAttributesChanged, onAttrs);
+      lkRoom.off(RoomEvent.DataReceived, onData);
     };
-  }, [lkRoom]);
+  }, [lkRoom, toast]);
 
   const tracks = useTracks(
     [
@@ -949,7 +1093,28 @@ const GoogleMeetLayout = ({ room, onLeave }: { room: string, onLeave: () => void
   );
   const isLocalPresenting = localParticipant.isScreenShareEnabled;
 
+  const toggleCamera = async () => {
+    const devices = await Room.getLocalDevices('videoinput');
+    if (devices.length < 2) return;
+    
+    const currentDeviceId = localParticipant.getTrackPublication(Track.Source.Camera)?.videoTrack?.mediaStreamTrack.getSettings().deviceId;
+    const nextDevice = devices.find(d => d.deviceId !== currentDeviceId) || devices[0];
+    
+    if (nextDevice) {
+      await localParticipant.setCameraEnabled(false);
+      await localParticipant.setCameraEnabled(true, { deviceId: nextDevice.deviceId });
+    }
+  };
+
+  const showFloatingTile = isMobile 
+    ? participantTracks.length >= 2 
+    : participantTracks.length > 4;
+
   const peopleInCall = roomParticipants;
+  const connectionState = useConnectionState();
+
+  if (connectionState === 'connecting') return <Loader label="Connecting to Meeting..." />;
+  if (connectionState === 'reconnecting') return <Loader label="Reconnecting to Meeting..." />;
 
   return (
     <div className="meet-bg meet-root h-screen w-full flex flex-col overflow-hidden text-white">
@@ -968,7 +1133,15 @@ const GoogleMeetLayout = ({ room, onLeave }: { room: string, onLeave: () => void
 
       <MeetCaptionsStrip enabled={captionsOn} onClose={() => setCaptionsOn(false)} />
 
-      <div className="meet-stage flex-1 flex overflow-hidden min-h-0 pb-[88px]">
+      <div className="meet-stage flex-1 flex overflow-hidden min-h-0 pb-[100px] sm:pb-[88px] relative">
+        {/* Mobile Top Bar (Google Meet Style) */}
+        <div className="meet-mobile-top-bar sm:hidden">
+          <div className="meet-mobile-code">{formatRoomId(room)}</div>
+          <button type="button" className="meet-mobile-util" onClick={toggleCamera} title="Switch camera">
+            <Video size={20} />
+          </button>
+        </div>
+
         {screenShareTrack ? (
           <div className="meet-presentation-wrap flex flex-1 min-h-0 overflow-hidden">
             <div className="presentation-container">
@@ -995,22 +1168,42 @@ const GoogleMeetLayout = ({ room, onLeave }: { room: string, onLeave: () => void
             </aside>
           </div>
         ) : (
-          <div className="meet-grid-wrap flex-1 px-4 sm:px-8 flex items-center justify-center transition-all min-h-0">
+          <div className="meet-grid-wrap flex-1 px-4 sm:px-8 flex items-center justify-center transition-all min-h-0 relative">
             <div
               className={`meet-video-grid gap-3 w-full h-full max-h-[calc(100vh-120px)] ${
-                participantTracks.length <= 1
-                  ? 'grid-cols-1 max-w-5xl'
-                  : participantTracks.length <= 2
-                    ? 'grid-cols-2 max-w-6xl'
-                    : participantTracks.length <= 4
-                      ? 'grid-cols-2 grid-rows-2 max-w-6xl'
-                      : 'grid-cols-3 max-w-7xl'
+                showFloatingTile
+                  ? 'grid-cols-1 sm:grid-cols-2 max-w-6xl' 
+                  : participantTracks.length === 4
+                    ? 'grid-cols-2 max-w-6xl' // 2x2 for 4 users
+                    : participantTracks.length === 3
+                      ? 'grid-cols-1 sm:grid-cols-3 max-w-7xl'
+                      : participantTracks.length === 2
+                        ? 'grid-cols-1 sm:grid-cols-2 max-w-6xl'
+                        : 'grid-cols-1 max-w-5xl'
               }`}
             >
-              {participantTracks.map((t) => (
-                <CustomTile key={`${t.participant.sid}-${t.source}`} trackRef={t} />
-              ))}
+              {showFloatingTile
+                ? /* Show only remote in grid */
+                  participantTracks
+                    .filter((t) => !t.participant.isLocal)
+                    .map((t) => <CustomTile key={`${t.participant.sid}-${t.source}`} trackRef={t} />)
+                : /* Show everyone in grid */
+                  participantTracks.map((t) => (
+                    <CustomTile key={`${t.participant.sid}-${t.source}`} trackRef={t} />
+                  ))}
             </div>
+
+            {/* Floating Local Tile: Based on device-specific threshold */}
+            {showFloatingTile && (
+              <div className="local-floating-tile">
+                {participantTracks.find((t) => t.participant.isLocal) && (
+                  <CustomTile 
+                    trackRef={participantTracks.find((t) => t.participant.isLocal)!} 
+                    isThumb={true} 
+                  />
+                )}
+              </div>
+            )}
           </div>
         )}
 
@@ -1030,8 +1223,6 @@ const GoogleMeetLayout = ({ room, onLeave }: { room: string, onLeave: () => void
         activePanel={activePanel} 
         setActivePanel={setActivePanel}
         participantCount={peopleInCall.length}
-        captionsOn={captionsOn}
-        onCaptionsChange={setCaptionsOn}
       />
     </div>
   );
@@ -1058,7 +1249,7 @@ const LiveKitMeeting = ({ room, identity, onDisconnected }: LiveKitMeetingProps)
         }
       } catch (e: any) {
         console.error('Token fetch error:', e);
-        setError(e.message);
+        setError(e.message?.replace(/LiveKit/gi, 'System') || 'Failed to connect');
         toast({
           title: 'Connection Error',
           description: 'Could not connect to the meeting server.',
@@ -1100,8 +1291,12 @@ const LiveKitMeeting = ({ room, identity, onDisconnected }: LiveKitMeetingProps)
       video={true}
       audio={true}
       token={token}
-      serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_URL}
+      serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_URL || ''}
       onDisconnected={handleLeave}
+      onError={(err) => {
+        const msg = err.message.replace(/LiveKit/gi, 'Meeting System');
+        toast({ title: 'Connection Error', description: msg, variant: 'destructive' });
+      }}
       data-lk-theme="default"
       style={{ height: '100vh' }}
     >

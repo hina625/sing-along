@@ -47,9 +47,9 @@ const PartnerDialog = ({ children }: { children: ReactNode }) => {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="mt-6">
-             <Link href="/plans" className="w-full">
+             <Link href="/donate" className="w-full">
               <button className="btn-primary-worship py-3 w-full font-bold uppercase tracking-wider">
-                I Agree
+                I Accept
               </button>
              </Link>
           </DialogFooter>

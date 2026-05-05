@@ -47,14 +47,15 @@ const MobileNav = () => {
         </SheetTrigger>
         <SheetContent side="left" className="border-none bg-background-3 p-0">
           <div className="flex h-full flex-col sidebar-glow no-scrollbar overflow-y-auto">
-            <div className="p-6">
-              <Link href="/" className="flex items-center gap-1">
+            <div className="p-6 flex flex-col items-center justify-center">
+              <Link href="/" className="flex flex-col items-center justify-center gap-1">
                 <Image
                   src="/icons/full-logo.png"
-                  width={140}
-                  height={140}
+                  width={100}
+                  height={100}
                   alt="Sing Along logo"
                 />
+                <span className='text-[#F57C00] font-bold text-[14px] leading-tight' style={{ fontFamily: "'Marcellus', serif" }}>Connect</span>
               </Link>
             </div>
             

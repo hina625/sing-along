@@ -9,7 +9,7 @@
     - [x] "Why HG Sing Along" Infographic section
     - [x] Pricing section cards
     - [x] "How it works" section
-- [/] Update `app/globals.css` with advanced visuals:
+- [x] Update `app/globals.css` with advanced visuals:
     - [x] Add `@keyframes` for Light Rays
     - [x] Add Light Glow classes for interactive elements
     - [x] Enhance `.card-awesome-black` with soft shadows and layered depth

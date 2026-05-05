@@ -51,47 +51,107 @@ const getDayName = (date: Date): string => {
 };
 
 const CallList = ({ type }: { type: 'ended' | 'upcoming' | 'recordings' }) => {
-  const [meetings, setMeetings] = useState([]);
-  const { user } = useUser()
-
+  const { endedCalls, upcomingCalls, callRecordings, isLoading } = useGetCalls();
+  const [recordings, setRecordings] = useState<CallRecording[]>([]);
+  const [meetings, setMeetings] = useState<IRoomDetails[]>([]);
+  const { user } = useUser();
+  const router = useRouter();
 
   async function getRooms() {
     try {
-      const res = await axios.get(`/api/v1/get-rooms?user_id=${user?.id}`);
-      setMeetings(res.data.rooms)
+      if (!user?.id) return;
+      const res = await axios.get(`/api/v1/get-rooms?user_id=${user?.id}${type === 'upcoming' ? '&upcoming=true' : ''}`);
+      setMeetings(res.data.rooms);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   }
 
   useEffect(() => {
     getRooms();
-  }, [])
+  }, [user, type]);
+
+  useEffect(() => {
+    const fetchRecordings = async () => {
+      try {
+        const callData = await Promise.all(
+          callRecordings?.map((meeting) => meeting.queryRecordings()) ?? [],
+        );
+
+        const recordings = callData
+          .filter((call) => call.recordings.length > 0)
+          .flatMap((call) => call.recordings);
+
+        setRecordings(recordings);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    if (type === 'recordings') {
+      fetchRecordings();
+    }
+  }, [type, callRecordings]);
+
+  if (isLoading) return <Loader />;
+
+  const getNoCallsMessage = () => {
+    switch (type) {
+      case 'ended':
+        return 'No Previous Meetings';
+      case 'upcoming':
+        return 'No Upcoming Meetings';
+      case 'recordings':
+        return 'No Recordings';
+      default:
+        return '';
+    }
+  };
+
+  const noCallsMessage = getNoCallsMessage();
+
   return (
     <div className='flex items-center justify-center flex-wrap gap-5'>
-      {
-        meetings && meetings.map((room: IRoomDetails, idex: number) => (
-          <div className='w-full max-w-[25rem] !min-h-[13rem] !shadow-md gradient-insta flex flex-col gap-2 rounded-md p-4 !bg-white border border-gray-100'>
-            <div className='flex flex-wrap items-start gap-2'>
-            <h3 className="text-white text-xl">Meeting ID: </h3>
-            <h3 className="text-white text-xl break-all">{room?.room_id}</h3>
-            </div>
-            <p className="text-white/90 text-lg">Start Time: {formatDateTimeWithDayAndAmPm(new Date(room.start_time))}</p>
-            <p className="text-white/90 text-lg">End Time: {formatDateTimeWithDayAndAmPm(new Date(room.end_time))}</p>
-            <p className="text-white/90 text-lg">Date: {formatDate(new Date(room.start_time))}</p>
-            <p className="text-white/90 text-lg">Day: {getDayName(new Date(room.start_time))}</p>
+      {type === 'recordings' ? (
+        recordings.length > 0 ? (
+          recordings.map((recording: CallRecording) => (
+            <MeetingCard
+              key={recording.url}
+              icon="/icons/recordings.svg"
+              title={recording.filename?.substring(0, 20) || 'Recording'}
+              date={new Date(recording.start_time).toLocaleString()}
+              isPreviousMeeting={type === 'ended'}
+              link={recording.url}
+              handleClick={() => router.push(recording.url)}
+              buttonText="Play"
+              buttonIcon1="/icons/play.svg"
+            />
+          ))
+        ) : (
+          <div className='flex items-center justify-center h-[60vh]'>
+            <h2 className='text-white/90 text-4xl'>{noCallsMessage}</h2>
           </div>
-        ))
-      }
-
-
-      {
-        meetings.length == 0 &&
-        <div className='flex items-center justify-center h-[60vh]'>
-          <h2 className='text-white/90 text-4xl'>No Previous meetings</h2>
-        </div>
-      }
-
+        )
+      ) : (
+        meetings && meetings.length > 0 ? (
+          meetings.map((room: IRoomDetails, idx: number) => (
+            <div key={idx} className='w-full max-w-[25rem] !min-h-[13rem] !shadow-md gradient-insta flex flex-col gap-2 rounded-md p-4 !bg-white border border-gray-100'>
+              <div className='flex flex-wrap items-start gap-2'>
+                <h3 className="text-black/80 text-xl font-bold">Meeting ID: </h3>
+                <h3 className="text-black/70 text-xl break-all">{room?.room_id}</h3>
+              </div>
+              <p className="text-black/60 text-lg font-medium">Start Time: {formatDateTimeWithDayAndAmPm(new Date(room.start_time))}</p>
+              <p className="text-black/60 text-lg font-medium">End Time: {formatDateTimeWithDayAndAmPm(new Date(room.end_time))}</p>
+              <p className="text-black/60 text-lg font-medium">Date: {formatDate(new Date(room.start_time))}</p>
+              <p className="text-black/60 text-lg font-medium">Day: {getDayName(new Date(room.start_time))}</p>
+            </div>
+          ))
+        ) : (
+          <div className='flex items-center justify-center h-[60vh]'>
+            <h2 className='text-white/90 text-4xl'>{noCallsMessage}</h2>
+          </div>
+        )
+      )}
     </div>
   );
 };

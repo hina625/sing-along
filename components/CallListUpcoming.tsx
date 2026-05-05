@@ -61,7 +61,7 @@ const CallListUpcoming = () => {
 
   useEffect(() => {
     getRooms();
-  }, [])
+  }, [user]);
   return (
     <div className='flex items-center justify-center flex-wrap gap-5'>
       {
