@@ -43,7 +43,9 @@ const MobileNav = () => {
     <section className="w-full max-w-[264px]">
       <Sheet>
         <SheetTrigger asChild>
-          <FiMenu size={36} className="cursor-pointer sm:hidden text-white" />
+          <button type="button" aria-label="Open menu" className="cursor-pointer sm:hidden text-white bg-transparent border-0 p-0">
+            <FiMenu size={36} />
+          </button>
         </SheetTrigger>
         <SheetContent side="left" className="border-none bg-background-3 p-0">
           <div className="flex h-full flex-col sidebar-glow no-scrollbar overflow-y-auto">

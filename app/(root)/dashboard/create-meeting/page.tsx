@@ -1,4 +1,5 @@
 import MeetingTypeList from '@/components/MeetingTypeList';
+import PermissionGate from '@/components/PermissionGate';
 import Link from 'next/link';
 
 const Home = () => {
@@ -9,13 +10,10 @@ const Home = () => {
 
   return (
     <section className="flex size-full flex-col gap-5 text-white">
-      <div className="h-[200px] md:h-[303px] w-full rounded-[20px] bg-hero bg-cover">
-        <div className="flex h-full flex-col justify-between max-md:px-5 max-md:py-8 lg:p-11">
-          
-          <div className="flex flex-col gap-2 mt-4 md:mt-12">
-            <h1 className="text-5xl font-extrabold lg:text-7xl">{time}</h1>
-            <p className="text-base md:text-lg font-medium text-sky-1 lg:text-2xl">{date}</p>
-          </div>
+      <div className="time-hero h-[140px] md:h-[160px] w-full rounded-2xl bg-hero bg-cover">
+        <div className="flex h-full flex-col justify-center px-5 md:px-8">
+          <h1 className="text-3xl md:text-4xl font-extrabold leading-none" style={{ color: '#ffffff' }}>{time}</h1>
+          <p className="mt-1 text-sm md:text-base font-medium" style={{ color: '#cfe6ff' }}>{date}</p>
         </div>
       </div>
 
@@ -24,4 +22,10 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default function HomeGated() {
+  return (
+    <PermissionGate resource="meetings" action="manage">
+      <Home />
+    </PermissionGate>
+  );
+}

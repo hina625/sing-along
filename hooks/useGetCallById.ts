@@ -1,31 +1,34 @@
+'use client';
+
 import { useEffect, useState } from 'react';
-import { Call, useStreamVideoClient } from '@stream-io/video-react-sdk';
+import axios from 'axios';
+import type { RoomCall } from './useGetCalls';
 
 export const useGetCallById = (id: string | string[]) => {
-  const [call, setCall] = useState<Call>();
+  const [call, setCall] = useState<RoomCall | null>(null);
   const [isCallLoading, setIsCallLoading] = useState(true);
 
-  const client = useStreamVideoClient();
+  const roomId = Array.isArray(id) ? id[0] : id;
 
   useEffect(() => {
-    if (!client) return;
-    
-    const loadCall = async () => {
+    if (!roomId) {
+      setIsCallLoading(false);
+      return;
+    }
+    let cancelled = false;
+    const load = async () => {
       try {
-        // https://getstream.io/video/docs/react/guides/querying-calls/#filters
-        const { calls } = await client.queryCalls({ filter_conditions: { id } });
-
-        if (calls.length > 0) setCall(calls[0]);
-
-        setIsCallLoading(false);
-      } catch (error) {
-        console.error(error);
-        setIsCallLoading(false);
+        const res = await axios.get(`/api/v1/create-room?room_id=${roomId}`);
+        if (!cancelled) setCall(res.data?.room || null);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        if (!cancelled) setIsCallLoading(false);
       }
     };
-
-    loadCall();
-  }, [client, id]);
+    load();
+    return () => { cancelled = true; };
+  }, [roomId]);
 
   return { call, isCallLoading };
 };

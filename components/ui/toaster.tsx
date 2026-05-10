@@ -20,7 +20,7 @@ export function Toaster() {
           <Toast
             key={id}
             {...props}
-            className="border-none bg-black/30  text-white"
+            className="border border-white/15 bg-black/15 backdrop-blur-md text-white shadow-xl"
           >
             <div className="grid gap-1 ">
               {title && <ToastTitle>{title}</ToastTitle>}

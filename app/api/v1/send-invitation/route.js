@@ -6,14 +6,16 @@ import { clerkClient } from '@clerk/nextjs/server';
 
 
 function formatDate(datestring) {
-    const date = new Date(datestring)
+    if (!datestring) return 'Anytime — meeting room is open';
+    const date = new Date(datestring);
+    if (isNaN(date.getTime())) return 'Anytime — meeting room is open';
     let year = date.getFullYear();
     let month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
     let day = String(date.getDate()).padStart(2, '0');
-    
+
     let hours = String(date.getHours()).padStart(2, '0');
     let minutes = String(date.getMinutes()).padStart(2, '0');
-    
+
     return `${year}-${month}-${day} ${hours}:${minutes}`;
 }
 
@@ -22,7 +24,13 @@ export const POST = async (req) => {
      await connectDB()
      const {room_id, emails,user_id} = await req.json();
      const roomdetails = await roomModel.findOne({room_id});
+     if (!roomdetails) {
+        return NextResponse.json({success: false, message: 'Room not found'}, {status: 404});
+     }
      const userdetail = await clerkClient.users.getUser(user_id);
+     // Personal rooms (created lazily) don't have a scheduleTime — fall back
+     // to start_time so the email still shows a sensible date.
+     const dateForEmail = roomdetails.scheduleTime || roomdetails.start_time;
      const meesage = `
 Hello,
 
@@ -30,7 +38,7 @@ I hope this message finds you well! I would like to invite you to a meeting.
 
 Meeting Details:
 
-Date: ${formatDate(roomdetails.scheduleTime)}
+Date: ${formatDate(dateForEmail)}
 Link: ${process.env.NEXT_PUBLIC_BASE_URL}/meeting/${room_id}
 
 Your insights and contributions would be greatly valued, and I believe this meeting will be beneficial for all participants.

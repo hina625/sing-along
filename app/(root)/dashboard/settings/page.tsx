@@ -7,6 +7,7 @@ import { planslist } from '@/constants';
 import Link from 'next/link';
 import Image from 'next/image';
 import Loader from '@/components/Loader';
+import PermissionGate from '@/components/PermissionGate';
 import { useToast } from '@/components/ui/use-toast';
 
 const SettingsPage = () => {
@@ -173,4 +174,10 @@ const SettingsPage = () => {
   );
 };
 
-export default SettingsPage;
+export default function SettingsPageGated() {
+  return (
+    <PermissionGate resource="settings" action="view">
+      <SettingsPage />
+    </PermissionGate>
+  );
+}

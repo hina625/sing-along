@@ -1219,10 +1219,24 @@ const page = () => {
             placeholder='Leave a message, if you want'
           />
         </div>
-        <p className='text-center'>Invite Your Friends and Family! <br /> Thank you for using our meeting platform. <span className='text-foregroud-primary cursor-pointer' onClick={handleShare}>share</span> the ease of seamless connections with your friends and family. Invite them to join today! </p>
+        <p className='text-center'>
+          <span className='font-semibold'>Invite Your Friends and Family!</span>
+          <br />
+          Thank you for using our meeting platform. Share the ease of seamless connections with your friends and family. Invite them to join today!
+        </p>
 
-
-        <span className='text-foregroud-primary text-center'><Link href={'/plans'}>See Our Plans</Link></span>
+        <div className='flex flex-col items-center gap-2'>
+          <button
+            type='button'
+            onClick={handleShare}
+            className='text-foregroud-primary cursor-pointer underline underline-offset-4 hover:opacity-80'
+          >
+            Share with friends
+          </button>
+          <Link href={'/plans'} className='text-foregroud-primary underline underline-offset-4 hover:opacity-80'>
+            See Our Plans
+          </Link>
+        </div>
       </MeetingModal>
 
       <MeetingModal

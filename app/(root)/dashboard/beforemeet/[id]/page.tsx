@@ -1,5 +1,5 @@
 "use client"
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { MdOutlineContentCopy, MdPersonAdd,MdClose } from "react-icons/md";
 import { IoMdShareAlt } from "react-icons/io";
 import { useUser } from '@clerk/nextjs';
@@ -26,6 +26,8 @@ import axios from 'axios';
 import { subscriptionContext } from '@/providers/SubscriptionProvider';
 import { planslist } from '@/constants';
 import InvitePeaople from '@/components/InvitePeaople';
+import WhatsAppInvite from '@/components/WhatsAppInvite';
+import CalendarShare from '@/components/CalendarShare';
 import { Input } from '@/components/ui/input';
 
 interface TypeParams {
@@ -36,6 +38,13 @@ interface PropsType {
     params: TypeParams
 }
 
+interface MeetingInfoLite {
+    title: string | null;
+    scheduleTime: string | null;
+    startTime: string | null;
+    endTime: string | null;
+}
+
 const page = ({ params }: PropsType) => {
     const { user } = useUser()
     const { toast } = useToast();
@@ -43,10 +52,27 @@ const page = ({ params }: PropsType) => {
     const [isOpen, setIsOpen] = useState(false);
     const [emails,setEmails] = useState<string[]>([])
     const [email,setEmail] = useState<string>('')
+    const [meetingInfo, setMeetingInfo] = useState<MeetingInfoLite | null>(null);
     const url = `${process.env.NEXT_PUBLIC_BASE_URL}/meeting/${params?.id}`
 
     const { subscription } = useContext(subscriptionContext)
     const router = useRouter()
+
+    useEffect(() => {
+        let cancelled = false;
+        axios.get(`/api/v1/meeting-info?room_id=${params?.id}`)
+            .then((res) => {
+                if (cancelled || !res.data?.success) return;
+                setMeetingInfo({
+                    title: res.data.title,
+                    scheduleTime: res.data.scheduleTime,
+                    startTime: res.data.startTime,
+                    endTime: res.data.endTime,
+                });
+            })
+            .catch(() => { /* ignore */ });
+        return () => { cancelled = true; };
+    }, [params?.id]);
     const handleCopy = async () => {
         try {
 
@@ -123,6 +149,15 @@ const page = ({ params }: PropsType) => {
                     <input value={url} className='text-gray-500 outline-none border-none bg-transparent w-full' />
                     <button className='text-gray-800 bg-none outline-none border-none' onClick={handleCopy}><MdOutlineContentCopy /></button>
                 </div>
+                <CalendarShare
+                    roomId={params?.id}
+                    title={meetingInfo?.title || 'Singalong Worship Service'}
+                    meetingUrl={url}
+                    startISO={meetingInfo?.scheduleTime || meetingInfo?.startTime || new Date().toISOString()}
+                    endISO={meetingInfo?.endTime || undefined}
+                    description={meetingInfo?.title || undefined}
+                    className="my-2"
+                />
                 <button className='bg-foregroud-primary px-4 py-2 rounded-md text-white flex items-center gap-3 w-[7rem] hover:scale-105 mx-auto' onClick={handleStart}>Start Now</button>
                 <p className='text-black/60 text-center'>joined as <span className='text-foregroud-primary'>{user?.primaryEmailAddress?.emailAddress}</span></p>
 
@@ -185,25 +220,37 @@ const page = ({ params }: PropsType) => {
 
 
             <InvitePeaople isOpen={isOpen} onClose={() => setIsOpen(false)}>
-                <h1 className='text-3xl text-black text-center font-semibold'>Invite Participants</h1>
-                <div className='flex items-center gap-4'>
-                    <input type='text' value={email} onChange={(e) => setEmail(e.target.value)} placeholder='Enter Email' className='outline-none border border-gray-300 rounded-md py-3 px-3 flex-1 placeholder:font-normal' />
-                    <button className='bg-foregroud-primary px-4 py-2 rounded-md text-white flex items-center gap-3  hover:scale-105' onClick={handleAddEmail}><MdPersonAdd size={25} /></button>
-
-
-                </div>
-                <div className='flex flex-wrap items-center justify-center gap-4 mt-8'>
-                    {
-                        emails.map((email,index) => (
-                            <div className='bg-gray-200 rounded-md py-3 pl-4 pr-2 text-black relative'>
-                                {email}
-                            <button className='text-black  pl-2'><MdClose size={20} onClick={() => handleRemoveEmail(index)}/></button>
+                <h1 className='text-3xl text-black text-center font-semibold'>Invite Your Congregation</h1>
+                <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
+                    {/* === Email column === */}
+                    <div className='flex flex-col gap-4 bg-gray-50 rounded-xl p-5'>
+                        <h2 className='text-lg font-semibold text-black'>By Email</h2>
+                        <div className='flex items-center gap-3'>
+                            <input type='text' value={email} onChange={(e) => setEmail(e.target.value)} placeholder='Enter Email' className='outline-none border border-gray-300 rounded-md py-3 px-3 flex-1 placeholder:font-normal' />
+                            <button className='bg-foregroud-primary px-4 py-3 rounded-md text-white flex items-center gap-3 hover:scale-105' onClick={handleAddEmail}><MdPersonAdd size={22} /></button>
                         </div>
-                        ))
-                    }
-                   
+                        {emails.length > 0 && (
+                            <div className='flex flex-wrap gap-2'>
+                                {emails.map((em, index) => (
+                                    <div key={`${em}-${index}`} className='bg-white border border-gray-200 rounded-md py-2 pl-3 pr-1 text-black flex items-center gap-1 text-sm'>
+                                        {em}
+                                        <button className='text-gray-500 hover:text-red-500 pl-1' onClick={() => handleRemoveEmail(index)}><MdClose size={16}/></button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                        <button
+                            className='bg-foregroud-primary px-4 py-3 rounded-md text-white flex items-center justify-center gap-2 hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 mt-auto'
+                            onClick={handleSendInvitation}
+                            disabled={emails.length === 0}
+                        >
+                            Send Email Invites <IoMdShareAlt />
+                        </button>
+                    </div>
+
+                    {/* === WhatsApp column === */}
+                    <WhatsAppInvite url={url} />
                 </div>
-                <button className='bg-foregroud-primary mx-auto px-4 py-3 rounded-md text-white flex items-center gap-3  hover:scale-105' onClick={handleSendInvitation}>Invite Now<IoMdShareAlt /></button>
             </InvitePeaople>
 
         </section>

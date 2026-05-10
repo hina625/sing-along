@@ -9,18 +9,34 @@ import { AiOutlineVideoCamera } from "react-icons/ai";
 import { RiVideoChatLine } from "react-icons/ri";
 import { FiUsers } from "react-icons/fi";
 import { BiDonateHeart } from "react-icons/bi";
+import { FaPrayingHands, FaMusic, FaBookOpen } from "react-icons/fa";
+import { TbActivityHeartbeat } from "react-icons/tb";
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 
-import { planslist, sidebarLinks } from '@/constants';
+import { planslist, sidebarLinks, isSidebarLinkVisible } from '@/constants';
 import { cn } from '@/lib/utils';
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
 import { subscriptionContext } from '@/providers/SubscriptionProvider'
+import { WorkspaceContext } from '@/providers/WorkspaceProvider';
 import PartnerDialog from './PartnerDialog';
 
 const Sidebar = () => {
   const pathname = usePathname();
   const { subscription } = useContext(subscriptionContext)
+  const { activeWorkspace, can } = useContext(WorkspaceContext);
+  const wsMode = activeWorkspace?.mode || 'worship';
+  const isWorshipy = wsMode === 'worship' || wsMode === 'hybrid' || wsMode === 'community';
+
+  const visibleLinks = useMemo(
+    () =>
+      sidebarLinks.filter((l) => {
+        if (!isSidebarLinkVisible(l.audience, wsMode)) return false;
+        if (!l.resource) return true; // home, etc — always visible
+        return can(l.resource, l.action || 'view');
+      }),
+    [wsMode, can]
+  );
 
 
   interface IconMap {
@@ -34,97 +50,83 @@ const Sidebar = () => {
     '5': <FiUsers size={24} />,
     '6': <BiDonateHeart size={24} />,
     '7': <MdSettings size={24} />,
+    '8': <FaPrayingHands size={22} />,
+    '9': <TbActivityHeartbeat size={24} />,
+    '10': <FaMusic size={20} />,
+    '11': <FaBookOpen size={20} />,
   };
 
   return (
-    <section className="sticky left-0 top-0 flex h-screen w-fit flex-col justify-between bg-background-3 shadow-md text-white max-sm:hidden lg:w-[264px] sidebar-glow overflow-hidden">
-      <div className="flex flex-col gap-6 p-6">
-        <Link href="/" className="flex flex-col items-center gap-1 mb-8 w-full">
+    <section className="flex h-full w-fit flex-col bg-background-3 shadow-md text-white max-sm:hidden lg:w-[264px] sidebar-glow shrink-0">
+      <div className="flex flex-col items-center gap-1 px-6 pt-5 pb-3 shrink-0">
+        <Link href="/" className="flex flex-col items-center gap-1 w-full">
           <Image
             src="/icons/full-logo.png"
-            width={140}
-            height={140}
+            width={88}
+            height={88}
             alt="Sing Along logo"
           />
-          <p className="text-[#F57C00] text-xl font-bold tracking-[0.2em] -mt-1 uppercase" style={{ fontFamily: "'Marcellus', serif" }}>CONNECT</p>
+          <p className="text-[#F57C00] text-sm font-bold tracking-[0.25em] -mt-1 uppercase" style={{ fontFamily: "'Marcellus', serif" }}>Connect</p>
         </Link>
       </div>
 
-      <div className="flex flex-1 flex-col gap-6 overflow-y-auto no-scrollbar">
-        {sidebarLinks.map((item) => {
+      <div className="flex flex-1 flex-col gap-2 px-4 py-2 overflow-y-auto no-scrollbar min-h-0">
+        {visibleLinks.map((item) => {
           const isActive = pathname === item.route
           const Icon = icons[item.Icon.toString()];
+          // Mode-aware label: worshipy workspaces see worshipLabel when present.
+          const label = (isWorshipy && item.worshipLabel) ? item.worshipLabel : item.label;
           return (
             <Link
               href={item.route}
               key={item.label}
               className={cn(
-                'flex gap-4 items-center p-4 rounded-lg justify-start',
+                'flex gap-4 items-center p-3 rounded-lg justify-start',
                 {
                   'bg-orange-500': isActive,
                 }
               )}
             >
-              <span className={`${isActive ? 'text-white' : 'text-white'}`}>
-
+              <span className="text-white">
                 {Icon}
               </span>
 
-              <p className={`text-lg  ${isActive ? "text-white" : "text-white"} font-semibold `}>
-                {item.label}
+              <p className="text-base text-white font-semibold">
+                {label}
               </p>
             </Link>
           );
         })}
       </div>
 
-
-
-      <div className='py-2 border-b border-t border-white/40 flex items-center justify-between !bg-[url("/images/green.jpg")] rounded-md p-2'>
-        <div className='flex flex-col'>
-          <h4 className='text-white/90 text-2xl mb-1'>{subscription}</h4>
-          <p className='text-white/70 text-xs'> No Cost ${planslist[subscription as keyof typeof planslist]?.price || 0}/month</p>
+      <div className="flex flex-col gap-3 px-4 py-4 border-t border-white/10 shrink-0">
+        <div className="rounded-xl bg-white/[0.04] border border-white/10 p-3 flex items-center justify-between gap-3">
+          <div className="flex flex-col min-w-0">
+            <span className="text-[10px] uppercase tracking-wider text-white/45">Plan</span>
+            <h4 className="text-white font-semibold text-sm capitalize truncate">{subscription}</h4>
+            <p className="text-white/55 text-[11px]">${planslist[subscription as keyof typeof planslist]?.price || 0}/month</p>
+          </div>
+          {subscription === 'free' && (
+            <Link
+              href="/plans"
+              className="shrink-0 px-3 py-1.5 rounded-md text-xs font-semibold text-deep-gold border border-deep-gold/50 hover:bg-deep-gold/10 transition-colors"
+            >
+              Upgrade
+            </Link>
+          )}
         </div>
-        <Link href={'/plans'} className='block py-2 px-4 text-white/90 rounded-3xl hover:bg-black/30 text-sm '>Upgrade</Link>
-      </div>
 
-      {
-        subscription == "free" &&
-        <>
+        {subscription === 'free' && (
           <PartnerDialog>
-            <div className='flex items-center justify-center mt-2 cursor-pointer w-full'>
-              <button
-                className="relative btn-primary-worship py-3 w-full group overflow-hidden"
-              >
-                <span
-                  className="absolute top-0 right-0 inline-block w-4 h-4 transition-all duration-500 ease-in-out bg-orange-700 rounded group-hover:-mr-4 group-hover:-mt-4"
-                >
-                  <span
-                    className="absolute top-0 right-0 w-5 h-5 rotate-45 translate-x-1/2 -translate-y-1/2 bg-background-3"
-                  ></span>
-                </span>
-                <span
-                  className="absolute bottom-0 rotate-180 left-0 inline-block w-4 h-4 transition-all duration-500 ease-in-out bg-orange-700 rounded group-hover:-ml-4 group-hover:-mb-4"
-                >
-                  <span
-                    className="absolute top-0 right-0 w-5 h-5 rotate-45 translate-x-1/2 -translate-y-1/2 bg-background-3"
-                  ></span>
-                </span>
-                <span
-                  className="absolute bottom-0 left-0 w-full h-full transition-all duration-500 ease-in-out delay-200 -translate-x-full bg-orange-600 rounded-md group-hover:translate-x-0"
-                ></span>
-                <span
-                  className="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-white"
-                >Partnering with Us</span
-                >
-              </button>
-            </div>
+            <button
+              type="button"
+              className="sidebar-partner-link w-full text-xs font-semibold text-deep-gold/90 hover:text-deep-gold text-left transition-colors"
+            >
+              Partner with us →
+            </button>
           </PartnerDialog>
-          <p className='text-xs font-light mt-1'>Working together, we can make an eternal impact.</p>
-        </>
-      }
-
-
+        )}
+      </div>
     </section>
   );
 };

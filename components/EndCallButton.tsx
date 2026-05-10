@@ -1,38 +1,47 @@
 'use client';
 
-import { useCall, useCallStateHooks } from '@stream-io/video-react-sdk';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useUser } from '@clerk/nextjs';
+import axios from 'axios';
 
 import { Button } from './ui/button';
-import { useRouter } from 'next/navigation';
+import { useToast } from './ui/use-toast';
 
-const EndCallButton = () => {
-  const call = useCall();
+interface EndCallButtonProps {
+  /** LiveKit room name (= room_id). */
+  room: string;
+  /** Clerk user.id of the room creator (host). Button only renders when user.id matches. */
+  hostUserId: string;
+}
+
+const EndCallButton = ({ room, hostUserId }: EndCallButtonProps) => {
   const router = useRouter();
+  const { user } = useUser();
+  const { toast } = useToast();
+  const [busy, setBusy] = useState(false);
 
-  if (!call)
-    throw new Error(
-      'useStreamCall must be used within a StreamCall component.',
-    );
-
-  // https://getstream.io/video/docs/react/guides/call-and-participant-state/#participant-state-3
-  const { useLocalParticipant } = useCallStateHooks();
-  const localParticipant = useLocalParticipant();
-
-  const isMeetingOwner =
-    localParticipant &&
-    call.state.createdBy &&
-    localParticipant.userId === call.state.createdBy.id;
-
-  if (!isMeetingOwner) return null;
+  if (!user || user.id !== hostUserId) return null;
 
   const endCall = async () => {
-    await call.endCall();
-    router.push('/');
+    if (busy) return;
+    setBusy(true);
+    try {
+      await axios.post('/api/livekit/moderate', {
+        action: 'end',
+        room,
+        callerUserId: user.id,
+      });
+      router.push('/');
+    } catch (err: any) {
+      toast({ title: 'Failed to end call', description: err?.response?.data?.message || err.message });
+      setBusy(false);
+    }
   };
 
   return (
-    <Button onClick={endCall} className="bg-red-500">
-      End call for everyone
+    <Button onClick={endCall} disabled={busy} className="bg-red-500">
+      {busy ? 'Ending…' : 'End call for everyone'}
     </Button>
   );
 };

@@ -1,4 +1,5 @@
 import CallList from "@/components/CallList";
+import PermissionGate from "@/components/PermissionGate";
 
 const PreviousPage = () => {
   return (
@@ -10,4 +11,10 @@ const PreviousPage = () => {
   );
 };
 
-export default PreviousPage;
+export default function PreviousPageGated() {
+  return (
+    <PermissionGate resource="meetings" action="view">
+      <PreviousPage />
+    </PermissionGate>
+  );
+}

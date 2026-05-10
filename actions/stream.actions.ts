@@ -1,25 +1,30 @@
 'use server';
 
-import { StreamClient } from '@stream-io/node-sdk';
+import { AccessToken } from 'livekit-server-sdk';
 import { currentUser } from '@clerk/nextjs/server';
 
-const API_KEY = process.env.NEXT_PUBLIC_STREAM_API_KEY;
-const API_SECRET = process.env.STREAM_SECRET_KEY;
+const API_KEY = process.env.LIVEKIT_API_KEY;
+const API_SECRET = process.env.LIVEKIT_API_SECRET;
 
-export const tokenProvider = async () => {
+export const tokenProvider = async (room?: string): Promise<string> => {
   const user = await currentUser();
-
   if (!user) throw new Error('User is not logged in');
-  if (!API_KEY) throw new Error('No API Key');
-  if (!API_SECRET) throw new Error('No API Secret');
+  if (!API_KEY || !API_SECRET) throw new Error('LiveKit credentials missing');
 
-  const client = new StreamClient(API_KEY, API_SECRET);
+  const at = new AccessToken(API_KEY, API_SECRET, {
+    identity: user.id,
+    name: user.username || user.firstName || user.id,
+    ttl: 60 * 60,
+  });
 
-  // exp is optional (default 1h)
-  const exp = Math.round(new Date().getTime() / 1000) + 60 * 60;
-  const issued = Math.floor(Date.now() / 1000) - 60;
+  at.addGrant({
+    roomJoin: true,
+    room: room || '*',
+    canPublish: true,
+    canSubscribe: true,
+    canPublishData: true,
+    canUpdateOwnMetadata: true,
+  });
 
-  const token = client.generateUserToken({ user_id: user.id, exp: exp, iat: issued });
-
-  return token;
+  return at.toJwt();
 };

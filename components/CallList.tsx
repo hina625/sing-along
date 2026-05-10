@@ -1,14 +1,13 @@
 'use client';
 
-import { Call, CallRecording } from '@stream-io/video-react-sdk';
-
 import Loader from './Loader';
-import { useGetCalls } from '@/hooks/useGetCalls';
+import { useGetCalls, RoomRecording } from '@/hooks/useGetCalls';
 import MeetingCard from './MeetingCard';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { useUser } from '@clerk/nextjs';
+import { WorkspaceContext } from '@/providers/WorkspaceProvider';
 
 export interface IRoomDetails {
   end_time: string;
@@ -51,16 +50,20 @@ const getDayName = (date: Date): string => {
 };
 
 const CallList = ({ type }: { type: 'ended' | 'upcoming' | 'recordings' }) => {
-  const { endedCalls, upcomingCalls, callRecordings, isLoading } = useGetCalls();
-  const [recordings, setRecordings] = useState<CallRecording[]>([]);
+  const { callRecordings, isLoading } = useGetCalls();
   const [meetings, setMeetings] = useState<IRoomDetails[]>([]);
   const { user } = useUser();
+  const { activeWorkspace } = useContext(WorkspaceContext);
   const router = useRouter();
+  const recordings: RoomRecording[] = callRecordings || [];
 
   async function getRooms() {
     try {
       if (!user?.id) return;
-      const res = await axios.get(`/api/v1/get-rooms?user_id=${user?.id}${type === 'upcoming' ? '&upcoming=true' : ''}`);
+      const params = new URLSearchParams({ user_id: user.id });
+      if (type === 'upcoming') params.set('upcoming', 'true');
+      if (activeWorkspace?._id) params.set('workspace_id', activeWorkspace._id);
+      const res = await axios.get(`/api/v1/get-rooms?${params.toString()}`);
       setMeetings(res.data.rooms);
     } catch (error) {
       console.log(error);
@@ -69,29 +72,7 @@ const CallList = ({ type }: { type: 'ended' | 'upcoming' | 'recordings' }) => {
 
   useEffect(() => {
     getRooms();
-  }, [user, type]);
-
-  useEffect(() => {
-    const fetchRecordings = async () => {
-      try {
-        const callData = await Promise.all(
-          callRecordings?.map((meeting) => meeting.queryRecordings()) ?? [],
-        );
-
-        const recordings = callData
-          .filter((call) => call.recordings.length > 0)
-          .flatMap((call) => call.recordings);
-
-        setRecordings(recordings);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    if (type === 'recordings') {
-      fetchRecordings();
-    }
-  }, [type, callRecordings]);
+  }, [user, type, activeWorkspace?._id]);
 
   if (isLoading) return <Loader />;
 
@@ -114,15 +95,15 @@ const CallList = ({ type }: { type: 'ended' | 'upcoming' | 'recordings' }) => {
     <div className='flex items-center justify-center flex-wrap gap-5'>
       {type === 'recordings' ? (
         recordings.length > 0 ? (
-          recordings.map((recording: CallRecording) => (
+          recordings.map((recording: RoomRecording) => (
             <MeetingCard
-              key={recording.url}
+              key={recording._id}
               icon="/icons/recordings.svg"
-              title={recording.filename?.substring(0, 20) || 'Recording'}
-              date={new Date(recording.start_time).toLocaleString()}
+              title={recording.title?.substring(0, 20) || 'Recording'}
+              date={new Date(recording.startedAt).toLocaleString()}
               isPreviousMeeting={type === 'ended'}
-              link={recording.url}
-              handleClick={() => router.push(recording.url)}
+              link={recording.fileUrl || ''}
+              handleClick={() => recording.fileUrl && router.push(recording.fileUrl)}
               buttonText="Play"
               buttonIcon1="/icons/play.svg"
             />

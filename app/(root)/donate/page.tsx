@@ -53,6 +53,8 @@ const page = ({ searchParams }: props) => {
   const [cvv, setCvv] = useState('');
   const [loading, setLoading] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<'cash'|'zelle'|'venmo' | undefined>(undefined);
+  const [isRecurring, setIsRecurring] = useState(false);
+  const [frequency, setFrequency] = useState<'weekly' | 'monthly' | 'yearly'>('monthly');
   const { user } = useUser();
   const { toast } = useToast();
   const router = useRouter();
@@ -106,7 +108,7 @@ const page = ({ searchParams }: props) => {
         return
       }
 
-      const res = await axios.post(`/api/v1/donate`, {
+      const payload = {
         cardNumber: cardNumber.replaceAll('-', ''),
         expiryMonth: expire.split('/')[0],
         expiryYear: expire.split('/')[1],
@@ -115,21 +117,31 @@ const page = ({ searchParams }: props) => {
         email: email,
         firstName: `${firstname || ''}`,
         lastName: `${lastname || ''}`,
-      }, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
+        ...(isRecurring && { frequency }),
+      };
+
+      const endpoint = isRecurring ? `/api/v1/donate/recurring` : `/api/v1/donate`;
+      const res = await axios.post(endpoint, payload, {
+        headers: { 'Content-Type': 'application/json' },
       });
       setLoading(false);
 
       if (res.data.success) {
-        router.push(`/success?session_id=${res.data.transactionId}`);
+        if (isRecurring) {
+          toast({
+            title: '💛 Recurring gift set up',
+            description: `Your ${frequency} gift of $${donationAmount} is scheduled.`,
+          });
+          router.push(`/success?subscription_id=${res.data.subscriptionId}&recurring=1`);
+        } else {
+          router.push(`/success?session_id=${res.data.transactionId}`);
+        }
       }
 
     } catch (error: any) {
       setLoading(false)
       toast({
-        title: error?.response?.data?.message
+        title: error?.response?.data?.message || error?.message || 'Donation failed. Please try again.',
       });
       console.log(error.message);
     }
@@ -149,10 +161,10 @@ const page = ({ searchParams }: props) => {
             <div className="mx-auto max-w-5xl">
               <div className="flex items-center justify-between mb-8">
                 <h2 className="text-3xl md:text-5xl font-bold text-white">
-                  Support Our Ministry
+                  Give Offering — Sow a Seed
                 </h2>
                 <div className="hidden md:block">
-                   <p className="text-white/60 text-sm">Empower our ministry with your support.</p>
+                   <p className="text-white/60 text-sm">Be a blessing — your gift powers the ministry.</p>
                 </div>
               </div>
 
@@ -236,6 +248,42 @@ const page = ({ searchParams }: props) => {
                     </div>
                   </div>
 
+                  {/* === Recurring toggle === */}
+                  <div className="mb-6 rounded-xl border border-white/10 bg-white/5 p-4">
+                    <label className="flex items-center gap-3 cursor-pointer select-none">
+                      <input
+                        type="checkbox"
+                        checked={isRecurring}
+                        onChange={(e) => setIsRecurring(e.target.checked)}
+                        className="h-4 w-4 accent-orange-500"
+                      />
+                      <span className="text-white/90 text-sm font-medium">Make this a recurring gift</span>
+                    </label>
+                    {isRecurring && (
+                      <div className="mt-4 grid grid-cols-3 gap-2">
+                        {(['weekly', 'monthly', 'yearly'] as const).map((freq) => (
+                          <button
+                            type="button"
+                            key={freq}
+                            onClick={() => setFrequency(freq)}
+                            className={`py-2 px-3 rounded-lg text-sm font-semibold transition-all border ${
+                              frequency === freq
+                                ? 'bg-gradient-to-r from-[#5A2D82] to-[#D4AF37] text-white border-transparent shadow-md'
+                                : 'bg-white/5 text-white/70 border-white/10 hover:bg-white/10'
+                            }`}
+                          >
+                            {freq[0].toUpperCase() + freq.slice(1)}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                    {isRecurring && (
+                      <p className="mt-3 text-xs text-white/55 italic">
+                        ${donationAmount} will be charged every {frequency === 'monthly' ? 'month' : frequency === 'weekly' ? 'week' : 'year'} until you cancel. Cancel any time from your dashboard.
+                      </p>
+                    )}
+                  </div>
+
                   <div className="mb-6">
                     <label className="mb-2 block text-sm font-medium text-white/80">
                       Card Number*
@@ -293,7 +341,7 @@ const page = ({ searchParams }: props) => {
                         </svg>
                         Processing...
                       </span>
-                    ) : 'Send Your Gift'}
+                    ) : isRecurring ? `Sow a ${frequency[0].toUpperCase() + frequency.slice(1)} Seed` : 'Sow a Seed'}
                   </button>
 
                   <div className="relative my-8 flex items-center">

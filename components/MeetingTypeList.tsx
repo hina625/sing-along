@@ -14,6 +14,7 @@ import { useToast } from './ui/use-toast';
 import { Input } from './ui/input';
 import axios from 'axios';
 import { subscriptionContext } from '@/providers/SubscriptionProvider';
+import { WorkspaceContext } from '@/providers/WorkspaceProvider';
 import { planslist } from '@/constants';
 import { IRoomDetails } from './CallList';
 
@@ -52,6 +53,7 @@ const MeetingTypeList = () => {
   >(undefined);
   const [values, setValues] = useState(initialValues);
   const {subscription} = useContext(subscriptionContext);
+  const { activeWorkspace } = useContext(WorkspaceContext);
  
 
  
@@ -92,14 +94,19 @@ const MeetingTypeList = () => {
     if ( !user) return;
     if(meetings && meetings.length > 0){
       const todayMeetings = meetings.filter(m => isToday(m.start_time));
-      if(subscription == "free" && todayMeetings.length >= 3){
-        toast({ title: 'You are on our Free Plan, which lets you host 3 meetings each day. To host more, please upgrade your plan.' });
+      const freeLimit = planslist.free.meetingsPerDay;
+      if(subscription == "free" && todayMeetings.length >= freeLimit){
+        toast({ title: `You are on our Free Plan, which lets you host ${freeLimit} meetings each day. To host more, please upgrade your plan.` });
         return
       }
     }
     try {
       if (!values.dateTime) {
         toast({ title: 'Please select a date and time' });
+        return;
+      }
+      if (meetingState === 'isScheduleMeeting' && values.dateTime.getTime() <= Date.now()) {
+        toast({ title: 'Pick a date and time in the future' });
         return;
       }
       const id = crypto.randomUUID();
@@ -116,10 +123,10 @@ const MeetingTypeList = () => {
       let res;
       if(meetingState === 'isScheduleMeeting'){
 
-        res = await axios.post('/api/v1/create-room',{user_id: user?.id, room_id: id, user_plan: subscription,start_time: new Date().toUTCString(),end_time,isSchedule:true,description:description,scheduleTime:values.dateTime,status,image});
+        res = await axios.post('/api/v1/create-room',{user_id: user?.id, workspaceId: activeWorkspace?._id || null, room_id: id, user_plan: subscription,start_time: new Date().toUTCString(),end_time,isSchedule:true,description:description,scheduleTime:values.dateTime,status,image});
       }else{
 
-         res = await axios.post('/api/v1/create-room',{user_id: user?.id, room_id: id, user_plan: subscription,start_time: new Date().toUTCString(),end_time,status:'private'});
+         res = await axios.post('/api/v1/create-room',{user_id: user?.id, workspaceId: activeWorkspace?._id || null, room_id: id, user_plan: subscription,start_time: new Date().toUTCString(),end_time,status:'private'});
       }
       setId(id)
       if(res?.data.success){
@@ -130,9 +137,11 @@ const MeetingTypeList = () => {
         title: 'Meeting Created',
       });
       setMeetingState(undefined);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      toast({ title: 'Failed to create Meeting' });
+      // Surface server's plan-cap message when 402 (or any structured error).
+      const serverMsg = error?.response?.data?.message;
+      toast({ title: serverMsg || 'Failed to create Meeting' });
     }
   };
 
@@ -140,57 +149,93 @@ const MeetingTypeList = () => {
 
   const meetingLink = `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/beforemeet/${id}`;
 
+  // Business workspaces get team-meeting framing; worship/hybrid/community
+  // keep the worship copy. Mirrors the split in dashboard/page.tsx.
+  const isBusinessWs = activeWorkspace?.mode === 'business';
+  const copy = isBusinessWs
+    ? {
+        startTitle: 'Start Meeting',
+        startDesc: 'Get your team in the room',
+        joinTitle: 'Join Meeting',
+        joinDesc: 'via invitation link',
+        scheduleTitle: 'Schedule Meeting',
+        scheduleDesc: 'Plan a team sync',
+        pastTitle: 'Past Meetings',
+        pastDesc: 'Recorded sessions',
+        scheduleModalTitle: 'Schedule Meeting',
+        joinModalTitle: 'Paste the meeting link',
+        joinModalButton: 'Join Meeting',
+        instantModalTitle: 'Start Meeting Now',
+        instantModalButton: 'Start Meeting',
+      }
+    : {
+        startTitle: 'Start Worship',
+        startDesc: 'Go live with your congregation',
+        joinTitle: 'Join Worship',
+        joinDesc: 'via invitation link',
+        scheduleTitle: 'Schedule Service',
+        scheduleDesc: 'Plan Sunday or midweek service',
+        pastTitle: 'Past Services',
+        pastDesc: 'Recorded worship & sermons',
+        scheduleModalTitle: 'Schedule Worship Service',
+        joinModalTitle: 'Paste the worship link',
+        joinModalButton: 'Join Worship',
+        instantModalTitle: 'Start Worship Now',
+        instantModalButton: 'Start Worship',
+      };
+
   return (
     <section className="flex items-center justify-center gap-5 flex-wrap">
       <HomeCard
         img="/icons/add-meeting.svg"
-        title="New Meeting"
-        description="Start an instant meeting"
+        title={copy.startTitle}
+        description={copy.startDesc}
         className="card-gold"
         handleClick={() => setMeetingState('isInstantMeeting')}
       />
       <HomeCard
         img="/icons/join-meeting.svg"
-        title="Join Meeting"
-        description="via invitation link"
+        title={copy.joinTitle}
+        description={copy.joinDesc}
         className="card-purple"
         handleClick={() => setMeetingState('isJoiningMeeting')}
       />
       <HomeCard
         img="/icons/schedule.svg"
-        title="Schedule Meeting"
-        description="Plan your meeting"
+        title={copy.scheduleTitle}
+        description={copy.scheduleDesc}
         className="card-burgundy"
         handleClick={() => setMeetingState('isScheduleMeeting')}
       />
       <HomeCard
         img="/icons/recordings.svg"
-        title="View Recordings"
-        description="Meeting Recordings"
+        title={copy.pastTitle}
+        description={copy.pastDesc}
         className="card-teal"
-        handleClick={() => router.push('/recordings')}
+        handleClick={() => router.push('/dashboard/recordings')}
       />
 
       {true ? (
         <MeetingModal
           isOpen={meetingState === 'isScheduleMeeting'}
           onClose={() => setMeetingState(undefined)}
-          title="Create Meeting"
+          title={copy.scheduleModalTitle}
+          className="text-white"
           handleClick={createMeeting}
         >
           <div className="flex flex-col gap-2.5">
-            <label className="text-base font-normal leading-[22.4px] text-black/90">
+            <label className="text-base font-normal leading-[22.4px] text-white/85">
               Add a description
             </label>
             <Textarea
-              className="bg-transparent border-gray-400"
+              className="bg-dark-3 text-white placeholder:text-white/40 border border-white/15 focus-visible:border-deep-gold/60 focus-visible:ring-0 focus-visible:ring-offset-0"
               onChange={(e) =>
                 setDesc(e.target.value)
               }
             />
           </div>
           <div className="flex w-full flex-col gap-2.5">
-            <label className="text-base font-normal leading-[22.4px] text-black/90">
+            <label className="text-base font-normal leading-[22.4px] text-white/85">
               Select Date and Time
             </label>
             <ReactDatePicker
@@ -201,23 +246,35 @@ const MeetingTypeList = () => {
               timeIntervals={15}
               timeCaption="time"
               dateFormat="MMMM d, yyyy h:mm aa"
-              className="w-full rounded bg-dark-3 p-2 focus:outline-none"
+              minDate={new Date()}
+              // When picking today, only show time slots that haven't passed yet.
+              filterTime={(time) => {
+                const selected = values.dateTime || new Date();
+                if (!isToday(selected.toISOString())) return true;
+                return time.getTime() >= Date.now();
+              }}
+              wrapperClassName="w-full"
+              className="w-full rounded !bg-[#1A1A1A] !text-white border border-white/15 p-2 focus:outline-none focus:border-deep-gold/60"
             />
           </div>
-          
+
 
           <div className="flex w-full flex-col gap-2.5">
-            <label className="text-base font-normal leading-[22.4px] text-black/90">
+            <label className="text-base font-normal leading-[22.4px] text-white/85">
               Meeting Type
             </label>
-            <select onChange={(e) => setStatus(e.target.value)} value={status} className='py-2 px-3 outline-none border rounded-md border-gray-400 bg-transparent'>
-              <option value={'private'}>Private</option>
-              <option value={'public'}>Public</option>
+            <select
+              onChange={(e) => setStatus(e.target.value)}
+              value={status}
+              className="py-2 px-3 outline-none border rounded-md border-white/15 !bg-[#1A1A1A] !text-white focus:border-deep-gold/60"
+            >
+              <option value={'private'} className="bg-[#1A1A1A] text-white">Private</option>
+              <option value={'public'} className="bg-[#1A1A1A] text-white">Public</option>
             </select>
           </div>
 
           <div className="flex flex-col gap-2.5">
-            <label className="text-base font-normal leading-[22.4px] text-black/90">
+            <label className="text-base font-normal leading-[22.4px] text-white/85">
               Cover Image
             </label>
             <Input
@@ -225,7 +282,7 @@ const MeetingTypeList = () => {
               type='file'
               accept='image/*'
               onChange={handleImageChange}
-              className="border-none bg-dark-3 focus-visible:ring-0 focus-visible:ring-offset-0"
+              className="bg-dark-3 text-white border border-white/15 file:text-white file:bg-transparent file:border-0 file:mr-3 focus-visible:border-deep-gold/60 focus-visible:ring-0 focus-visible:ring-offset-0"
             />
           </div>
 
@@ -241,7 +298,7 @@ const MeetingTypeList = () => {
           }}
           image={'/icons/checked.svg'}
           buttonIcon="/icons/copy.svg"
-          className="text-center"
+          className="text-center text-white"
           buttonText="Copy Meeting Link"
         />
       )}
@@ -249,24 +306,40 @@ const MeetingTypeList = () => {
       <MeetingModal
         isOpen={meetingState === 'isJoiningMeeting'}
         onClose={() => setMeetingState(undefined)}
-        title="Type the link here"
-        className="text-center"
-        buttonText="Join Meeting"
-        handleClick={() => router.push(`/meeting/${values.link}`)}
+        title={copy.joinModalTitle}
+        className="text-center text-white"
+        buttonText={copy.joinModalButton}
+        handleClick={() => {
+          const raw = (values.link || '').trim();
+          if (!raw) {
+            toast({ title: 'Paste a meeting link or ID' });
+            return;
+          }
+          // Accept either a bare meeting id or a full URL like
+          // /dashboard/beforemeet/<id> or /meeting/<id>. Strip query/hash
+          // and take the last non-empty path segment.
+          const cleaned = raw.split('?')[0].split('#')[0];
+          const id = cleaned.split('/').filter(Boolean).pop() || '';
+          if (!id) {
+            toast({ title: 'That link doesn’t look like a valid meeting' });
+            return;
+          }
+          router.push(`/meeting/${id}`);
+        }}
       >
         <Input
-          placeholder="Meeting link"
+          placeholder="Meeting link or ID"
           onChange={(e) => setValues({ ...values, link: e.target.value })}
-          className="border-none bg-dark-3 focus-visible:ring-0 focus-visible:ring-offset-0"
+          className="bg-dark-3 text-white placeholder:text-white/40 border border-white/15 focus-visible:border-deep-gold/60 focus-visible:ring-0 focus-visible:ring-offset-0"
         />
       </MeetingModal>
 
       <MeetingModal
         isOpen={meetingState === 'isInstantMeeting'}
         onClose={() => setMeetingState(undefined)}
-        title="Start an Instant Meeting"
-        className="text-center"
-        buttonText="Start Meeting"
+        title={copy.instantModalTitle}
+        className="text-center text-white"
+        buttonText={copy.instantModalButton}
         handleClick={createMeeting}
       />
     </section>

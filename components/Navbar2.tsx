@@ -60,13 +60,13 @@ const Navbar2 = () => {
         <div className="collapse2 navbar-collapse p-3 md:!p-0 rounded-md md:rounded-none" id="navbarCollapse">
           <ul className="navbar-nav mt-4 mt-lg-0 ml-auto">
             <li className="nav-item ">
-              <a className="nav-link !text-black/80 md:!text-white/80  hover:!text-foregroud-primary !font-medium hover:!font-normal !text-[18px]" href="/">
+              <a className="nav-link !text-black/80 lg:!text-white/80  hover:!text-foregroud-primary !font-medium hover:!font-normal !text-[18px]" href="/">
                 Home
               </a>
             </li>
             <li className="nav-item ">
               <a
-                className="nav-link !text-black/80 md:!text-white/80  hover:!text-foregroud-primary !font-medium hover:!font-normal !text-[18px]"
+                className="nav-link !text-black/80 lg:!text-white/80  hover:!text-foregroud-primary !font-medium hover:!font-normal !text-[18px]"
                 href="/dashboard"
               >
                 Dashboard
@@ -77,7 +77,7 @@ const Navbar2 = () => {
               data-toggle="hover"
             >
               <a
-                className="nav-link !text-black/80 md:!text-white/80  hover:!text-foregroud-primary !font-medium hover:!font-normal !text-[18px]"
+                className="nav-link !text-black/80 lg:!text-white/80  hover:!text-foregroud-primary !font-medium hover:!font-normal !text-[18px]"
                 href="/about"
                 role="button"
                 data-toggle="dropdown"
@@ -116,7 +116,7 @@ const Navbar2 = () => {
             </li>
             <li className="nav-item ">
               <a
-                className="nav-link !text-black/80 md:!text-white/80  hover:!text-foregroud-primary !font-medium hover:!font-normal !text-[18px]"
+                className="nav-link !text-black/80 lg:!text-white/80  hover:!text-foregroud-primary !font-medium hover:!font-normal !text-[18px]"
                 href="/contact-us"
               >
                 Contact

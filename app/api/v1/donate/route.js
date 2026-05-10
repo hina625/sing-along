@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { APIContracts, APIControllers,Constants as SDKConstants } from 'authorizenet';
 import subscriptionModel from '@/lib/userModel';
+import donationModel from '@/lib/donationModel';
+import connectDB from '@/lib/connnectDB';
+import { notify } from '@/lib/notify';
 import sendEmail from '@/lib/sendEmail'
 import { getAuth, clerkClient } from '@clerk/nextjs/server'
 
@@ -102,8 +105,37 @@ export const POST = async (req) => {
             });
         });
 
-     
+
         if(response.success){
+            // Log the donation so it shows up in dashboard analytics.
+            try {
+                const { userId } = (typeof getAuth === 'function') ? getAuth(req) : { userId: null };
+                await connectDB();
+                await donationModel.create({
+                    transactionId: response.transactionId,
+                    donorUserId: userId || null,
+                    firstName: firstName || '',
+                    lastName: lastName || '',
+                    email: email || '',
+                    amount: Number(amount) || 0,
+                    method: 'card',
+                    status: 'succeeded',
+                });
+                // Send the donor a thank-you notification (in-app), if they are signed in.
+                if (userId) {
+                    await notify({
+                        userId,
+                        type: 'donation.received',
+                        title: '💛 Thank you for your gift',
+                        body: `Your $${Number(amount).toLocaleString()} offering was received. Be blessed.`,
+                        link: '/dashboard',
+                        icon: '💛',
+                    });
+                }
+            } catch (logErr) {
+                console.error('Donation logging failed (non-fatal):', logErr?.message);
+            }
+
             try {
                 const message = `Donation Successful! 🎉
 
