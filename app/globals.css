@@ -6678,6 +6678,136 @@ html.light[data-ws-mode="hybrid"] .dash-welcome-name {
   color: transparent !important;
 }
 
+/* =====================================================================
+   COMMUNITY mode — "Meadow" palette (worship + business blended).
+
+   Community shares the worship selector lists above as a base layer; this
+   block comes later in source order with equal specificity, so it wins for
+   `[data-ws-mode="community"]` pages and re-skins the key surfaces with a
+   sage-green / honey identity that's distinct from worship (gold/purple),
+   hybrid (purple/teal) and business (slate/indigo).
+   ===================================================================== */
+
+/* Top navbar */
+html.light[data-ws-mode="community"] nav.flex-between {
+  background: linear-gradient(90deg, #E7F0DE 0%, #DCE9CF 60%, #D2E3C4 100%) !important;
+  border-bottom: 1px solid rgba(63, 125, 92, 0.35) !important;
+  color: #234A33 !important;
+}
+html.light[data-ws-mode="community"] nav.flex-between .text-white { color: #234A33 !important; }
+
+/* Body wash */
+html.light[data-ws-mode="community"] .bg-background-4 {
+  background-color: #EEF4EA !important;
+  background-image:
+    radial-gradient(900px 320px at 100% -10%, rgba(63, 125, 92, 0.22), transparent 60%),
+    radial-gradient(700px 300px at 0% 110%, rgba(217, 154, 43, 0.20), transparent 60%),
+    radial-gradient(800px 320px at 50% 50%, rgba(192, 78, 53, 0.10), transparent 70%) !important;
+}
+
+/* Sidebar */
+html.light[data-ws-mode="community"] .sidebar-glow {
+  background: linear-gradient(180deg, #E7F0DE 0%, #DCE9CF 60%, #D2E3C4 100%) !important;
+  border-right: 1px solid rgba(63, 125, 92, 0.35) !important;
+  color: #234A33 !important;
+  box-shadow: inset -1px 0 0 rgba(255,255,255,0.5), 4px 0 24px rgba(63, 125, 92, 0.12) !important;
+}
+html.light[data-ws-mode="community"] .sidebar-glow .text-white { color: #1F3D2A !important; }
+html.light[data-ws-mode="community"] .sidebar-glow .text-white\/55,
+html.light[data-ws-mode="community"] .sidebar-glow .text-white\/45 { color: rgba(31, 61, 42, 0.65) !important; }
+html.light[data-ws-mode="community"] .sidebar-glow .text-\[\#F57C00\] { color: #9A5B1A !important; }
+html.light[data-ws-mode="community"] .sidebar-partner-link { color: #9A5B1A !important; }
+html.light[data-ws-mode="community"] .sidebar-partner-link:hover { color: #3F7D5C !important; }
+html.light[data-ws-mode="community"] .sidebar-glow a.bg-orange-500 {
+  background: linear-gradient(135deg, #3F7D5C 0%, #D99A2B 100%) !important;
+  box-shadow: 0 6px 16px rgba(63, 125, 92, 0.35) !important;
+}
+html.light[data-ws-mode="community"] .sidebar-glow a.bg-orange-500 .text-white { color: #ffffff !important; }
+
+/* Default card-premium */
+html.light[data-ws-mode="community"] .card-premium {
+  background: linear-gradient(135deg, #F6FBF0 0%, #E4EFD4 100%) !important;
+  border: 1px solid rgba(63, 125, 92, 0.40) !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.9) inset,
+    0 12px 30px rgba(63, 125, 92, 0.14),
+    0 4px 10px rgba(217, 154, 43, 0.18) !important;
+  color: #234A33;
+}
+
+/* Dashboard stats grid — warm meadow rotation */
+html.light[data-ws-mode="community"] .dash-stats-grid > .card-premium:nth-child(6n+1) {
+  background: linear-gradient(135deg, #FFE3C2 0%, #F2BE82 100%) !important;
+  border-color: rgba(217, 119, 6, 0.40) !important;
+}
+html.light[data-ws-mode="community"] .dash-stats-grid > .card-premium:nth-child(6n+2) {
+  background: linear-gradient(135deg, #E2EFCF 0%, #BFD89B 100%) !important;
+  border-color: rgba(63, 125, 92, 0.40) !important;
+}
+html.light[data-ws-mode="community"] .dash-stats-grid > .card-premium:nth-child(6n+3) {
+  background: linear-gradient(135deg, #FBD9CB 0%, #EFA98C 100%) !important;
+  border-color: rgba(192, 78, 53, 0.40) !important;
+}
+html.light[data-ws-mode="community"] .dash-stats-grid > .card-premium:nth-child(6n+4) {
+  background: linear-gradient(135deg, #D8E9F0 0%, #A7C9D6 100%) !important;
+  border-color: rgba(45, 120, 140, 0.38) !important;
+}
+html.light[data-ws-mode="community"] .dash-stats-grid > .card-premium:nth-child(6n+5) {
+  background: linear-gradient(135deg, #E7DDEF 0%, #C3AAD3 100%) !important;
+  border-color: rgba(120, 80, 140, 0.40) !important;
+}
+html.light[data-ws-mode="community"] .dash-stats-grid > .card-premium:nth-child(6n+6) {
+  background: linear-gradient(135deg, #DDEAD0 0%, #B6CF98 100%) !important;
+  border-color: rgba(90, 130, 60, 0.42) !important;
+}
+
+/* Plan grid */
+html.light[data-ws-mode="community"] .dash-plan-grid > .card-premium:nth-child(4n+1) {
+  background: linear-gradient(135deg, #E2EFCF 0%, #BFD89B 100%) !important;
+  border-color: rgba(63, 125, 92, 0.45) !important;
+}
+html.light[data-ws-mode="community"] .dash-plan-grid > .card-premium:nth-child(4n+2) {
+  background: linear-gradient(135deg, #FFE3C2 0%, #F2BE82 100%) !important;
+  border-color: rgba(217, 119, 6, 0.45) !important;
+}
+html.light[data-ws-mode="community"] .dash-plan-grid > .card-premium:nth-child(4n+3) {
+  background: linear-gradient(135deg, #FBD9CB 0%, #EFA98C 100%) !important;
+  border-color: rgba(192, 78, 53, 0.45) !important;
+}
+html.light[data-ws-mode="community"] .dash-plan-grid > .card-premium:nth-child(4n+4) {
+  background: linear-gradient(135deg, #D8E9F0 0%, #A7C9D6 100%) !important;
+  border-color: rgba(45, 120, 140, 0.45) !important;
+}
+
+/* Radix Dialog / Sheet surface + overlay */
+html.light[data-ws-mode="community"] [role="dialog"].bg-white,
+html.light[data-ws-mode="community"] [role="alertdialog"].bg-white {
+  background: linear-gradient(160deg, #F6FBF0 0%, #E4EFD4 100%) !important;
+  border: 1px solid rgba(63, 125, 92, 0.45) !important;
+  color: #234A33 !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.9) inset,
+    0 24px 60px rgba(63, 125, 92, 0.22),
+    0 8px 18px rgba(217, 154, 43, 0.18) !important;
+}
+html.light[data-ws-mode="community"] [role="dialog"][data-state]::backdrop {
+  background: rgba(31, 61, 42, 0.55) !important;
+}
+
+/* Generic .bg-white surfaces on inner pages (members, recordings, etc.) */
+html.light[data-ws-mode="community"] section .bg-white {
+  background-color: #F4FAEE !important;
+}
+
+/* Welcome name gradient */
+html.light[data-ws-mode="community"] .dash-welcome-name {
+  background-image: linear-gradient(135deg, #3F7D5C 0%, #D99A2B 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
 /* ---------- DARK mode mode-tinting (subtle — keep premium feel) ----
    Even in dark mode, a touch of mode-specific accent on the body wash
    reinforces which workspace you're in. */

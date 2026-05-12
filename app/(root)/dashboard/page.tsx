@@ -67,7 +67,7 @@ const DashboardPage = () => {
 
   const [stats, setStats] = useState<Stats | null>(null);
   const [statsLoading, setStatsLoading] = useState(true);
-  const [starting, setStarting] = useState<'worship' | 'meeting' | null>(null);
+  const [starting, setStarting] = useState<'worship' | 'meeting' | 'gathering' | null>(null);
 
   useEffect(() => {
     if (!user?.id) return;
@@ -89,9 +89,12 @@ const DashboardPage = () => {
     return () => clearInterval(t);
   }, [user?.id, activeWorkspace?._id]);
 
-  const startSession = async (mode: 'worship' | 'meeting') => {
+  const startSession = async (kind: 'worship' | 'meeting' | 'gathering') => {
     if (!user || starting) return;
-    setStarting(mode);
+    setStarting(kind);
+    // 'gathering' opens a hybrid room (both worship + business toolsets) — the
+    // default session shape for community workspaces.
+    const roomMode = kind === 'worship' ? 'worship' : kind === 'gathering' ? 'hybrid' : 'business';
     try {
       const id = crypto.randomUUID();
       const minutes = planslist[subscription]?.min || 40;
@@ -99,7 +102,7 @@ const DashboardPage = () => {
       const res = await axios.post('/api/v1/create-room', {
         user_id: user.id,
         workspaceId: activeWorkspace?._id || null,
-        mode: mode === 'worship' ? 'worship' : 'business',
+        mode: roomMode,
         room_id: id,
         user_plan: subscription,
         start_time: new Date().toUTCString(),
@@ -117,7 +120,7 @@ const DashboardPage = () => {
       // upgrade message directly when the server returns 402 (plan-cap hit).
       const serverMsg = e?.response?.data?.message;
       toast({
-        title: mode === 'worship' ? 'Could not start worship' : 'Could not start meeting',
+        title: kind === 'worship' ? 'Could not start worship' : kind === 'gathering' ? 'Could not start gathering' : 'Could not start meeting',
         description: serverMsg || e?.message || 'Try again.',
       });
     }
@@ -212,11 +215,11 @@ const DashboardPage = () => {
     return <Loader />;
   }
 
-  // Mode-aware copy: business workspaces get team-meeting framing,
-  // worship/hybrid/community get worship framing.
+  // Mode-aware copy: business → team-meeting framing, worship/hybrid → worship,
+  // community → blended "gathering" framing (worship tools + meeting tools).
   const wsMode = activeWorkspace.mode;
   const isBusinessWs = wsMode === 'business';
-  const isWorshipy = wsMode === 'worship' || wsMode === 'hybrid' || wsMode === 'community';
+  const isCommunityWs = wsMode === 'community';
 
   const heroCopy = isBusinessWs
     ? {
@@ -224,11 +227,23 @@ const DashboardPage = () => {
         headline: 'Get your team in the room',
         subline: 'One click to open a meeting with notes, files, whiteboard, and recording.',
       }
+    : isCommunityWs
+    ? {
+        eyebrow: 'Go Live',
+        headline: 'Bring your community together',
+        subline: 'One click to open a gathering — lyrics, prayer, and giving alongside notes, files, whiteboard, and recording.',
+      }
     : {
         eyebrow: 'Go Live',
         headline: 'Gather your congregation',
         subline: 'One click to open a worship room with lyrics, faith reactions, prayer, and giving — or start a regular meeting.',
       };
+
+  const welcomeSub = isBusinessWs
+    ? 'Built for the way your team actually meets.'
+    : isCommunityWs
+    ? 'One space for worship and the work that keeps it running.'
+    : '"Sing to the Lord a new song" — Psalm 96:1';
 
   return (
     <section className="flex size-full flex-col gap-8 text-white pb-12">
@@ -238,9 +253,7 @@ const DashboardPage = () => {
           Welcome{user?.firstName ? <>, <span className="dash-welcome-name">{user.firstName}</span></> : ''}
         </h2>
         <p className="dash-welcome-sub mt-1 text-sm md:text-base">
-          {isBusinessWs
-            ? 'Built for the way your team actually meets.'
-            : '"Sing to the Lord a new song" — Psalm 96:1'}
+          {welcomeSub}
         </p>
       </div>
 
@@ -257,11 +270,16 @@ const DashboardPage = () => {
               {heroCopy.subline}
             </p>
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2 mt-1">
-              {/* Primary CTA: worship for worshipy workspaces, meeting for business. */}
+              {/* Primary CTA: business → meeting, community → gathering (both toolsets), worship → worship + meeting. */}
               {isBusinessWs ? (
                 <button type="button" onClick={() => startSession('meeting')} disabled={!!starting} className="hero-start-worship">
                   <Briefcase size={22} className="shrink-0" />
                   <span>{starting === 'meeting' ? 'Opening meeting…' : 'Start Meeting'}</span>
+                </button>
+              ) : isCommunityWs ? (
+                <button type="button" onClick={() => startSession('gathering')} disabled={!!starting} className="hero-start-worship">
+                  <Users size={22} className="shrink-0" />
+                  <span>{starting === 'gathering' ? 'Opening gathering…' : 'Start Gathering'}</span>
                 </button>
               ) : (
                 <>
@@ -278,7 +296,7 @@ const DashboardPage = () => {
             </div>
             <div className="flex flex-wrap items-center justify-center gap-3 mt-4">
               <Link href="/dashboard/upcoming" className="hero-quick-link">
-                <Calendar size={16} /> {isBusinessWs ? 'Schedule Meeting' : 'Schedule Service'}
+                <Calendar size={16} /> {isBusinessWs ? 'Schedule Meeting' : isCommunityWs ? 'Schedule Gathering' : 'Schedule Service'}
               </Link>
               {!isBusinessWs && (
                 <Link href="/donate" className="hero-quick-link hero-quick-link-gold">

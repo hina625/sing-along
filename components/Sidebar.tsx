@@ -14,7 +14,7 @@ import { TbActivityHeartbeat } from "react-icons/tb";
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 
-import { planslist, sidebarLinks, isSidebarLinkVisible } from '@/constants';
+import { planslist, sidebarLinks, isSidebarLinkVisible, sidebarLabelFor } from '@/constants';
 import { cn } from '@/lib/utils';
 import { useContext, useMemo } from 'react';
 import { subscriptionContext } from '@/providers/SubscriptionProvider'
@@ -26,7 +26,6 @@ const Sidebar = () => {
   const { subscription } = useContext(subscriptionContext)
   const { activeWorkspace, can } = useContext(WorkspaceContext);
   const wsMode = activeWorkspace?.mode || 'worship';
-  const isWorshipy = wsMode === 'worship' || wsMode === 'hybrid' || wsMode === 'community';
 
   const visibleLinks = useMemo(
     () =>
@@ -74,8 +73,8 @@ const Sidebar = () => {
         {visibleLinks.map((item) => {
           const isActive = pathname === item.route
           const Icon = icons[item.Icon.toString()];
-          // Mode-aware label: worshipy workspaces see worshipLabel when present.
-          const label = (isWorshipy && item.worshipLabel) ? item.worshipLabel : item.label;
+          // Mode-aware label: community → "Start Gathering", worship/hybrid → "Start Worship", business → "Start Meeting".
+          const label = sidebarLabelFor(item, wsMode);
           return (
             <Link
               href={item.route}

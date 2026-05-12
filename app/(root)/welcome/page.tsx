@@ -44,9 +44,9 @@ const MODE_CARDS: ModeCard[] = [
     mode: 'community',
     emoji: '🌍',
     icon: <Users size={26} />,
-    title: 'Community & Groups',
-    pitch: 'Chat-first rooms with light moderation and RSVPs.',
-    forList: ['Online communities', 'Classes', 'Friend groups', 'Events'],
+    title: 'Community',
+    pitch: 'Worship tools and meeting tools together — gatherings plus the work behind them.',
+    forList: ['Faith communities', 'Small groups', 'Ministries & teams', 'Events & classes'],
     defaultName: (n) => (n ? `${n}'s Community` : 'My Community'),
   },
 ];

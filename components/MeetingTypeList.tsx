@@ -149,9 +149,11 @@ const MeetingTypeList = () => {
 
   const meetingLink = `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/beforemeet/${id}`;
 
-  // Business workspaces get team-meeting framing; worship/hybrid/community
-  // keep the worship copy. Mirrors the split in dashboard/page.tsx.
-  const isBusinessWs = activeWorkspace?.mode === 'business';
+  // Mode-aware copy: business → team meetings, community → blended "gathering"
+  // wording, worship/hybrid → worship copy. Mirrors the split in dashboard/page.tsx.
+  const wsMode = activeWorkspace?.mode;
+  const isBusinessWs = wsMode === 'business';
+  const isCommunityWs = wsMode === 'community';
   const copy = isBusinessWs
     ? {
         startTitle: 'Start Meeting',
@@ -167,6 +169,22 @@ const MeetingTypeList = () => {
         joinModalButton: 'Join Meeting',
         instantModalTitle: 'Start Meeting Now',
         instantModalButton: 'Start Meeting',
+      }
+    : isCommunityWs
+    ? {
+        startTitle: 'Start Gathering',
+        startDesc: 'Bring your community together',
+        joinTitle: 'Join Gathering',
+        joinDesc: 'via invitation link',
+        scheduleTitle: 'Schedule Gathering',
+        scheduleDesc: 'Plan your next gathering',
+        pastTitle: 'Past Gatherings',
+        pastDesc: 'Recorded gatherings & sessions',
+        scheduleModalTitle: 'Schedule Gathering',
+        joinModalTitle: 'Paste the gathering link',
+        joinModalButton: 'Join Gathering',
+        instantModalTitle: 'Start Gathering Now',
+        instantModalButton: 'Start Gathering',
       }
     : {
         startTitle: 'Start Worship',

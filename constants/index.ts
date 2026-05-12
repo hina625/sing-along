@@ -5,11 +5,16 @@
  * `audience` controls visibility per workspace mode:
  *   - 'all'      → always shown
  *   - 'worship'  → only in worship + hybrid + community workspaces
- *   - 'business' → only in business + hybrid workspaces
+ *   - 'business' → only in business + hybrid + community workspaces
  *
- * `worshipLabel` overrides `label` when the workspace is worship/hybrid/community
- * so business users see neutral copy ("Go Live / Start Meeting") and worship
- * users see worship copy ("Go Live / Start Worship").
+ * Community = worship + business: a community workspace sees every link
+ * (worship-audience and business-audience) and gets its own blended copy
+ * ("Start Gathering" etc).
+ *
+ * Label resolution per workspace mode (see `sidebarLabelFor`):
+ *   - community         → `communityLabel` ?? `worshipLabel` ?? `label`
+ *   - worship / hybrid  → `worshipLabel` ?? `label`
+ *   - business          → `label` (neutral copy: "Start Meeting")
  */
 export type SidebarAudience = 'all' | 'worship' | 'business';
 
@@ -17,7 +22,10 @@ export interface SidebarLink {
   Icon: number;
   route: string;
   label: string;
+  /** Used in worship + hybrid workspaces (and as community fallback). */
   worshipLabel?: string;
+  /** Used in community workspaces — blended "gathering" wording. */
+  communityLabel?: string;
   audience: SidebarAudience;
   /** Resource key in the role-permission matrix this link maps to. */
   resource?: string;
@@ -27,8 +35,8 @@ export interface SidebarLink {
 
 export const sidebarLinks: SidebarLink[] = [
   { Icon: 4, route: '/dashboard', label: 'Dashboard', audience: 'all' },
-  { Icon: 1, route: '/dashboard/create-meeting', label: 'Start Meeting', worshipLabel: 'Start Worship', audience: 'all', resource: 'meetings', action: 'manage' },
-  { Icon: 2, route: '/dashboard/upcoming', label: 'Upcoming Meetings', worshipLabel: 'Upcoming Worship', audience: 'all', resource: 'meetings' },
+  { Icon: 1, route: '/dashboard/create-meeting', label: 'Start Meeting', worshipLabel: 'Start Worship', communityLabel: 'Start Gathering', audience: 'all', resource: 'meetings', action: 'manage' },
+  { Icon: 2, route: '/dashboard/upcoming', label: 'Upcoming Meetings', worshipLabel: 'Upcoming Worship', communityLabel: 'Upcoming Gatherings', audience: 'all', resource: 'meetings' },
   { Icon: 5, route: '/dashboard/members', label: 'Members', audience: 'all', resource: 'members' },
   { Icon: 3, route: '/dashboard/recordings', label: 'Recordings', audience: 'all', resource: 'recordings' },
   { Icon: 8, route: '/dashboard/prayer-requests', label: 'Prayer Requests', audience: 'worship', resource: 'prayerRequests' },
@@ -44,8 +52,16 @@ export function isSidebarLinkVisible(audience: SidebarAudience, mode?: string | 
   if (audience === 'all') return true;
   const m = mode || 'worship';
   if (audience === 'worship') return m === 'worship' || m === 'hybrid' || m === 'community';
-  if (audience === 'business') return m === 'business' || m === 'hybrid';
+  if (audience === 'business') return m === 'business' || m === 'hybrid' || m === 'community';
   return true;
+}
+
+/** Resolve the label to show for a sidebar entry given the workspace mode. */
+export function sidebarLabelFor(link: SidebarLink, mode?: string | null): string {
+  const m = mode || 'worship';
+  if (m === 'community') return link.communityLabel || link.worshipLabel || link.label;
+  if (m === 'worship' || m === 'hybrid') return link.worshipLabel || link.label;
+  return link.label;
 }
 
 export const avatarImages = [

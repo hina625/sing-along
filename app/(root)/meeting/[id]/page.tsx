@@ -64,9 +64,10 @@ interface MeetingInfo {
 }
 
 const MODE_LABEL: Record<string, { eyebrow: string; pill: string; emoji: string }> = {
-  worship:  { eyebrow: 'Live worship',  pill: 'Worship',  emoji: '🎶' },
-  business: { eyebrow: 'Live meeting',  pill: 'Meeting',  emoji: '💼' },
-  hybrid:   { eyebrow: 'Live session',  pill: 'Hybrid',   emoji: '🌍' },
+  worship:  { eyebrow: 'Live worship',   pill: 'Worship',   emoji: '🎶' },
+  business: { eyebrow: 'Live meeting',   pill: 'Meeting',   emoji: '💼' },
+  // 'hybrid' is the both-toolsets room shape — the default for community workspaces.
+  hybrid:   { eyebrow: 'Live gathering', pill: 'Gathering', emoji: '🌍' },
 };
 
 type WaitState = 'idle' | 'waiting' | 'admitted' | 'denied';

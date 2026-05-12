@@ -112,7 +112,7 @@ const CallListUpcoming = () => {
         const isPublic = room.status === 'public';
         const mode = room.mode || 'worship';
         const fallbackTitle = mode === 'business' ? 'Team meeting'
-          : mode === 'hybrid' ? 'Session'
+          : mode === 'hybrid' ? 'Gathering'
           : 'Worship service';
         const title = (room.description || '').trim() || fallbackTitle;
         const cover = room.image?.url || null;
