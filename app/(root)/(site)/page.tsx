@@ -378,12 +378,12 @@ const page = () => {
         <div className="flex items-center justify-center flex-col mb-12">
 
           <h2 className="mt-4 main-header !text-white text-2xl md:text-4xl">
-            Why HG Sing Along
+            Why SingAlong Connect
           </h2>
           <div className="mt-2">
             <p className="leading-7 max-w-[35rem] text-center font-[300] text-[1.125rem] main-para !text-white/80">
 
-              Discover the difference with our competitive pricing, exceptional features, and unbeatable value—an experience we don't want you to miss!
+              Discover the difference with our professional communication tools, business networking features, and AI-powered platform built to help you grow.
             </p>
           </div>
 
@@ -392,7 +392,7 @@ const page = () => {
           <div className='services -left-[50%] relative w-full h-full flex justify-center items-center cursor-pointer '>
             <div className='secvice-box flex' style={getStyle(1)} data-target="content1">
               <div className='flex items-start'>
-                <h2 className='absolute -left-[180%] md:-left-[210%] top-[25%] w-[10rem] !text-[10px] md:!text-xl !font-[700] !text-white hidden md:block'>Crystal Clear Sound</h2>
+                <h2 className='absolute -left-[180%] md:-left-[210%] top-[25%] w-[10rem] !text-[10px] md:!text-xl !font-[700] !text-white hidden md:block'>Crystal Clear Audio</h2>
                 <div className=' md:w-20 md:h-20 h-14 w-14 flex items-center justify-center rounded-full bg-royal-purple shadow-lg shadow-royal-purple/30 group-hover:bg-burgundy transition-all' >
 
                   <span className='text-white text-3xl'><FaVolumeDown /></span>
@@ -420,7 +420,7 @@ const page = () => {
                   <span className='text-white text-3xl'><FaHandshake /></span>
 
                 </div>
-                <h2 className='absolute !-right-[260%] md:!-right-[210%] -top-[5%] md:top-[25%] w-[10rem] !text-[10px] md:!text-xl !font-[700] !text-white hidden md:block'>Collabrative</h2>
+                <h2 className='absolute !-right-[260%] md:!-right-[210%] -top-[5%] md:top-[25%] w-[10rem] !text-[10px] md:!text-xl !font-[700] !text-white hidden md:block'>Collaborative</h2>
               </div>
             </div>
             <div className='secvice-box flex' style={getStyle(4)} data-target="content4">
@@ -438,7 +438,7 @@ const page = () => {
             <div className='secvice-box flex' style={getStyle(5)} data-target="content5">
               <div className='flex items-start relative'>
 
-                <h2 className='absolute -left-[110%] md:-left-[210%] top-[25%] w-[10rem] !text-[10px] md:!text-xl !font-[700] !text-white hidden md:block'>Extandable</h2>
+                <h2 className='absolute -left-[110%] md:-left-[210%] top-[25%] w-[10rem] !text-[10px] md:!text-xl !font-[700] !text-white hidden md:block'>Extendable</h2>
 
                 <div className=' md:w-20 md:h-20 h-14 w-14 flex items-center justify-center rounded-full bg-royal-purple shadow-lg shadow-royal-purple/30 group-hover:bg-burgundy transition-all' >
 
@@ -468,11 +468,11 @@ const page = () => {
               (
                 <div className='content absolute inset-0 overflow-hidden items-center justify-center flex'>
                   <div className='contentBox active' id='content0'>
-                    <h1 className='!text-white text-lg md:!text-4xl !font-[700] text-gradient'>Why HG SingAlong ?</h1>
+                    <h1 className='!text-white text-lg md:!text-4xl !font-[700] text-gradient'>Why SingAlong Connect?</h1>
                   </div>
                   <div className='contentBox' id='content1'>
                     <p className='!text-white/80 max-w-[21rem] main-para text-center md:p-0 p-5 pt-6 text-sm md:text-base'>
-                      Experience exceptional audio quality that delivers every note with precision. Whether you're enjoying music, calls, or videos, the clarity will impress you.
+                      Experience professional-grade audio clarity that captures every word with precision—ideal for meetings, presentations, webinars, interviews, and live business events.
                     </p>
                   </div>
                   <div className='contentBox' id='content2'>
@@ -505,11 +505,11 @@ const page = () => {
               (
                 <div className='content absolute inset-0 overflow-hidden items-center justify-center flex'>
                   <div className='contentBox active' id='content0'>
-                    <h1 className='!text-white text-lg md:!text-4xl !font-[700] text-gradient'>Why HG SingAlong ?</h1>
+                    <h1 className='!text-white text-lg md:!text-4xl !font-[700] text-gradient'>Why SingAlong Connect?</h1>
                   </div>
                   <div className='contentBox' id='content1'>
                     <p className='!text-white/80 max-w-[21rem] main-para text-center md:p-0 p-5 pt-6 !text-md'>
-                      I am in PC Experience exceptional audio quality that delivers every note with precision. Whether you're enjoying music, calls, or videos, the clarity will impress you.
+                      Experience professional-grade audio clarity that captures every word with precision—ideal for meetings, presentations, webinars, interviews, and live business events.
                     </p>
                   </div>
                   <div className='contentBox' id='content2'>
@@ -793,7 +793,7 @@ const page = () => {
                 Create an account to host a meeting
               </div>
               <p className="leading-7 mt-3 font-[300] text-[1.125rem] main-para !text-white/80 text-center">
-                Sign up with your Name, Email Address, and Password. Then, check your email to verify your account. Once your account is verified, you will have full access to Trivoh workspace.
+                Sign up with your Name, Email Address, and Password. Then, check your email to verify your account. Once your account is verified, you will have full access to the SingAlong Connect workspace.
               </p>
               <div className="text-center text-md-left mt-3">
                 <a href="/sign-in" className="btn btn-primary !border-none !bg-royal-purple hover:!bg-burgundy btn-icon !font-[500] shadow-lg shadow-royal-purple/20 transition-all">
@@ -815,7 +815,7 @@ const page = () => {
                 Create an account to host a meeting
               </div>
               <p className="leading-7 mt-3 font-[300] text-[1.125rem] main-para !text-white/80">
-                Sign up with your Name, Email Address, and Password. Then, check your email to verify your account. Once your account is verified, you will have full access to Trivoh workspace.
+                Sign up with your Name, Email Address, and Password. Then, check your email to verify your account. Once your account is verified, you will have full access to the SingAlong Connect workspace.
               </p>
               <div className="text-center text-md-left mt-3">
                 <a href="/sign-in" className="btn btn-primary !border-none !bg-foregroud-primary btn-icon !font-[500]">
@@ -885,7 +885,7 @@ const page = () => {
                 Enter your meeting room
               </div>
               <p className="leading-7 mt-3 font-[300] text-[1.125rem] main-para !text-white/80 text-center">
-                It is not compulsory to have an account to join a meeting on Trivoh, Join any meetings using the meeting link or ID, Simply insert your name, set up your microphones and videos, and you are good to go.
+                It is not compulsory to have an account to join a meeting on SingAlong Connect. Join any meeting using the meeting link or ID, simply insert your name, set up your microphone and video, and you're good to go.
 
 
               </p>
@@ -898,7 +898,7 @@ const page = () => {
                 Enter your meeting room
               </div>
               <p className="leading-7 mt-3 font-[300] text-[1.125rem] main-para !text-white/80">
-                It is not compulsory to have an account to join a meeting on Trivoh, Join any meetings using the meeting link or ID, Simply insert your name, set up your microphones and videos, and you are good to go.
+                It is not compulsory to have an account to join a meeting on SingAlong Connect. Join any meeting using the meeting link or ID, simply insert your name, set up your microphone and video, and you're good to go.
 
 
               </p>
@@ -1053,9 +1053,10 @@ const page = () => {
                   />
                 </a>
                 <p className="text-sm opacity-8 pr-lg-4 !text-white !font-[400] !text-[18px] !leading-[27px]">
-                  Sing Along is a video conferencing/meeting platform offered by
-                  Hallelujah Gospel Globally. We offer high-quality, secured, and
-                  hassle-free meetings.{" "}
+                  SingAlong Connect is a professional video conferencing and business
+                  networking platform powered by Hallelujah Gospel Globally. We provide
+                  high-quality, secure, and reliable communication tools for meetings,
+                  conferences, networking, collaboration, and virtual events.{" "}
                 </p>
               </div>
 

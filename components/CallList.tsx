@@ -101,7 +101,7 @@ const CallList = ({ type }: { type: 'ended' | 'upcoming' | 'recordings' }) => {
               icon="/icons/recordings.svg"
               title={recording.title?.substring(0, 20) || 'Recording'}
               date={new Date(recording.startedAt).toLocaleString()}
-              isPreviousMeeting={type === 'ended'}
+              isPreviousMeeting={true}
               link={recording.fileUrl || ''}
               handleClick={() => recording.fileUrl && router.push(recording.fileUrl)}
               buttonText="Play"
