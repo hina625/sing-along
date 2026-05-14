@@ -57,10 +57,10 @@ const MobileNav = () => {
                   height={100}
                   alt="Sing Along logo"
                 />
-                <span className='text-[#F57C00] font-bold text-[14px] leading-tight' style={{ fontFamily: "'Marcellus', serif" }}>Connect</span>
+                <span className='text-[#024d04] font-bold text-[14px] leading-tight' style={{ fontFamily: "'Marcellus', serif" }}>Connect</span>
               </Link>
             </div>
-            
+
             <div className="flex flex-1 flex-col justify-between p-6 pt-0">
               <section className="flex h-full flex-col gap-6 text-white">
                 {sidebarLinks.map((item) => {

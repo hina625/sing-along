@@ -54,36 +54,72 @@ function getStyle(num: number) {
 
 const products = [
   {
-    title: "ANYTIME",
-    subtitle: "VIDEO CHAT",
-    icon: <img src='/images/streams.png' className='w-[80%] h-[5rem] object-contain' />,
-    gradient: "from-yellow-400 to-orange-500",
-    icon2: "/card-logo/1.png",
-    link: "https://hgvibelive.org/"
+    brandPrefix: "HG",
+    brandName: "singalong",
+    brandTag: "Meetings",
+    brandAccent: "#FFD600",
+    heading1: "MEET. CONNECT.",
+    heading2: "COLLABORATE.",
+    headingAccent: "#FFD600",
+    description: "A professional video meeting platform for conferences, webinars, and business collaboration.",
+    points: ["HD Video Meetings", "Screen Sharing", "Webinars", "Secure Rooms"],
+    buttonText: "START A MEETING",
+    btnBg: "#FFD600",
+    btnText: "#0A1A2F",
+    bannerImage: "/images/banners/card1.png",
+    solidBg: "#0A1A2F",
+    link: "https://hgsingalong.org/"
   },
   {
-    title: "WATCH",
-    subtitle: "VIDEOS",
-    icon: <img src='/images/pipeline.png' className='w-[80%] h-[5rem] object-contain' />,
-    gradient: "from-green-400 to-blue-500",
-    icon2: "/card-logo/2.png",
+    brandPrefix: "HG",
+    brandName: "pipeline",
+    brandTag: "Video Sharing",
+    brandAccent: "#FF4D4D",
+    heading1: "SHARE YOUR VIDEOS",
+    heading2: "WITH THE WORLD.",
+    headingAccent: "#FF4D4D",
+    description: "Upload, watch, and discover videos on our community video sharing platform — your stage, your audience.",
+    points: ["Upload Videos", "Subscribe & Like", "Comment & Share", "Grow Your Channel"],
+    buttonText: "WATCH NOW",
+    btnBg: "#FF1F1F",
+    btnText: "#FFFFFF",
+    bannerImage: "/images/banners/card2.png",
+    solidBg: "#1A0606",
     link: "https://hgpipeline.com/"
   },
   {
-    title: "SUBMIT",
-    subtitle: "ANYTIME",
-    icon: <img src='/images/radio.png' className='w-[80%] h-[5rem] object-contain' />,
-    gradient: "from-purple-400 to-pink-500",
-    icon2: "/card-logo/3.png",
-    link: "https://hgcradio.com/"
+    brandPrefix: "HG",
+    brandName: "vibelive",
+    brandTag: "Live Streaming",
+    brandAccent: "#7CFF8E",
+    heading1: "STREAM LIVE.",
+    heading2: "REACH EVERYONE.",
+    headingAccent: "#7CFF8E",
+    description: "Broadcast in HD to a global audience. Engage viewers in real time with live chat and interactive streams.",
+    points: ["HD Live Streaming", "Real-Time Chat", "Multi-Camera", "Global Reach"],
+    buttonText: "START STREAMING",
+    btnBg: "#28A745",
+    btnText: "#FFFFFF",
+    bannerImage: "/images/banners/card3.png",
+    solidBg: "#0B3D1E",
+    link: "https://hgvibelive.org/"
   },
   {
-    title: "COMING",
-    subtitle: "SOON",
-    icon: <img src='/images/main-logo.png' className='w-[80%] h-[5rem] object-contain' />,
-    gradient: "from-orange-400 to-yellow-500",
-    icon2: "/card-logo/4.png",
-    link: "#"
+    brandPrefix: "HG",
+    brandName: "cradio",
+    brandTag: "Audio Streaming",
+    brandAccent: "#FFC97A",
+    heading1: "TUNE IN. LISTEN LIVE.",
+    heading2: "ANYWHERE.",
+    headingAccent: "#FFC97A",
+    description: "24/7 audio streaming platform — live radio, music, podcasts, and talk shows in crystal-clear sound.",
+    points: ["Live Radio", "Music Library", "Podcasts", "Talk Shows"],
+    buttonText: "LISTEN NOW",
+    btnBg: "#FF6A00",
+    btnText: "#FFFFFF",
+    bannerImage: "/images/banners/card4.png",
+    solidBg: "#4A1D00",
+    link: "https://hgcradio.com/"
   },
 ]
 const page = () => {
@@ -213,10 +249,16 @@ const page = () => {
             </div>
             <div className="col-12 col-md-7 col-lg-6 order-md-1 pr-md-5">
 
-              <h1 className="text-3xl md:text-5xl lg:text-6xl text-center text-md-left mb-4 !font-bold !text-white leading-tight">
+              <h1
+                className="text-3xl md:text-5xl lg:text-6xl text-center text-md-left mb-4 leading-tight"
+                style={{ color: '#ffffff', fontWeight: 700 }}
+              >
                 It's time to set up your <strong className="text-gradient">virtual meetings</strong>
               </h1>
-              <p className="lead text-center text-md-left !font-[400] !text-white/90">
+              <p
+                className="lead text-center text-md-left"
+                style={{ color: 'rgba(255,255,255,0.9)', fontWeight: 400 }}
+              >
                 Now you can set up your secured and high-quality virtual meetings on Sing Along.
               </p>
               <div className="text-center text-md-left mt-5">
@@ -230,7 +272,9 @@ const page = () => {
                   </svg></span>
                 </a>
                 <a href="/how-to-use"
-                  className="btn btn-neutral btn-icon d-none d-lg-inline-block !text-white !border-2 hover:!border-foregroud-primary">Read Guidelines</a>
+                  className="btn btn-neutral btn-icon d-none d-lg-inline-block !border-2 hover:!border-foregroud-primary"
+                  style={{ color: '#ffffff', fontWeight: 600 }}
+                >Read Guidelines</a>
               </div>
             </div>
           </div>
@@ -239,7 +283,6 @@ const page = () => {
 
       <section className="slice slice-lg pt-lg-6 pb-0 pb-lg-6 !bg-bg-dark relative overflow-hidden">
         <div className='absolute top-1 left-1 z-0'>
-          <img src='/images/left-plus.png' />
         </div>
         <div className='absolute bottom-0 right-0 z-0'>
           <img src='/images/bottom-line.png' />
@@ -258,7 +301,7 @@ const page = () => {
                 Ready to use + carefully crafted performance for quality meetings
               </h2>
               <div className="mt-2">
-                <p className="lead lh-180 main-para !text-white/90">
+                <p className="lead lh-180 main-para" style={{ color: 'rgba(255,255,255,0.9)' }}>
                   We offer competitive pricing, great features, and better value.
                   See our difference!
                 </p>
@@ -286,8 +329,8 @@ const page = () => {
                       alt="Illustration"
                     />
                   </div>
-                  <h5 className="h4 lh-130 mb-3 !text-white">Easy to set up &amp; use</h5>
-                  <p className=" mb-0  main-para !text-white/80">
+                  <h5 className="h4 lh-130 mb-3" style={{ color: '#ffffff', fontWeight: 700 }}>Easy to set up &amp; use</h5>
+                  <p className=" mb-0  main-para" style={{ color: 'rgba(255,255,255,0.85)' }}>
                     No need to download or install any software. Just start a
                     meeting and share the link with your guests or participants to
                     join using any web browser, or our easy-to-use app.
@@ -314,8 +357,8 @@ const page = () => {
                       alt="Illustration"
                     />
                   </div>
-                  <h5 className="h4 lh-130 mb-3 !text-white/90">Fully controlled by you</h5>
-                  <p className=" mb-0 main-para !text-white/80">
+                  <h5 className="h4 lh-130 mb-3" style={{ color: '#ffffff', fontWeight: 700 }}>Fully controlled by you</h5>
+                  <p className=" mb-0 main-para" style={{ color: 'rgba(255,255,255,0.85)' }}>
                     We have completely managed servers so you have full control of
                     your own meetings. You can set up{" "}
                     <b
@@ -342,10 +385,10 @@ const page = () => {
                       alt="Illustration"
                     />
                   </div>
-                  <h5 className="h4 lh-130 mb-3 !text-white/90">
+                  <h5 className="h4 lh-130 mb-3" style={{ color: '#ffffff', fontWeight: 700 }}>
                     Unlimited Meetings &amp; Recordings
                   </h5>
-                  <p className=" mb-0 main-para !text-white/80">
+                  <p className=" mb-0 main-para" style={{ color: 'rgba(255,255,255,0.85)' }}>
                     Go with unlimited meetings and recordings as per your activated
                     plan with no hidden charges. We offer{" "}
                     <b
@@ -552,7 +595,6 @@ const page = () => {
       <section className="slice slice-lg !bg-bg-dark pt-5 pt-lg-8 relative overflow-hidden">
         <div className="pattern-bg absolute inset-0 opacity-5"></div>
         <div className='absolute top-1 left-1 z-0'>
-          <img src='/images/left-plus.png' />
         </div>
         {/* SVG separator */}
         <div className="shape-container shape-line shape-position-top shape-orientation-inverse">
@@ -574,24 +616,32 @@ const page = () => {
         </div>
         {/* Container */}
 
-        <div className='flex items-center flex-col md:flex-row px-3 md:px-6'>
-          <div className="px-2 py-8 w-full md:w-[50%] flex flex-col items-center justify-center md:block">
-            <h2 className="text-lg md:text-4xl lg:text-5xl text-white !font-[700] text-gradient leading-tight text-center md:text-left">Are you ready to grow faster?</h2>
-            <h4 className="text-white mt-3 !font-[500] text-center md:text-left">
+        <div className='max-w-6xl mx-auto flex items-center flex-col md:flex-row gap-8 px-6 md:px-8 py-10'>
+          <div className="w-full md:w-1/2 flex flex-col items-center md:items-start gap-4">
+            <h2
+              className="text-2xl md:text-4xl lg:text-5xl text-gradient leading-tight text-center md:text-left"
+              style={{ color: '#ffffff', fontWeight: 700, margin: 0 }}
+            >
+              Are you ready to grow faster?
+            </h2>
+            <h4
+              className="text-center md:text-left text-lg md:text-xl"
+              style={{ color: 'rgba(255,255,255,0.9)', fontWeight: 500, margin: 0 }}
+            >
               Activate any plan and get started
             </h4>
 
             <a
               href="/plans"
-              className="btn btn-primary !bg-royal-purple hover:!bg-burgundy !border-none btn-icon mt-4 !font-500 shadow-lg shadow-royal-purple/20 transition-all"
+              className="btn btn-primary !bg-royal-purple hover:!bg-burgundy !border-none btn-icon shadow-lg shadow-royal-purple/20 transition-all mt-2"
+              style={{ color: '#ffffff', fontWeight: 600 }}
             >
               Start now
             </a>
           </div>
 
-
-          <div className='flex items-center justify-center w-full md:w-[50%]'>
-            <img src='/images/stamps.jpg' className='w-full max-w-[22rem] hover:scale-110 transition-all cursor-pointer' />
+          <div className='w-full md:w-1/2 flex items-center justify-center md:justify-end'>
+            <img src='/images/stamps.jpg' className='w-full max-w-[20rem] hover:scale-105 transition-all cursor-pointer' />
           </div>
         </div>
 
@@ -605,7 +655,6 @@ const page = () => {
           <img src='/images/bottom-box-shape.png' />
         </div>
         <div className='absolute right-1 top-1 z-0'>
-          <img src='/images/left-plus.png' />
         </div>
 
         <div className="container position-relative zindex-100">
@@ -627,13 +676,13 @@ const page = () => {
                           <span className="h6 text-gradient">{planslist[plan].title}</span>
                         </div>
                         <div className="card-body !p-1 !text-white">
-                          <span className="h6 !text-white" style={{ fontWeight: "bold" }}>
+                          <span className="h6" style={{ fontWeight: "bold", color: "#ffffff" }}>
                             Features:
                           </span>
                           <ul className="list-unstyled  text-sm opacity-8 mb-4">
                             {
                               planslist[plan].features.map((text, i) => (
-                                <li key={i} className="py-2 !text-left">
+                                <li key={i} className="py-2 !text-left" style={{ color: "rgba(255,255,255,0.9)" }}>
                                   <IoMdCheckmark /> {text}
                                 </li>
                               ))
@@ -644,8 +693,8 @@ const page = () => {
                             subscription === plan ?
                               (
                                 <a
-
-                                  className="btn btn-sm btn- !bg-[#1ebbc4] !text-white hover-translate-y-n3 hover-shadow-lg mb-3"
+                                  className="btn btn-sm btn- !bg-[#1ebbc4] hover-translate-y-n3 hover-shadow-lg mb-3"
+                                  style={{ color: "#ffffff", fontWeight: 700 }}
                                 >
                                   Current Plan
                                 </a>
@@ -655,7 +704,8 @@ const page = () => {
                               (
                                 <a
                                   onClick={(e) => handlePurchanse(e, plan)}
-                                  className="btn btn-sm btn- !bg-[#A79369] !text-white hover-translate-y-n3 hover-shadow-lg mb-3"
+                                  className="btn btn-sm btn- !bg-[#A79369] hover-translate-y-n3 hover-shadow-lg mb-3"
+                                  style={{ color: "#ffffff", fontWeight: 700 }}
                                 >
                                   Purchase Now
                                 </a>
@@ -680,13 +730,13 @@ const page = () => {
                           <span className="h6  text-gradient">{planslist[plan].title}</span>
                         </div>
                         <div className="card-body !p-1">
-                          <span className="h6 !text-white" style={{ fontWeight: "bold" }}>
+                          <span className="h6" style={{ fontWeight: "bold", color: "#ffffff" }}>
                             Features:
                           </span>
                           <ul className="list-unstyled text-sm mb-4">
                             {
                               planslist[plan].features.map((text, i) => (
-                                <li key={i} className="py-2 !text-left  !text-white">
+                                <li key={i} className="py-2 !text-left" style={{ color: "rgba(255,255,255,0.9)" }}>
                                   <IoMdCheckmark /> {text}
                                 </li>
                               ))
@@ -698,8 +748,8 @@ const page = () => {
                             plan == 'free' && subscription != 'free' ?
                               (
                                 <a
-
-                                  className="btn btn-sm btn- !bg-[#A79369] !text-white hover-translate-y-n3 hover-shadow-lg mb-3"
+                                  className="btn btn-sm btn- !bg-[#A79369] hover-translate-y-n3 hover-shadow-lg mb-3"
+                                  style={{ color: "#ffffff", fontWeight: 700 }}
                                 >
                                   Free Plan
                                 </a>
@@ -708,7 +758,8 @@ const page = () => {
                                 (
                                   <a
                                     onClick={plan == "free" ? () => setFreePlanModel(true) : () => { }}
-                                    className="btn btn-sm btn- !bg-[#A79369] !text-white hover-translate-y-n3 hover-shadow-lg mb-3"
+                                    className="btn btn-sm btn- !bg-[#A79369] hover-translate-y-n3 hover-shadow-lg mb-3"
+                                    style={{ color: "#ffffff", fontWeight: 700 }}
                                   >
                                     {plan == "free" ? "Continue With Free" : "Current Plan"}
 
@@ -719,7 +770,8 @@ const page = () => {
                                 (
                                   <a
                                     onClick={(e) => handlePurchanse(e, plan)}
-                                    className="btn btn-sm btn- !bg-royal-purple !text-white hover:!bg-burgundy hover-translate-y-n3 hover-shadow-lg mb-3 shadow-md shadow-royal-purple/20 transition-all font-bold"
+                                    className="btn btn-sm btn- !bg-royal-purple hover:!bg-burgundy hover-translate-y-n3 hover-shadow-lg mb-3 shadow-md shadow-royal-purple/20 transition-all"
+                                    style={{ color: "#ffffff", fontWeight: 700 }}
                                   >
                                     Purchase Now
                                   </a>
@@ -736,7 +788,7 @@ const page = () => {
             }
           </div>
           <div className="mt-5 text-center">
-            <p className="mb-2 !text-white">
+            <p className="mb-2" style={{ color: 'rgba(255,255,255,0.95)' }}>
               All plans include active-subscription free support. Need more?
             </p>
             <a
@@ -769,7 +821,6 @@ const page = () => {
       <section className='section !bg-bg-dark relative overflow-hidden'>
         <div className="pattern-bg absolute inset-0 opacity-5"></div>
         <div className='absolute top-1 left-1 z-0'>
-          <img src='/images/left-plus.png' />
         </div>
         <div className='absolute bottom-0 right-0 z-0'>
           <img src='/images/bottom-line.png' />
@@ -780,7 +831,7 @@ const page = () => {
             How it works
           </h2>
           <div className="mt-2">
-            <p className="leading-7 max-w-[35rem] text-center font-[300] text-[1.125rem] main-para !text-white/80">
+            <p className="leading-7 max-w-[35rem] text-center font-[300] text-[1.125rem] main-para" style={{ color: 'rgba(255,255,255,0.85)' }}>
               Experience engaging video and audio communication tools that are easy to use and navigate. There's never a dull moment!
             </p>
           </div>
@@ -789,10 +840,10 @@ const page = () => {
         <div className='container'>
           <div className='w-full relative flex flex-wrap flex-col md:flex-row items-center gap-0 my-2'>
             <div className=' w-full md:w-[50%] p-4 md:hidden block'>
-              <div className="h1 !text-white/90 text-center text-2xl md:text-4xl">
+              <div className="h1 text-center text-2xl md:text-4xl" style={{ color: 'rgba(255,255,255,0.95)', fontWeight: 700 }}>
                 Create an account to host a meeting
               </div>
-              <p className="leading-7 mt-3 font-[300] text-[1.125rem] main-para !text-white/80 text-center">
+              <p className="leading-7 mt-3 font-[300] text-[1.125rem] main-para text-center" style={{ color: 'rgba(255,255,255,0.85)' }}>
                 Sign up with your Name, Email Address, and Password. Then, check your email to verify your account. Once your account is verified, you will have full access to the SingAlong Connect workspace.
               </p>
               <div className="text-center text-md-left mt-3">
@@ -811,10 +862,10 @@ const page = () => {
 
 
             <div className=' w-full md:w-[50%] p-4 md:block hidden'>
-              <div className="h1 text-2xl md:text-4xl !text-white/90 ">
+              <div className="h1 text-2xl md:text-4xl" style={{ color: 'rgba(255,255,255,0.95)', fontWeight: 700 }}>
                 Create an account to host a meeting
               </div>
-              <p className="leading-7 mt-3 font-[300] text-[1.125rem] main-para !text-white/80">
+              <p className="leading-7 mt-3 font-[300] text-[1.125rem] main-para" style={{ color: 'rgba(255,255,255,0.85)' }}>
                 Sign up with your Name, Email Address, and Password. Then, check your email to verify your account. Once your account is verified, you will have full access to the SingAlong Connect workspace.
               </p>
               <div className="text-center text-md-left mt-3">
@@ -859,20 +910,20 @@ const page = () => {
             </div>
 
             <div className=' w-full md:w-[50%] p-4 md:hidden block'>
-              <div className="h1 !text-white/90 text-center text-2xl md:text-4xl">
+              <div className="h1 text-center text-2xl md:text-4xl" style={{ color: 'rgba(255,255,255,0.95)', fontWeight: 700 }}>
                 Set up your meeting
               </div>
-              <p className="leading-7 mt-3 font-[300] text-[1.125rem] main-para !text-white/80 text-center">
+              <p className="leading-7 mt-3 font-[300] text-[1.125rem] main-para text-center" style={{ color: 'rgba(255,255,255,0.85)' }}>
                 To set-up and schedule a meeting, click on Host a meeting which will give you full control of the meeting you have created. Once your meeting is created, share the link with your participants or add it to your calendar.
               </p>
 
             </div>
 
             <div className=' w-full md:w-[50%] p-4 hidden md:block'>
-              <div className="h1 text-2xl md:text-4xl !text-white/90">
+              <div className="h1 text-2xl md:text-4xl" style={{ color: 'rgba(255,255,255,0.95)', fontWeight: 700 }}>
                 Set up your meeting
               </div>
-              <p className="leading-7 mt-3 font-[300] text-[1.125rem] main-para !text-white/80">
+              <p className="leading-7 mt-3 font-[300] text-[1.125rem] main-para" style={{ color: 'rgba(255,255,255,0.85)' }}>
                 To set-up and schedule a meeting, click on Host a meeting which will give you full control of the meeting you have created. Once your meeting is created, share the link with your participants or add it to your calendar.
               </p>
 
@@ -881,10 +932,10 @@ const page = () => {
 
           <div className='w-full relative flex flex-wrap flex-col md:flex-row items-center gap-0 mt-2'>
             <div className=' w-full md:w-[50%] p-4 block md:hidden'>
-              <div className="h1 !text-white/90 text-center text-2xl md:text-4xl">
+              <div className="h1 text-center text-2xl md:text-4xl" style={{ color: 'rgba(255,255,255,0.95)', fontWeight: 700 }}>
                 Enter your meeting room
               </div>
-              <p className="leading-7 mt-3 font-[300] text-[1.125rem] main-para !text-white/80 text-center">
+              <p className="leading-7 mt-3 font-[300] text-[1.125rem] main-para text-center" style={{ color: 'rgba(255,255,255,0.85)' }}>
                 It is not compulsory to have an account to join a meeting on SingAlong Connect. Join any meeting using the meeting link or ID, simply insert your name, set up your microphone and video, and you're good to go.
 
 
@@ -894,10 +945,10 @@ const page = () => {
 
 
             <div className=' w-full md:w-[50%] p-4 hidden md:block'>
-              <div className="h1 !text-white/90 text-2xl md:text-4xl">
+              <div className="h1 text-2xl md:text-4xl" style={{ color: 'rgba(255,255,255,0.95)', fontWeight: 700 }}>
                 Enter your meeting room
               </div>
-              <p className="leading-7 mt-3 font-[300] text-[1.125rem] main-para !text-white/80">
+              <p className="leading-7 mt-3 font-[300] text-[1.125rem] main-para" style={{ color: 'rgba(255,255,255,0.85)' }}>
                 It is not compulsory to have an account to join a meeting on SingAlong Connect. Join any meeting using the meeting link or ID, simply insert your name, set up your microphone and video, and you're good to go.
 
 
@@ -920,29 +971,91 @@ const page = () => {
           <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-center mb-8 !bg-gradient-to-r !text-white !text-transparent !bg-clip-text leading-tight">
             Discover Our Products
           </h2>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="flex flex-col gap-3 max-w-6xl mx-auto">
             {products.map((item, index) => (
-              <a key={index} href={item.link}>
-
-
+              <a key={index} href={item.link} className='block hover:scale-[1.005] transition-transform duration-300'>
                 <div
-                  className={` rounded-3xl text-white shadow-lg`}
+                  className="rounded-xl shadow-xl overflow-hidden flex flex-col md:flex-row items-stretch md:h-[180px]"
+                  style={{ background: item.solidBg }}
                 >
-                  <div className='flex items-center justify-center p-3 bg-[#343434] rounded-t-3xl'>
-                    <div className='h-[8px] w-[4rem] rounded-3xl !bg-black'></div>
-                  </div>
-                  <div className="h-[10rem] w-full bg-[url('/images/bg-card.png')] bg-cover bg-no-repeat relative">
-                    <div className='absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black/80'>
-                      {item.icon}
+                  {/* Left: Brand */}
+                  <div className='flex md:flex-col items-center justify-center gap-0 pl-5 pr-2 py-0 md:w-[170px] shrink-0'>
+                    <img
+                      src='/images/banners/img.png'
+                      alt='HGsingalong'
+                      className='h-20 w-20 md:h-24 md:w-24 object-contain shrink-0 -mb-1'
+                    />
+                    <div className='flex flex-col items-center leading-none'>
+                      <span className='text-xl md:text-2xl tracking-wide leading-none' style={{ color: '#ffffff', fontWeight: 700 }}>
+                        {item.brandPrefix}<span style={{ fontWeight: 300 }}>{item.brandName}</span>
+                      </span>
+                      <span
+                        className='text-[11px] md:text-xs tracking-[0.25em] uppercase mt-1 leading-none whitespace-nowrap'
+                        style={{ color: item.brandAccent, fontWeight: 700 }}
+                      >
+                        {item.brandTag}
+                      </span>
                     </div>
                   </div>
 
-                  <div className='flex items-center justify-center  px-4 pb-4 !pt-0 bg-white  w-full rounded-b-3xl relative flex-col'>
-                    <img src={item.icon2} className='w-full h-full object-contain' />
-                    <h3 className="text-2xl md:text-4xl font-bold text-black">{item.title}</h3>
-                    <h5 className='px-3 py-2 bg-[#ff950b] text-black text-lg md:text-2xl !font-normal rounded-lg'>{item.subtitle}</h5>
+                  {/* Middle: Heading + Description */}
+                  <div className='flex-1 flex flex-col justify-center gap-2 px-4 py-4 min-w-0'>
+                    <div>
+                      <h3
+                        className="text-xl md:text-2xl leading-tight"
+                        style={{ color: '#ffffff', fontWeight: 800, margin: 0 }}
+                      >
+                        {item.heading1}
+                      </h3>
+                      <h3
+                        className="text-xl md:text-2xl leading-tight"
+                        style={{ color: item.headingAccent, fontWeight: 800, margin: 0 }}
+                      >
+                        {item.heading2}
+                      </h3>
+                    </div>
+
+                    <p
+                      className='text-xs md:text-sm leading-snug max-w-md'
+                      style={{ color: 'rgba(255,255,255,0.85)', margin: 0 }}
+                    >
+                      {item.description}
+                    </p>
                   </div>
 
+                  {/* Image with button overlay */}
+                  <div className='relative md:w-[340px] lg:w-[380px] h-[180px] md:h-auto shrink-0 overflow-hidden'>
+                    <img
+                      src={item.bannerImage}
+                      alt={item.heading1}
+                      className='absolute inset-0 w-full h-full object-cover'
+                    />
+                    <div className='absolute bottom-3 left-1/2 -translate-x-1/2'>
+                      <span
+                        className='inline-flex items-center gap-1.5 px-4 py-2 text-[11px] md:text-xs rounded-full shadow-lg tracking-wide whitespace-nowrap'
+                        style={{ background: item.btnBg, color: item.btnText, fontWeight: 700 }}
+                      >
+                        {item.buttonText}
+                        <span className='inline-block'>›</span>
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Points list (far right) */}
+                  <div className='hidden md:flex flex-col justify-center gap-1.5 px-4 py-4 md:min-w-[170px] shrink-0'>
+                    <ul className='flex flex-col gap-1.5' style={{ margin: 0, padding: 0, listStyle: 'none' }}>
+                      {item.points.map((pt, i) => (
+                        <li
+                          key={i}
+                          className='flex items-center gap-2 text-xs lg:text-sm whitespace-nowrap'
+                          style={{ color: '#ffffff', fontWeight: 500 }}
+                        >
+                          <IoMdCheckmark style={{ color: item.brandAccent }} className='shrink-0' size={14} />
+                          <span>{pt}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
               </a>
             ))}
@@ -963,7 +1076,7 @@ const page = () => {
               >
                 Latest Public Meetings
               </span>
-              <p className="lh-180 mt-4 mb-5 main-para !text-white/80 !font-normal px-4 md:px-0">
+              <p className="lh-180 mt-4 mb-5 main-para px-4 md:px-0" style={{ color: 'rgba(255,255,255,0.9)', fontWeight: 400 }}>
                 We offer Public and Private meetings. Only Public meetings (live and
                 scheduled) will be displayed on our website so other users can join
                 those meetings.
@@ -1052,7 +1165,7 @@ const page = () => {
                     id="footer-logo"
                   />
                 </a>
-                <p className="text-sm opacity-8 pr-lg-4 !text-white !font-[400] !text-[18px] !leading-[27px]">
+                <p className="pr-lg-4" style={{ color: 'rgba(255,255,255,0.9)', fontWeight: 400, fontSize: '18px', lineHeight: '27px' }}>
                   SingAlong Connect is a professional video conferencing and business
                   networking platform powered by Hallelujah Gospel Globally. We provide
                   high-quality, secure, and reliable communication tools for meetings,
@@ -1187,13 +1300,13 @@ const page = () => {
       <TwoButtonModel
         isOpen={freePlanModel}
         onClose={() => setFreePlanModel(false)}
-        title="Donate Now"
+        title="Partner with us"
         className="text-center"
-        buttonText="Donate Now"
+        buttonText="Partner with us"
         handleClick={() => { router.push('/donate'); setOpen(false) }}
         handleSecondClick={() => { router.push('/dashboard'); setOpen(false) }}
       >
-        <p className='text-center'>How with free plan and donate now.</p>
+        <p className='text-center'>How with free plan and partner with us .</p>
 
       </TwoButtonModel>
 

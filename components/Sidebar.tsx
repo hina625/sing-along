@@ -56,7 +56,7 @@ const Sidebar = () => {
   };
 
   return (
-    <section className="flex h-full w-fit flex-col bg-background-3 shadow-md text-white max-sm:hidden lg:w-[264px] sidebar-glow shrink-0">
+    <section className="sticky top-0 flex h-screen w-fit flex-col bg-background-3 shadow-md text-white max-sm:hidden lg:w-[264px] sidebar-glow shrink-0">
       <div className="flex flex-col items-center gap-1 px-6 pt-5 pb-3 shrink-0">
         <Link href="/" className="flex flex-col items-center gap-1 w-full">
           <Image
@@ -65,7 +65,7 @@ const Sidebar = () => {
             height={88}
             alt="Sing Along logo"
           />
-          <p className="text-[#F57C00] text-sm font-bold tracking-[0.25em] -mt-1 uppercase" style={{ fontFamily: "'Marcellus', serif" }}>Connect</p>
+          <p className="text-[#024d04] text-sm font-bold tracking-[0.25em] -mt-1 uppercase" style={{ fontFamily: "'Marcellus', serif" }}>Connect</p>
         </Link>
       </div>
 

@@ -23,7 +23,7 @@ const Navbar2 = () => {
             id="navbar-logo"
             className='h-[65px] md:h-[90px]'
           />
-          <span className='text-[#F57C00] font-bold text-[12px] leading-tight md:hidden' style={{ fontFamily: "'Marcellus', serif" }}>Connect</span>
+          <span className='text-[#024d04] font-bold text-[12px] leading-tight md:hidden' style={{ fontFamily: "'Marcellus', serif" }}>Connect</span>
         </a>
         <span className="text-center hidden md:block" style={{ marginLeft: 10 }}>
           <h3

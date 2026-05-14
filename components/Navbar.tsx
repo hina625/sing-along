@@ -27,9 +27,9 @@ const Navbar = () => {
           alt="Sing Along logo"
           className="max-sm:h-[50px] max-sm:w-auto"
         />
-        <span className='text-[#F57C00] font-bold text-[12px] leading-tight max-sm:block hidden' style={{ fontFamily: "'Marcellus', serif" }}>Connect</span>
-        
-        
+        <span className='text-[#024d04] font-bold text-[12px] leading-tight max-sm:block hidden' style={{ fontFamily: "'Marcellus', serif" }}>Connect</span>
+
+
       </Link>
       <div className="flex-between gap-4 text-white">
         {isMounted && (
@@ -38,7 +38,7 @@ const Navbar = () => {
               <WorkspaceSwitcher />
               <NotificationBell />
               <ThemeToggle />
-              <UserButton afterSignOutUrl="/sign-in" appearance={{elements: {userButtonAvatarBox: 'custom-avatar'}}}/>
+              <UserButton afterSignOutUrl="/sign-in" appearance={{ elements: { userButtonAvatarBox: 'custom-avatar' } }} />
               <span className="max-sm:hidden" style={{ fontSize: '14px', fontWeight: 500 }}>{user?.fullName || user?.firstName}</span>
             </div>
           </SignedIn>
