@@ -966,12 +966,12 @@ const page = () => {
       </section>
 
 
-      <div className="bg-background-3 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="bg-gray-300 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-center mb-8 !bg-gradient-to-r !text-white !text-transparent !bg-clip-text leading-tight">
+          <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-center mb-8 !text-gray-900 leading-tight">
             Discover Our Products
           </h2>
-          <div className="flex flex-col gap-3 max-w-6xl mx-auto">
+          <div className="flex flex-col gap-8 max-w-6xl mx-auto">
             {products.map((item, index) => (
               <a key={index} href={item.link} className='block hover:scale-[1.005] transition-transform duration-300'>
                 <div
