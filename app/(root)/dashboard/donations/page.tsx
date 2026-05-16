@@ -84,14 +84,14 @@ const DonationsPage = () => {
 
   const cancelRecurring = async (row: DonationRow) => {
     if (!row.subscriptionId || !user?.id) return;
-    if (typeof window !== 'undefined' && !window.confirm(`Cancel this ${row.frequency} gift of $${row.amount}? Future charges will stop.`)) return;
+    if (typeof window !== 'undefined' && !window.confirm(`Cancel this ${row.frequency} partnership of $${row.amount}? Future charges will stop.`)) return;
     setCancellingId(row._id);
     try {
       const res = await axios.delete('/api/v1/donate/recurring', {
         data: { subscriptionId: row.subscriptionId, donorUserId: user.id },
       });
       if (res.data?.success) {
-        toast({ title: 'Recurring gift cancelled', description: 'No future charges will be made.' });
+        toast({ title: 'Recurring partnership cancelled', description: 'No future charges will be made.' });
         fetchReports();
       } else {
         throw new Error(res.data?.message || 'Cancel failed');
@@ -110,7 +110,7 @@ const DonationsPage = () => {
   const trendChart = useMemo(() => ({
     labels: data?.trend.map((p) => new Date(p.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })) || [],
     datasets: [{
-      label: 'Donations ($)',
+      label: 'Contributions ($)',
       data: data?.trend.map((p) => p.amount) || [],
       fill: true,
       backgroundColor: 'rgba(245, 124, 0, 0.18)',
@@ -139,10 +139,10 @@ const DonationsPage = () => {
         <div>
           <h2 className="text-3xl sm:text-4xl font-bold flex items-center gap-3">
             <DollarSign className="text-deep-gold" size={32} />
-            Donations
+            Partner with Us
           </h2>
           <p className="text-white/60 mt-2 italic text-sm">
-            Giving across <strong>{activeWorkspace?.name || 'your workspace'}</strong>.
+            Partner contributions across <strong>{activeWorkspace?.name || 'your workspace'}</strong>.
           </p>
         </div>
         <button type="button" onClick={fetchReports} className="hero-quick-link" disabled={loading}>
@@ -156,15 +156,15 @@ const DonationsPage = () => {
         <>
           {/* === KPI tiles === */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-            <KpiTile icon={<DollarSign size={18} />} label="Total received" value={formatMoney(data.summary.total)} sub={`${data.summary.count} gift${data.summary.count === 1 ? '' : 's'}`} tone="gold" />
-            <KpiTile icon={<TrendingUp size={18} />} label="This month" value={formatMoney(data.summary.monthTotal)} sub={`${data.summary.monthCount} gift${data.summary.monthCount === 1 ? '' : 's'}`} />
+            <KpiTile icon={<DollarSign size={18} />} label="Total received" value={formatMoney(data.summary.total)} sub={`${data.summary.count} contribution${data.summary.count === 1 ? '' : 's'}`} tone="gold" />
+            <KpiTile icon={<TrendingUp size={18} />} label="This month" value={formatMoney(data.summary.monthTotal)} sub={`${data.summary.monthCount} contribution${data.summary.monthCount === 1 ? '' : 's'}`} />
             <KpiTile icon={<Repeat size={18} />} label="Active recurring" value={String(data.summary.recurringActive)} sub={data.summary.recurringActive === 1 ? '1 subscription' : `${data.summary.recurringActive} subscriptions`} />
             <KpiTile icon={<TrendingUp size={18} />} label="Recurring / month" value={formatMoney(data.summary.recurringMonthlyValue)} sub="MRR equivalent" tone="gold" />
           </div>
 
           {/* === Trend chart === */}
           <div className="card-premium p-5">
-            <h4 className="text-deep-gold font-semibold mb-2">Giving — last 90 days</h4>
+            <h4 className="text-deep-gold font-semibold mb-2">Contributions — last 90 days</h4>
             <div className="h-[260px]">
               <Line data={trendChart} options={chartOpts} />
             </div>
@@ -173,10 +173,10 @@ const DonationsPage = () => {
           {/* === Active recurring subscriptions === */}
           <div className="card-premium p-5">
             <h4 className="text-deep-gold font-semibold mb-3 flex items-center gap-2">
-              <Repeat size={18} /> Active recurring gifts
+              <Repeat size={18} /> Active recurring partnerships
             </h4>
             {data.recurring.length === 0 ? (
-              <p className="text-white/50 text-sm italic">No active recurring gifts yet.</p>
+              <p className="text-white/50 text-sm italic">No active recurring partnerships yet.</p>
             ) : (
               <ul className="flex flex-col gap-2">
                 {data.recurring.map((row) => (
@@ -216,10 +216,10 @@ const DonationsPage = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div className="card-premium p-5">
               <h4 className="text-deep-gold font-semibold mb-3 flex items-center gap-2">
-                <Users size={18} /> Top givers
+                <Users size={18} /> Top partners
               </h4>
               {data.topDonors.length === 0 ? (
-                <p className="text-white/50 text-sm italic">No givers yet.</p>
+                <p className="text-white/50 text-sm italic">No partners yet.</p>
               ) : (
                 <ul className="flex flex-col gap-2">
                   {data.topDonors.map((d, i) => (
@@ -233,7 +233,7 @@ const DonationsPage = () => {
                       </div>
                       <div className="flex flex-col items-end shrink-0">
                         <span className="text-deep-gold font-semibold">{formatMoney(d.total)}</span>
-                        <span className="text-[10px] text-white/45">{d.count} gift{d.count === 1 ? '' : 's'}</span>
+                        <span className="text-[10px] text-white/45">{d.count} contribution{d.count === 1 ? '' : 's'}</span>
                       </div>
                     </li>
                   ))}
@@ -242,9 +242,9 @@ const DonationsPage = () => {
             </div>
 
             <div className="card-premium p-5">
-              <h4 className="text-deep-gold font-semibold mb-3">Recent gifts</h4>
+              <h4 className="text-deep-gold font-semibold mb-3">Recent contributions</h4>
               {data.recent.length === 0 ? (
-                <p className="text-white/50 text-sm italic">No gifts yet.</p>
+                <p className="text-white/50 text-sm italic">No contributions yet.</p>
               ) : (
                 <ul className="flex flex-col gap-1.5 max-h-[420px] overflow-y-auto">
                   {data.recent.map((row) => (

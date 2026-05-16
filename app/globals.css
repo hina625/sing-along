@@ -895,7 +895,10 @@ button.cl-formButtonPrimary.cl-button.🔒️.cl-internal-ttumny {
   padding: 12px 20px 16px !important;
   background: linear-gradient(to top, #202124 70%, rgba(32, 33, 36, 0.92) 100%) !important;
   display: grid !important;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) !important;
+  /* auto | 1fr | auto so the right utility buttons always claim their own
+     space — the center cluster takes whatever remains and wraps if needed. */
+  grid-template-columns: auto minmax(0, 1fr) auto !important;
+  gap: 12px !important;
   align-items: center !important;
   z-index: 1000 !important;
 }
@@ -926,17 +929,66 @@ button.cl-formButtonPrimary.cl-button.🔒️.cl-internal-ttumny {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  justify-self: center !important;
+  justify-self: stretch !important;
+  min-width: 0 !important;
 }
 
 .meet-controls-cluster {
+  position: relative !important;
   display: flex !important;
   align-items: center !important;
+  justify-content: center !important;
   gap: 8px !important;
+  max-width: 100% !important;
   background-color: #3c4043 !important;
   border-radius: 999px !important;
   padding: 6px 10px 6px 8px !important;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35) !important;
+}
+
+/* Overflow group — buttons inline on large screens, collapsed into a
+   dropup on smaller screens. `display: contents` makes the wrapper
+   transparent so children participate in the cluster's flex layout. */
+.meet-overflow {
+  display: contents;
+}
+
+.meet-more-toggle-stack {
+  display: none !important;
+}
+
+.meet-more-toggle.is-active {
+  background-color: #5f6368 !important;
+}
+
+/* Duplicate utility-button group rendered inside the dropup. Hidden except
+   on mobile where .meet-bar-right is itself hidden. */
+.meet-mobile-utility-overflow {
+  display: none;
+}
+
+/* Slim full-width separator that splits the dropup into two visual rows:
+   cluster overflow above, utility buttons below. */
+.meet-overflow-sep {
+  flex-basis: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 4px 0 2px;
+}
+
+/* Custom scrollbar for the dropup when it overflows vertically */
+.meet-overflow[data-open="true"]::-webkit-scrollbar {
+  width: 6px;
+}
+.meet-overflow[data-open="true"]::-webkit-scrollbar-track {
+  background: transparent;
+}
+.meet-overflow[data-open="true"]::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 3px;
+}
+.meet-overflow[data-open="true"]::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.28);
 }
 
 .meet-cluster-divider {
@@ -1051,17 +1103,13 @@ button.cl-formButtonPrimary.cl-button.🔒️.cl-internal-ttumny {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 8px !important;
+  width: 56px !important;
   height: 40px !important;
-  padding: 0 16px !important;
+  padding: 0 !important;
   border: none !important;
   border-radius: 20px !important;
   background-color: #c5221f !important;
   color: #fff !important;
-  font-size: 13px !important;
-  font-weight: 600 !important;
-  letter-spacing: 0.01em !important;
-  white-space: nowrap !important;
   cursor: pointer !important;
   transition: background-color 0.2s, transform 0.05s !important;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) !important;
@@ -2571,6 +2619,23 @@ button.cl-formButtonPrimary.cl-button.🔒️.cl-internal-ttumny {
   font-size: 11px;
   color: rgba(255, 255, 255, 0.45);
   flex-shrink: 0;
+}
+
+html.light .songs-search {
+  background: rgba(11, 31, 58, 0.04);
+  border-color: rgba(11, 31, 58, 0.12);
+}
+html.light .songs-search-input {
+  color: rgba(11, 31, 58, 0.95);
+}
+html.light .songs-search-input::placeholder {
+  color: rgba(11, 31, 58, 0.5);
+}
+html.light .songs-search-count {
+  color: rgba(11, 31, 58, 0.6);
+}
+html.light .songs-search svg {
+  color: rgba(11, 31, 58, 0.6) !important;
 }
 
 .songs-play-btn {
@@ -4290,6 +4355,36 @@ html.light .daily-verse-share:hover {
   background: rgba(212, 175, 55, 0.1);
 }
 
+/* Mobile: dropdown should anchor to the viewport, not the trigger, so the
+   left edge doesn't slide off-screen when the trigger sits near the right. */
+@media (max-width: 640px) {
+  .ws-switcher-trigger {
+    max-width: 150px;
+    padding: 5px 8px 5px 6px;
+    gap: 6px;
+  }
+  .ws-switcher-avatar {
+    width: 26px;
+    height: 26px;
+    font-size: 10px;
+  }
+  .ws-switcher-name-text {
+    max-width: 80px;
+    font-size: 12px;
+  }
+  .ws-switcher-mode {
+    display: none;
+  }
+  .ws-switcher-menu {
+    position: fixed;
+    top: 64px;
+    left: 12px;
+    right: 12px;
+    width: auto;
+    max-width: none;
+  }
+}
+
 /* ===== Join landing (worship-branded) ===== */
 .join-landing {
   position: relative;
@@ -4744,6 +4839,36 @@ html.light .text-white\/50,
 html.light .text-white\/45     { color: rgba(11, 31, 58, 0.5) !important; }
 html.light .text-white\/40,
 html.light .text-white\/35     { color: rgba(11, 31, 58, 0.4) !important; }
+
+/* .zeeshan wrapper is always dark-themed — keep white text white in light mode */
+html.light .zeeshan .text-white,
+html.light .zeeshan .\!text-white       { color: #ffffff !important; }
+html.light .zeeshan .text-white\/95,
+html.light .zeeshan .\!text-white\/95   { color: rgba(255, 255, 255, 0.95) !important; }
+html.light .zeeshan .text-white\/90,
+html.light .zeeshan .\!text-white\/90   { color: rgba(255, 255, 255, 0.90) !important; }
+html.light .zeeshan .text-white\/85,
+html.light .zeeshan .\!text-white\/85   { color: rgba(255, 255, 255, 0.85) !important; }
+html.light .zeeshan .text-white\/80,
+html.light .zeeshan .\!text-white\/80   { color: rgba(255, 255, 255, 0.80) !important; }
+html.light .zeeshan .text-white\/75,
+html.light .zeeshan .\!text-white\/75   { color: rgba(255, 255, 255, 0.75) !important; }
+html.light .zeeshan .text-white\/70,
+html.light .zeeshan .\!text-white\/70   { color: rgba(255, 255, 255, 0.70) !important; }
+html.light .zeeshan .text-white\/65,
+html.light .zeeshan .\!text-white\/65   { color: rgba(255, 255, 255, 0.65) !important; }
+html.light .zeeshan .text-white\/60,
+html.light .zeeshan .\!text-white\/60   { color: rgba(255, 255, 255, 0.60) !important; }
+html.light .zeeshan .text-white\/55,
+html.light .zeeshan .\!text-white\/55   { color: rgba(255, 255, 255, 0.55) !important; }
+html.light .zeeshan .text-white\/50,
+html.light .zeeshan .\!text-white\/50   { color: rgba(255, 255, 255, 0.50) !important; }
+html.light .zeeshan .text-white\/45,
+html.light .zeeshan .\!text-white\/45   { color: rgba(255, 255, 255, 0.45) !important; }
+html.light .zeeshan .text-white\/40,
+html.light .zeeshan .\!text-white\/40   { color: rgba(255, 255, 255, 0.40) !important; }
+html.light .zeeshan .text-white\/35,
+html.light .zeeshan .\!text-white\/35   { color: rgba(255, 255, 255, 0.35) !important; }
 
 html.light .card-premium {
   background: linear-gradient(135deg, #ffffff 0%, #FBF3DD 100%) !important;
@@ -6095,8 +6220,116 @@ html.light .bg-background-4 {
 }
 
 /* ========================================= */
-/* Mobile Responsiveness for Meeting Page    */
+/* Responsive: Meeting Bottom Bar             */
 /* ========================================= */
+
+/* Small desktop / large tablet — tighten spacing so the cluster
+   doesn't crowd the right-side utility buttons. */
+@media (max-width: 1280px) and (min-width: 1025px) {
+  .meet-bottom-bar {
+    padding: 10px 14px 14px !important;
+    gap: 8px !important;
+  }
+  .meet-controls-cluster {
+    gap: 6px !important;
+    padding: 5px 8px !important;
+  }
+  .meet-bar-right {
+    gap: 2px !important;
+  }
+  .meet-utility-button {
+    width: 42px !important;
+    height: 42px !important;
+  }
+  .meet-utility-button svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+  .meet-btn-label {
+    font-size: 9px !important;
+    max-width: 56px !important;
+  }
+}
+
+/* Tablet — hide the left clock, shrink controls, collapse overflow
+   buttons into a "More" dropup so the cluster stays single-row. */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .meet-bottom-bar {
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    padding: 10px 12px 12px !important;
+    gap: 8px !important;
+  }
+  .meet-bar-left {
+    display: none !important;
+  }
+  .meet-bar-center {
+    justify-self: center !important;
+  }
+  .meet-icon-button {
+    width: 38px !important;
+    height: 38px !important;
+  }
+  .meet-icon-button svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
+  .meet-icon-button.hangup {
+    width: 50px !important;
+  }
+  .meet-end-for-all {
+    width: 50px !important;
+    height: 38px !important;
+  }
+  .meet-utility-button {
+    width: 40px !important;
+    height: 40px !important;
+  }
+  .meet-utility-button svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
+  .meet-bar-right {
+    gap: 0 !important;
+  }
+
+  /* Collapse overflow buttons into the dropup */
+  .meet-overflow-divider {
+    display: none !important;
+  }
+  .meet-more-toggle-stack {
+    display: flex !important;
+  }
+  .meet-overflow {
+    display: none;
+  }
+  .meet-overflow[data-open="true"] {
+    display: flex !important;
+    position: absolute !important;
+    bottom: calc(100% + 12px) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    background: #2d2e30 !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    padding: 14px 16px !important;
+    border-radius: 18px !important;
+    max-width: min(92vw, 460px) !important;
+    max-height: min(50vh, 360px) !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5) !important;
+    z-index: 1100 !important;
+  }
+  /* Restore labels inside the dropup so users can identify each action */
+  .meet-overflow[data-open="true"] .meet-btn-label {
+    display: block !important;
+    font-size: 11px !important;
+    max-width: 72px !important;
+  }
+}
 
 @media (max-width: 768px) {
   /* Bottom Bar Optimization */
@@ -6142,6 +6375,48 @@ html.light .bg-background-4 {
     border: none !important;
   }
 
+  /* Collapse overflow buttons into the dropup on mobile too */
+  .meet-overflow-divider {
+    display: none !important;
+  }
+  .meet-more-toggle-stack {
+    display: flex !important;
+  }
+  .meet-overflow {
+    display: none;
+  }
+  .meet-overflow[data-open="true"] {
+    display: flex !important;
+    position: absolute !important;
+    bottom: calc(100% + 12px) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    background: #2d2e30 !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    padding: 14px 16px !important;
+    border-radius: 18px !important;
+    max-width: min(92vw, 420px) !important;
+    max-height: min(45vh, 320px) !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5) !important;
+    z-index: 1100 !important;
+  }
+  .meet-overflow[data-open="true"] .meet-btn-label {
+    display: block !important;
+    font-size: 11px !important;
+    max-width: 72px !important;
+  }
+
+  /* Surface the duplicated right-side utility buttons inside the dropup */
+  .meet-mobile-utility-overflow {
+    display: contents !important;
+  }
+
   .meet-icon-button {
     width: 44px !important;
     height: 44px !important;
@@ -6169,11 +6444,10 @@ html.light .bg-background-4 {
   }
 
   .meet-end-for-all {
+    width: 56px !important;
     height: 44px !important;
-    padding: 0 14px !important;
+    padding: 0 !important;
     border-radius: 22px !important;
-    font-size: 12px !important;
-    gap: 6px !important;
   }
 
   .meet-end-for-all-icon {
@@ -6320,12 +6594,28 @@ html.light .bg-background-4 {
 }
 
 @media (max-width: 480px) {
-  .meet-controls-cluster {
-    scale: 0.9;
+  .meet-bottom-bar {
+    padding: 8px !important;
+    gap: 6px !important;
   }
-  
-  .meet-bar-right {
-    bottom: 70px !important;
+  .meet-controls-cluster {
+    gap: 6px !important;
+  }
+  .meet-icon-button {
+    width: 40px !important;
+    height: 40px !important;
+  }
+  .meet-icon-button.hangup {
+    width: 48px !important;
+    height: 40px !important;
+  }
+  .meet-end-for-all {
+    width: 48px !important;
+    height: 40px !important;
+  }
+  .meet-split-button-main {
+    width: 40px !important;
+    height: 40px !important;
   }
 }
 

@@ -261,6 +261,12 @@ const page = () => {
               >
                 Now you can set up your secured and high-quality virtual meetings on Sing Along.
               </p>
+              <p
+                className="text-center text-md-left mt-3"
+                style={{ color: 'rgba(255,255,255,0.7)', fontWeight: 400, fontSize: '0.95rem' }}
+              >
+                Designed for businesses, teams, communities, nonprofits, and faith-based organizations.
+              </p>
               <div className="text-center text-md-left mt-5">
                 <a href="/dashboard" className="btn btn-primary !border-none !bg-royal-purple hover:!bg-burgundy transition-all btn-icon shadow-lg shadow-royal-purple/20">
                   <span className="btn-inner--text">Get started</span>
@@ -426,7 +432,7 @@ const page = () => {
           <div className="mt-2">
             <p className="leading-7 max-w-[35rem] text-center font-[300] text-[1.125rem] main-para !text-white/80">
 
-              Discover the difference with our professional communication tools, business networking features, and AI-powered platform built to help you grow.
+              Discover the difference with our professional communication tools, collaboration features, and AI-powered platform built to help any organization grow.
             </p>
           </div>
 
@@ -649,7 +655,7 @@ const page = () => {
 
 
 
-      <section className="slice !bg-bg-dark pt-7 relative overflow-hidden">
+      <section className="slice !bg-bg-dark !pt-8 md:!pt-12 !pb-10 md:!pb-16 relative overflow-hidden">
 
         <div className='absolute bottom-1 left-1 z-0'>
           <img src='/images/bottom-box-shape.png' />
@@ -657,135 +663,151 @@ const page = () => {
         <div className='absolute right-1 top-1 z-0'>
         </div>
 
-        <div className="container position-relative zindex-100">
-          <div className="flex flex-wrap items-center justify-center gap-7">
-            {
-              Object.keys(planslist).map((plan) => (
-                <React.Fragment key={plan}>
-                  {
-                    plan == 'starter' &&
-                    <div className="w-[18rem]">
-                      <div
-                        className="card card-pricing card-awesome-black text-center px-3 border-0 hover-scale-110 md:scale-110"
-                        style={{ border: "1px solid" }}
+        <div className="container position-relative zindex-100 px-4 sm:px-6">
+          <div className="flex items-center justify-center flex-col mb-6 md:mb-10 text-center">
+            <span className="inline-block px-3 sm:px-4 py-1.5 mb-3 text-[10px] sm:text-xs font-semibold text-[#D4AF37] uppercase tracking-[0.2em] border border-[#D4AF37]/30 rounded-full bg-[#D4AF37]/5">
+              Pricing Plans
+            </span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gradient !leading-tight">
+              Pricing for every team
+            </h2>
+            <p
+              className="mt-3 mb-0 leading-7 max-w-[40rem] text-center font-[300] text-base sm:text-[1.125rem] px-2"
+              style={{ color: '#ffffff' }}
+            >
+              Start free. Upgrade as your audience grows.
+              All plans include live meetings, recordings, and real-time collaboration.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-6xl mx-auto items-stretch">
+            {Object.keys(planslist)
+              .filter((key) => key !== 'plus' && planslist[key].audience !== 'enterprise')
+              .map((key) => {
+                const plan = planslist[key];
+                const isCurrent = subscription === key;
+                const isFreePlan = key === 'free';
+                const showFreePlanBadge = isFreePlan && subscription !== 'free';
+
+                return (
+                  <div
+                    key={key}
+                    className="relative flex flex-col rounded-xl p-4 sm:p-5 transition-all duration-300 hover:-translate-y-1"
+                    style={{
+                      backgroundColor: '#1A1A1A',
+                      border: plan.popular ? '1px solid rgba(212, 175, 55, 0.6)' : '1px solid rgba(255, 255, 255, 0.1)',
+                      boxShadow: plan.popular ? '0 10px 25px -5px rgba(212, 175, 55, 0.15)' : 'none',
+                    }}
+                  >
+                    {plan.popular && (
+                      <span
+                        className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full"
+                        style={{
+                          fontSize: '10px',
+                          fontWeight: 700,
+                          letterSpacing: '0.1em',
+                          textTransform: 'uppercase',
+                          background: 'linear-gradient(90deg, #5A2D82, #D4AF37)',
+                          color: '#ffffff',
+                          boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
+                        }}
                       >
-                        <div className="card-header py-5 border-0 delimiter-bottom">
-                          <div className="h1  text-center mb-0 text-gradient">
-                            $<span className="price font-weight-bolder text-gradient">{planslist[plan].price}</span>
-                          </div>
-                          <span className="h6 text-gradient">{planslist[plan].title}</span>
-                        </div>
-                        <div className="card-body !p-1 !text-white">
-                          <span className="h6" style={{ fontWeight: "bold", color: "#ffffff" }}>
-                            Features:
-                          </span>
-                          <ul className="list-unstyled  text-sm opacity-8 mb-4">
-                            {
-                              planslist[plan].features.map((text, i) => (
-                                <li key={i} className="py-2 !text-left" style={{ color: "rgba(255,255,255,0.9)" }}>
-                                  <IoMdCheckmark /> {text}
-                                </li>
-                              ))
-                            }
-                          </ul>
-                          {
+                        Most Popular
+                      </span>
+                    )}
 
-                            subscription === plan ?
-                              (
-                                <a
-                                  className="btn btn-sm btn- !bg-[#1ebbc4] hover-translate-y-n3 hover-shadow-lg mb-3"
-                                  style={{ color: "#ffffff", fontWeight: 700 }}
-                                >
-                                  Current Plan
-                                </a>
-
-                              )
-                              :
-                              (
-                                <a
-                                  onClick={(e) => handlePurchanse(e, plan)}
-                                  className="btn btn-sm btn- !bg-[#A79369] hover-translate-y-n3 hover-shadow-lg mb-3"
-                                  style={{ color: "#ffffff", fontWeight: 700 }}
-                                >
-                                  Purchase Now
-                                </a>
-
-                              )
-                          }
-                        </div>
+                    <div className="pb-3 sm:pb-4 border-b border-white/10">
+                      <h3
+                        style={{
+                          fontSize: '0.75rem',
+                          fontWeight: 600,
+                          color: 'rgba(255,255,255,0.6)',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.1em',
+                          margin: 0,
+                        }}
+                      >
+                        {plan.title}
+                      </h3>
+                      <div className="mt-2 flex items-baseline gap-1">
+                        <span className="text-3xl sm:text-4xl font-bold text-white leading-none">
+                          ${plan.price}
+                        </span>
+                        <span className="text-sm text-white/55">/mo</span>
                       </div>
                     </div>
-                  }
-                  {
-                    plan != "starter" &&
-                    <div className="w-[18rem]">
-                      <div
-                        className="card card-awesome-black card-pricing text-center px-3 hover-scale-110"
 
-                      >
-                        <div className="card-header py-5 border-0 delimiter-bottom">
-                          <div className="h1 text-center mb-0 text-gradient">
-                            $<span className="price font-weight-bolder ">{planslist[plan].price}</span>
-                          </div>
-                          <span className="h6  text-gradient">{planslist[plan].title}</span>
-                        </div>
-                        <div className="card-body !p-1">
-                          <span className="h6" style={{ fontWeight: "bold", color: "#ffffff" }}>
-                            Features:
-                          </span>
-                          <ul className="list-unstyled text-sm mb-4">
-                            {
-                              planslist[plan].features.map((text, i) => (
-                                <li key={i} className="py-2 !text-left" style={{ color: "rgba(255,255,255,0.9)" }}>
-                                  <IoMdCheckmark /> {text}
-                                </li>
-                              ))
-                            }
+                    <ul className="mt-3 sm:mt-4 mb-0 p-0 list-none flex-1">
+                      {plan.features.map((text, i) => (
+                        <li
+                          key={i}
+                          className="flex gap-2 items-start text-sm text-white/85 py-1.5 leading-snug"
+                        >
+                          <IoMdCheckmark className="text-[#D4AF37] mt-1 shrink-0" />
+                          <span className="break-words">{text}</span>
+                        </li>
+                      ))}
+                    </ul>
 
-                          </ul>
-
-                          {
-                            plan == 'free' && subscription != 'free' ?
-                              (
-                                <a
-                                  className="btn btn-sm btn- !bg-[#A79369] hover-translate-y-n3 hover-shadow-lg mb-3"
-                                  style={{ color: "#ffffff", fontWeight: 700 }}
-                                >
-                                  Free Plan
-                                </a>
-                              ) :
-                              subscription === plan ?
-                                (
-                                  <a
-                                    onClick={plan == "free" ? () => setFreePlanModel(true) : () => { }}
-                                    className="btn btn-sm btn- !bg-[#A79369] hover-translate-y-n3 hover-shadow-lg mb-3"
-                                    style={{ color: "#ffffff", fontWeight: 700 }}
-                                  >
-                                    {plan == "free" ? "Continue With Free" : "Current Plan"}
-
-                                  </a>
-
-                                )
-                                :
-                                (
-                                  <a
-                                    onClick={(e) => handlePurchanse(e, plan)}
-                                    className="btn btn-sm btn- !bg-royal-purple hover:!bg-burgundy hover-translate-y-n3 hover-shadow-lg mb-3 shadow-md shadow-royal-purple/20 transition-all"
-                                    style={{ color: "#ffffff", fontWeight: 700 }}
-                                  >
-                                    Purchase Now
-                                  </a>
-
-                                )
-                          }
-
-                        </div>
-                      </div>
+                    <div className="mt-4 sm:mt-5">
+                      {showFreePlanBadge ? (
+                        <button
+                          style={{
+                            width: '100%',
+                            padding: '0.625rem',
+                            borderRadius: '0.5rem',
+                            backgroundColor: 'rgba(255,255,255,0.1)',
+                            color: '#ffffff',
+                            fontSize: '0.875rem',
+                            fontWeight: 500,
+                            border: 'none',
+                            cursor: 'default',
+                          }}
+                        >
+                          Free Plan
+                        </button>
+                      ) : isCurrent ? (
+                        <button
+                          onClick={isFreePlan ? () => setFreePlanModel(true) : undefined}
+                          style={{
+                            width: '100%',
+                            padding: '0.625rem',
+                            borderRadius: '0.5rem',
+                            backgroundColor: 'rgba(255,255,255,0.1)',
+                            color: '#ffffff',
+                            fontSize: '0.875rem',
+                            fontWeight: 500,
+                            border: 'none',
+                            cursor: isFreePlan ? 'pointer' : 'default',
+                          }}
+                        >
+                          {isFreePlan ? 'Continue With Free' : 'Current Plan'}
+                        </button>
+                      ) : (
+                        <button
+                          onClick={(e) => handlePurchanse(e, key)}
+                          style={{
+                            width: '100%',
+                            padding: '0.625rem',
+                            borderRadius: '0.5rem',
+                            background: plan.popular
+                              ? 'linear-gradient(90deg, #5A2D82, #D4AF37)'
+                              : '#1ebbc4',
+                            color: '#ffffff',
+                            fontSize: '0.875rem',
+                            fontWeight: 600,
+                            border: 'none',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s',
+                          }}
+                        >
+                          Get Started
+                        </button>
+                      )}
                     </div>
-                  }
-                </React.Fragment>
-              ))
-            }
+                  </div>
+                );
+              })}
           </div>
           <div className="mt-5 text-center">
             <p className="mb-2" style={{ color: 'rgba(255,255,255,0.95)' }}>
@@ -966,9 +988,9 @@ const page = () => {
       </section>
 
 
-      <div className="bg-gray-300 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="bg-gray-700 pt-2 pb-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-center mb-8 !text-gray-900 leading-tight">
+          <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-center mb-4 !text-white leading-tight">
             Discover Our Products
           </h2>
           <div className="flex flex-col gap-8 max-w-6xl mx-auto">
@@ -979,18 +1001,18 @@ const page = () => {
                   style={{ background: item.solidBg }}
                 >
                   {/* Left: Brand */}
-                  <div className='flex md:flex-col items-center justify-center gap-0 pl-5 pr-2 py-0 md:w-[170px] shrink-0'>
+                  <div className='flex md:flex-col items-center justify-center gap-2 md:gap-0 px-3 md:pl-5 md:pr-2 py-3 md:py-0 md:w-[170px] shrink-0'>
                     <img
                       src='/images/banners/img.png'
                       alt='HGsingalong'
-                      className='h-20 w-20 md:h-24 md:w-24 object-contain shrink-0 -mb-1'
+                      className='h-16 w-16 md:h-24 md:w-24 object-contain shrink-0 md:-mb-1'
                     />
-                    <div className='flex flex-col items-center leading-none'>
-                      <span className='text-xl md:text-2xl tracking-wide leading-none' style={{ color: '#ffffff', fontWeight: 700 }}>
+                    <div className='flex flex-col items-center leading-none min-w-0'>
+                      <span className='text-lg md:text-2xl tracking-wide leading-none' style={{ color: '#ffffff', fontWeight: 700 }}>
                         {item.brandPrefix}<span style={{ fontWeight: 300 }}>{item.brandName}</span>
                       </span>
                       <span
-                        className='text-[11px] md:text-xs tracking-[0.25em] uppercase mt-1 leading-none whitespace-nowrap'
+                        className='text-[10px] md:text-xs tracking-[0.2em] md:tracking-[0.25em] uppercase mt-1 leading-none whitespace-nowrap'
                         style={{ color: item.brandAccent, fontWeight: 700 }}
                       >
                         {item.brandTag}
@@ -1166,10 +1188,12 @@ const page = () => {
                   />
                 </a>
                 <p className="pr-lg-4" style={{ color: 'rgba(255,255,255,0.9)', fontWeight: 400, fontSize: '18px', lineHeight: '27px' }}>
-                  SingAlong Connect is a professional video conferencing and business
-                  networking platform powered by Hallelujah Gospel Globally. We provide
-                  high-quality, secure, and reliable communication tools for meetings,
-                  conferences, networking, collaboration, and virtual events.{" "}
+                  SingAlong Connect is a professional video conferencing and
+                  collaboration platform powered by Hallelujah Gospel Globally.
+                  Designed for businesses, teams, communities, nonprofits, and
+                  faith-based organizations — we provide high-quality, secure, and
+                  reliable communication tools for meetings, conferences, networking,
+                  collaboration, and virtual events.{" "}
                 </p>
               </div>
 

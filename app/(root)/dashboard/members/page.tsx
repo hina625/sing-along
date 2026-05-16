@@ -94,7 +94,7 @@ const MembersPage = () => {
       }
     } catch (err) {
       console.error('Members load failed', err);
-      toast({ title: 'Could not load members', variant: 'destructive' });
+      toast({ title: 'Could not load team', variant: 'destructive' });
     } finally {
       setLoading(false);
     }
@@ -209,7 +209,7 @@ const MembersPage = () => {
     <section className="flex size-full flex-col gap-8 text-white pb-12">
       <div className="flex items-start justify-between flex-wrap gap-4 mt-12">
         <div>
-          <h2 className="text-4xl sm:text-5xl font-bold">Members</h2>
+          <h2 className="text-4xl sm:text-5xl font-bold">Team</h2>
           <p className="text-white/60 mt-2">
             People with access to <span className="text-white">{activeWorkspace.name}</span>
             {isAdmin && ' — invite teammates and manage roles below.'}
@@ -277,10 +277,10 @@ const MembersPage = () => {
 
       <div className="rounded-2xl border border-white/10 bg-background-3/30 backdrop-blur-xl p-5">
         <h3 className="text-lg font-semibold mb-4">
-          Members <span className="text-white/40 text-sm">({members.length})</span>
+          Team <span className="text-white/40 text-sm">({members.length})</span>
         </h3>
         {members.length === 0 ? (
-          <p className="text-white/50 py-8 text-center">No members yet.</p>
+          <p className="text-white/50 py-8 text-center">No team members yet.</p>
         ) : (
           <ul className="divide-y divide-white/5">
             {members.map((m) => {
@@ -434,7 +434,7 @@ const InviteModal = ({ workspaceId, workspaceName, userId, onClose, onSent }: In
   const dismiss = sentInvite ? onSent : onClose;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4" onClick={dismiss}>
+    <div className="zeeshan fixed inset-0 z-[60] flex items-center justify-center bg-black/70 px-4" onClick={dismiss}>
       <div
         className="w-full max-w-md rounded-2xl border border-white/10 bg-[#1A1A1A] p-6 text-white"
         onClick={(e) => e.stopPropagation()}
@@ -640,19 +640,19 @@ const ManageRolesModal = ({ workspaceId, workspaceName, userId, onClose }: Manag
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 py-8" onClick={onClose}>
+    <div className="zeeshan fixed inset-0 z-[60] flex items-center justify-center bg-black/70 px-2 py-4 sm:px-4 sm:py-8" onClick={onClose}>
       <div
         className="w-full max-w-4xl max-h-full overflow-hidden rounded-2xl border border-white/10 bg-[#1A1A1A] text-white flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-start justify-between p-6 pb-4 border-b border-white/10">
-          <div>
-            <h3 className="text-xl font-bold">Manage roles</h3>
-            <p className="text-sm text-white/60 mt-1">
+        <div className="flex items-start justify-between gap-3 p-4 sm:p-6 pb-3 sm:pb-4 border-b border-white/10">
+          <div className="min-w-0">
+            <h3 className="text-lg sm:text-xl font-bold">Manage roles</h3>
+            <p className="text-xs sm:text-sm text-white/60 mt-1">
               Choose what each role can do in <span className="text-white">{workspaceName}</span>. Admins always have full access.
             </p>
           </div>
-          <button onClick={onClose} className="text-white/60 hover:text-white">
+          <button onClick={onClose} className="text-white/60 hover:text-white flex-shrink-0">
             <X size={20} />
           </button>
         </div>
@@ -663,7 +663,7 @@ const ManageRolesModal = ({ workspaceId, workspaceName, userId, onClose }: Manag
           </div>
         ) : (
           <>
-            <div className="overflow-auto px-6 py-4">
+            <div className="overflow-auto px-3 sm:px-6 py-4">
               <table className="w-full text-sm border-separate border-spacing-y-1">
                 <thead>
                   <tr>
@@ -721,24 +721,24 @@ const ManageRolesModal = ({ workspaceId, workspaceName, userId, onClose }: Manag
               </p>
             </div>
 
-            <div className="flex items-center justify-between gap-2 px-6 py-4 border-t border-white/10">
+            <div className="flex items-center justify-between gap-2 px-4 sm:px-6 py-3 sm:py-4 border-t border-white/10 flex-wrap">
               <button
                 onClick={resetToDefaults}
-                className="text-sm text-white/60 hover:text-white"
+                className="text-sm text-white/60 hover:text-white whitespace-nowrap"
               >
                 Reset to defaults
               </button>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 ml-auto">
                 <button
                   onClick={onClose}
-                  className="px-4 py-2 rounded-lg border border-white/15 text-white/80 hover:bg-white/5"
+                  className="px-3 sm:px-4 py-2 rounded-lg border border-white/15 text-white/80 hover:bg-white/5 text-sm"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={save}
                   disabled={saving}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-[#5A2D82] to-[#D4AF37] font-semibold disabled:opacity-60"
+                  className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg bg-gradient-to-r from-[#5A2D82] to-[#D4AF37] font-semibold disabled:opacity-60 text-sm whitespace-nowrap"
                 >
                   {saving && <Loader2 size={16} className="animate-spin" />}
                   {saving ? 'Saving…' : 'Save changes'}

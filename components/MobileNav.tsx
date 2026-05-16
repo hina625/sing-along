@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 
 
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { planslist, sidebarLinks } from '@/constants';
+import { planslist, sidebarLinks, isSidebarLinkVisible, sidebarLabelFor } from '@/constants';
 import { cn } from '@/lib/utils';
 import { BsCalendar2Check } from "react-icons/bs";
 import { BsCalendar2Minus } from "react-icons/bs";
@@ -15,9 +15,13 @@ import { AiOutlineVideoCamera } from "react-icons/ai";
 import { RiVideoChatLine } from "react-icons/ri";
 import { FiUsers, FiMenu } from "react-icons/fi";
 import { BiDonateHeart } from "react-icons/bi";
-import { useContext } from 'react';
+import { FaPrayingHands, FaMusic, FaBookOpen } from "react-icons/fa";
+import { TbActivityHeartbeat } from "react-icons/tb";
+import { useContext, useMemo } from 'react';
 import { subscriptionContext } from '@/providers/SubscriptionProvider'
+import { WorkspaceContext } from '@/providers/WorkspaceProvider';
 import PartnerDialog from './PartnerDialog';
+import ThemeToggle from './ThemeToggle';
 
 interface IconMap {
   [key: string]: JSX.Element;
@@ -28,6 +32,18 @@ interface IconMap {
 const MobileNav = () => {
   const pathname = usePathname();
   const { subscription } = useContext(subscriptionContext)
+  const { activeWorkspace, can } = useContext(WorkspaceContext);
+  const wsMode = activeWorkspace?.mode || 'worship';
+
+  const visibleLinks = useMemo(
+    () =>
+      sidebarLinks.filter((l) => {
+        if (!isSidebarLinkVisible(l.audience, wsMode)) return false;
+        if (!l.resource) return true;
+        return can(l.resource, l.action || 'view');
+      }),
+    [wsMode, can]
+  );
 
   const icons: IconMap = {
     '1': <AiOutlineVideoCamera size={24} />,
@@ -37,19 +53,27 @@ const MobileNav = () => {
     '5': <FiUsers size={24} />,
     '6': <BiDonateHeart size={24} />,
     '7': <MdSettings size={24} />,
+    '8': <FaPrayingHands size={22} />,
+    '9': <TbActivityHeartbeat size={24} />,
+    '10': <FaMusic size={20} />,
+    '11': <FaBookOpen size={20} />,
   };
 
   return (
-    <section className="w-full max-w-[264px]">
+    <section className="sm:hidden">
       <Sheet>
         <SheetTrigger asChild>
-          <button type="button" aria-label="Open menu" className="cursor-pointer sm:hidden text-white bg-transparent border-0 p-0">
-            <FiMenu size={36} />
+          <button
+            type="button"
+            aria-label="Open menu"
+            className="cursor-pointer text-white bg-white/[0.06] border border-white/10 rounded-lg p-2 hover:bg-white/[0.1] transition-colors"
+          >
+            <FiMenu size={20} />
           </button>
         </SheetTrigger>
         <SheetContent side="left" className="border-none bg-background-3 p-0">
           <div className="flex h-full flex-col sidebar-glow no-scrollbar overflow-y-auto">
-            <div className="p-6 flex flex-col items-center justify-center">
+            <div className="p-6 pb-4 flex items-center justify-between">
               <Link href="/" className="flex flex-col items-center justify-center gap-1">
                 <Image
                   src="/icons/full-logo.png"
@@ -59,14 +83,16 @@ const MobileNav = () => {
                 />
                 <span className='text-[#024d04] font-bold text-[14px] leading-tight' style={{ fontFamily: "'Marcellus', serif" }}>Connect</span>
               </Link>
+              <ThemeToggle />
             </div>
 
             <div className="flex flex-1 flex-col justify-between p-6 pt-0">
               <section className="flex h-full flex-col gap-6 text-white">
-                {sidebarLinks.map((item) => {
+                {visibleLinks.map((item) => {
                   const isActive = pathname === item.route;
                   const ss: string = String(item.Icon);
                   const Icon = icons[ss];
+                  const label = sidebarLabelFor(item, wsMode);
                   return (
                     <SheetClose asChild key={item.route}>
                       <Link
@@ -82,7 +108,7 @@ const MobileNav = () => {
                         <span className="text-white">
                           {Icon}
                         </span>
-                        <p className="font-semibold">{item.label}</p>
+                        <p className="font-semibold">{label}</p>
                       </Link>
                     </SheetClose>
                   );

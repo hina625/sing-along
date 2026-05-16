@@ -245,8 +245,6 @@ const PrayerRequestsPage = () => {
                       {r.visibility === 'public' ? <Globe size={12} /> : <Lock size={12} />}
                       {r.visibility}
                     </span>
-                    <span>·</span>
-                    <span className="font-mono text-white/40">room {r.roomId.slice(0, 8)}…</span>
                   </div>
                   <p className="text-white whitespace-pre-wrap leading-relaxed">{r.content}</p>
 

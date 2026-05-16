@@ -94,7 +94,7 @@ const FeaturesPage = () => {
     };
 
     return (
-        <div className='zeeshan'>
+        <div className='zeeshan overflow-x-hidden'>
             <Navbar2 />
             <section className="slice bg-cover bg-no-repeat !pt-[8rem] !bg-bg-dark relative overflow-hidden min-h-screen">
                 <div className="light-ray-container opacity-25"></div>

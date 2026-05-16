@@ -161,19 +161,19 @@ const page = ({ searchParams }: props) => {
             <div className="mx-auto max-w-5xl">
               <div className="flex items-center justify-between mb-8">
                 <h2 className="text-3xl md:text-5xl font-bold text-white">
-                  Give Offering — Sow a Seed
+                  Partner with Us
                 </h2>
                 <div className="hidden md:block">
-                   <p className="text-white/60 text-sm">Be a blessing — your gift powers the ministry.</p>
+                   <p className="text-white/60 text-sm">Your partnership keeps this community growing.</p>
                 </div>
               </div>
 
               <div className="mt-6 sm:mt-8 lg:flex lg:items-start lg:gap-12">
                 <form
                   onSubmit={handlePayment}
-                  className="w-full rounded-2xl bg-background-3/40 backdrop-blur-xl border border-white/10 p-6 shadow-2xl sm:p-8 lg:max-w-xl lg:p-10 card-premium"
+                  className="w-full rounded-2xl bg-background-3/40 backdrop-blur-xl border border-white/10 p-5 shadow-2xl sm:p-6 lg:max-w-xl lg:p-8 card-premium"
                 >
-                  <div className="mb-6 grid grid-cols-2 gap-6">
+                  <div className="mb-4 grid grid-cols-2 gap-4">
                     <div>
                       <label className="mb-2 block text-sm font-medium text-white/80">
                         First Name*
@@ -202,7 +202,7 @@ const page = ({ searchParams }: props) => {
                     </div>
                   </div>
 
-                  <div className="mb-5">
+                  <div className="mb-4">
                     <label className="mb-2 block text-sm font-medium text-white/80">
                       Email Address*
                     </label>
@@ -216,7 +216,7 @@ const page = ({ searchParams }: props) => {
                     />
                   </div>
 
-                  <div className="mb-5">
+                  <div className="mb-4">
                     <label className="mb-2 block text-sm font-medium text-white/80">
                       Physical Address*
                     </label>
@@ -230,9 +230,9 @@ const page = ({ searchParams }: props) => {
                     />
                   </div>
 
-                  <div className="mb-6">
+                  <div className="mb-4">
                     <label className="mb-2 block text-sm font-medium text-white/80">
-                      Gift Amount ($)*
+                      Amount ($)*
                     </label>
                     <div className="relative">
                       <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50">$</span>
@@ -249,7 +249,7 @@ const page = ({ searchParams }: props) => {
                   </div>
 
                   {/* === Recurring toggle === */}
-                  <div className="mb-6 rounded-xl border border-white/10 bg-white/5 p-4">
+                  <div className="mb-4 rounded-xl border border-white/10 bg-white/5 p-4">
                     <label className="flex items-center gap-3 cursor-pointer select-none">
                       <input
                         type="checkbox"
@@ -257,7 +257,7 @@ const page = ({ searchParams }: props) => {
                         onChange={(e) => setIsRecurring(e.target.checked)}
                         className="h-4 w-4 accent-orange-500"
                       />
-                      <span className="text-white/90 text-sm font-medium">Make this a recurring gift</span>
+                      <span className="text-white/90 text-sm font-medium">Make this a recurring contribution</span>
                     </label>
                     {isRecurring && (
                       <div className="mt-4 grid grid-cols-3 gap-2">
@@ -284,7 +284,7 @@ const page = ({ searchParams }: props) => {
                     )}
                   </div>
 
-                  <div className="mb-6">
+                  <div className="mb-4">
                     <label className="mb-2 block text-sm font-medium text-white/80">
                       Card Number*
                     </label>
@@ -298,7 +298,7 @@ const page = ({ searchParams }: props) => {
                     />
                   </div>
 
-                  <div className="mb-8 grid grid-cols-2 gap-6">
+                  <div className="mb-6 grid grid-cols-2 gap-4">
                     <div>
                       <label className="mb-2 block text-sm font-medium text-white/80">
                         Expiration (MM/YY)*
@@ -341,10 +341,10 @@ const page = ({ searchParams }: props) => {
                         </svg>
                         Processing...
                       </span>
-                    ) : isRecurring ? `Sow a ${frequency[0].toUpperCase() + frequency.slice(1)} Seed` : 'Sow a Seed'}
+                    ) : isRecurring ? `Partner ${frequency[0].toUpperCase() + frequency.slice(1)}` : 'Partner with Us'}
                   </button>
 
-                  <div className="relative my-8 flex items-center">
+                  <div className="relative my-6 flex items-center">
                     <div className="flex-grow border-t border-white/10"></div>
                     <span className="mx-4 text-xs font-bold text-white/30 uppercase tracking-widest">or</span>
                     <div className="flex-grow border-t border-white/10"></div>
@@ -362,21 +362,21 @@ const page = ({ searchParams }: props) => {
                   </Select>
                 </form>
 
-                <div className="mt-8 grow lg:mt-0">
-                  <div className="rounded-2xl bg-gradient-to-br from-orange-600/20 to-orange-400/5 border border-white/10 p-8 shadow-xl">
+                <div className="mt-8 grow lg:mt-0 lg:sticky lg:top-24 lg:self-start">
+                  <div className="rounded-2xl bg-gradient-to-br from-orange-600/20 to-orange-400/5 border border-white/10 p-6 lg:p-8 shadow-xl">
                     <h3 className="text-xl font-bold text-white mb-4">Our Mission</h3>
                     <p className="text-white/80 leading-relaxed italic">
-                      "Join us in sustaining and expanding this powerful, God-ordained ministry. Your love gift not only supports this incredible work but also empowers us to reach more lives with His message of hope and transformation. Together, we can make an eternal impact!"
+                      "Join us in sustaining and expanding this important work. Your partnership not only supports our community but also empowers us to reach more people with our message of hope and connection. Together, we can make a lasting impact."
                     </p>
                   </div>
-                  
-                  <div className="mt-8 grid grid-cols-3 gap-6 items-center opacity-60 hover:opacity-100 transition-opacity">
+
+                  <div className="mt-6 grid grid-cols-3 gap-6 items-center opacity-60 hover:opacity-100 transition-opacity">
                     <img className="h-6 w-auto mx-auto grayscale invert" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/brand-logos/paypal.svg" alt="PayPal" />
                     <img className="h-6 w-auto mx-auto grayscale invert" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/brand-logos/visa.svg" alt="Visa" />
                     <img className="h-6 w-auto mx-auto grayscale invert" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/brand-logos/mastercard.svg" alt="Mastercard" />
                   </div>
 
-                  <p className="mt-8 text-sm text-white/40 text-center lg:text-left">
+                  <p className="mt-4 text-sm text-white/40 text-center lg:text-left">
                     Securely processed via <span className="text-orange-500/80 font-semibold">Authorize.net</span>
                   </p>
                 </div>

@@ -154,7 +154,7 @@ const DashboardPage = () => {
       labels,
       datasets: [
         {
-          label: 'Donations ($)',
+          label: 'Contributions ($)',
           data: stats?.donationsSeries.map((p) => p.amount) || [],
           fill: true,
           backgroundColor: 'rgba(245, 124, 0, 0.18)',
@@ -235,8 +235,8 @@ const DashboardPage = () => {
       }
     : {
         eyebrow: 'Go Live',
-        headline: 'Gather your congregation',
-        subline: 'One click to open a worship room with lyrics, faith reactions, prayer, and giving — or start a regular meeting.',
+        headline: 'Gather your community',
+        subline: 'One click to open a meeting with lyrics, reactions, member requests, and contributions — everything your community needs in one room.',
       };
 
   const welcomeSub = isBusinessWs
@@ -282,25 +282,19 @@ const DashboardPage = () => {
                   <span>{starting === 'gathering' ? 'Opening gathering…' : 'Start Gathering'}</span>
                 </button>
               ) : (
-                <>
-                  <button type="button" onClick={() => startSession('worship')} disabled={!!starting} className="hero-start-worship">
-                    <Mic2 size={22} className="shrink-0" />
-                    <span>{starting === 'worship' ? 'Opening worship room…' : 'Start Worship'}</span>
-                  </button>
-                  <button type="button" onClick={() => startSession('meeting')} disabled={!!starting} className="hero-start-meeting">
-                    <Briefcase size={20} className="shrink-0" />
-                    <span>{starting === 'meeting' ? 'Opening meeting…' : 'Start Meeting'}</span>
-                  </button>
-                </>
+                <button type="button" onClick={() => startSession('meeting')} disabled={!!starting} className="hero-start-worship">
+                  <Briefcase size={22} className="shrink-0" />
+                  <span>{starting === 'meeting' ? 'Opening meeting…' : 'Start Meeting'}</span>
+                </button>
               )}
             </div>
             <div className="flex flex-wrap items-center justify-center gap-3 mt-4">
               <Link href="/dashboard/upcoming" className="hero-quick-link">
-                <Calendar size={16} /> {isBusinessWs ? 'Schedule Meeting' : isCommunityWs ? 'Schedule Gathering' : 'Schedule Service'}
+                <Calendar size={16} /> {isCommunityWs ? 'Schedule Gathering' : 'Schedule Meeting'}
               </Link>
               {!isBusinessWs && (
                 <Link href="/donate" className="hero-quick-link hero-quick-link-gold">
-                  <HandHeart size={16} /> Give Offering
+                  <HandHeart size={16} /> Partner with Us
                 </Link>
               )}
             </div>
@@ -340,9 +334,9 @@ const DashboardPage = () => {
           {!isBusinessWs && (
             <StatTile
               icon={<DollarSign size={18} />}
-              label="Donations"
+              label="Partner with Us"
               value={stats ? `$${stats.totals.donationsAmount.toLocaleString()}` : '—'}
-              sub={stats ? `${stats.totals.donationsCount} gifts` : undefined}
+              sub={stats ? `${stats.totals.donationsCount} contributions` : undefined}
               tone="gold"
               loading={statsLoading}
             />
@@ -372,7 +366,7 @@ const DashboardPage = () => {
         )}
         {!isBusinessWs && (
           <div className="card-premium p-5 lg:col-span-3">
-            <h4 className="text-deep-gold font-semibold mb-2">Donations — last 30 days</h4>
+            <h4 className="text-deep-gold font-semibold mb-2">Contributions — last 30 days</h4>
             <div className="h-[240px]">
               <Line data={donationsChart} options={chartOpts} />
             </div>

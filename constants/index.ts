@@ -35,14 +35,14 @@ export interface SidebarLink {
 
 export const sidebarLinks: SidebarLink[] = [
   { Icon: 4, route: '/dashboard', label: 'Dashboard', audience: 'all' },
-  { Icon: 1, route: '/dashboard/create-meeting', label: 'Start Meeting', worshipLabel: 'Start Worship', communityLabel: 'Start Gathering', audience: 'all', resource: 'meetings', action: 'manage' },
-  { Icon: 2, route: '/dashboard/upcoming', label: 'Upcoming Meetings', worshipLabel: 'Upcoming Worship', communityLabel: 'Upcoming Gatherings', audience: 'all', resource: 'meetings' },
-  { Icon: 5, route: '/dashboard/members', label: 'Members', audience: 'all', resource: 'members' },
+  { Icon: 1, route: '/dashboard/create-meeting', label: 'Start Meeting', communityLabel: 'Start Gathering', audience: 'all', resource: 'meetings', action: 'manage' },
+  { Icon: 2, route: '/dashboard/upcoming', label: 'Upcoming Meetings', communityLabel: 'Upcoming Gatherings', audience: 'all', resource: 'meetings' },
+  { Icon: 5, route: '/dashboard/members', label: 'Team', audience: 'all', resource: 'members' },
   { Icon: 3, route: '/dashboard/recordings', label: 'Recordings', audience: 'all', resource: 'recordings' },
   { Icon: 8, route: '/dashboard/prayer-requests', label: 'Prayer Requests', audience: 'worship', resource: 'prayerRequests' },
   { Icon: 10, route: '/dashboard/songs', label: 'Song Library', audience: 'worship', resource: 'songs' },
   { Icon: 11, route: '/dashboard/daily-verses', label: 'Daily Verses', audience: 'worship', resource: 'dailyVerses' },
-  { Icon: 6, route: '/dashboard/donations', label: 'Donations', audience: 'worship', resource: 'donations' },
+  { Icon: 6, route: '/dashboard/donations', label: 'Partner with Us', audience: 'worship', resource: 'donations' },
   { Icon: 9, route: '/dashboard/activity', label: 'Activity', audience: 'all', resource: 'activity' },
   { Icon: 7, route: '/dashboard/settings', label: 'Settings', audience: 'all', resource: 'settings' },
 ];
@@ -100,7 +100,7 @@ export interface Plan {
   /** Singalong watermark/branding shown to participants. */
   brandedFooter: boolean;
   /** Audience this tier is sold to — drives display grouping on /plans. */
-  audience: 'church' | 'business' | 'enterprise';
+  audience: 'standard' | 'business' | 'enterprise';
 }
 
 /**
@@ -109,7 +109,7 @@ export interface Plan {
  * backward compat with existing subscriptions.
  */
 export const planslist: Record<string, Plan> = {
-  // ---- Church track ----
+  // ---- Standard plans ----
   "free": {
     title: "Free",
     price: 0,
@@ -124,12 +124,12 @@ export const planslist: Record<string, Plan> = {
     multiHost: false,
     customBranding: false,
     brandedFooter: true,
-    audience: 'church',
+    audience: 'standard',
     features: [
       "Up to 50 participants",
       "40-minute meetings",
-      "Basic worship features (lyrics, prayer, reactions)",
-      "Donations enabled",
+      "Basic engagement features (chat, reactions, polls)",
+      "Contributions enabled",
       "Singalong branding",
     ],
   },
@@ -148,13 +148,13 @@ export const planslist: Record<string, Plan> = {
     multiHost: false,
     customBranding: false,
     brandedFooter: true,
-    audience: 'church',
+    audience: 'standard',
     features: [
       "Up to 100 participants",
       "Unlimited meeting time",
       "Basic recording",
-      "Custom church name",
-      "Donations enabled",
+      "Custom organization name",
+      "Contributions enabled",
     ],
   },
   "growth": {
@@ -171,17 +171,17 @@ export const planslist: Record<string, Plan> = {
     multiHost: true,
     customBranding: true,
     brandedFooter: false,
-    audience: 'church',
+    audience: 'standard',
     features: [
       "Up to 300 participants",
       "HD recording",
-      "Donations + analytics dashboard",
+      "Contributions + analytics dashboard",
       "Custom branding (logo + colors)",
       "Multi-host support",
     ],
   },
   "ministry_pro": {
-    title: "Ministry Pro",
+    title: "Pro",
     price: 80,
     min: 480, // 8h
     saving: 16,
@@ -194,7 +194,7 @@ export const planslist: Record<string, Plan> = {
     multiHost: true,
     customBranding: true,
     brandedFooter: false,
-    audience: 'church',
+    audience: 'standard',
     features: [
       "Up to 1,000 participants",
       "Full HD streaming + recording",
@@ -246,11 +246,11 @@ export const planslist: Record<string, Plan> = {
     multiHost: true,
     customBranding: true,
     brandedFooter: false,
-    audience: 'church',
+    audience: 'standard',
     features: [
       "Up to 300 participants",
       "HD recording",
-      "Donations + analytics dashboard",
+      "Contributions + analytics dashboard",
       "Custom branding",
     ],
   },

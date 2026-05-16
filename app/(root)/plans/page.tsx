@@ -37,9 +37,9 @@ const PlansPage = () => {
     // backwards-compat with users whose subscription row still says 'plus').
     const HIDDEN_KEYS = useMemo(() => new Set(['plus']), []);
 
-    const churchPlans: VisiblePlan[] = useMemo(
+    const standardPlans: VisiblePlan[] = useMemo(
         () => Object.entries(planslist)
-            .filter(([k, p]) => !HIDDEN_KEYS.has(k) && p.audience === 'church')
+            .filter(([k, p]) => !HIDDEN_KEYS.has(k) && p.audience === 'standard')
             .map(([key, p]) => ({ key, ...p })),
         [HIDDEN_KEYS],
     );
@@ -57,93 +57,108 @@ const PlansPage = () => {
         const isEnterprise = plan.key === 'enterprise';
 
         return (
-            <div key={plan.key} className={`w-full max-w-[20rem] ${plan.popular ? 'lg:scale-105' : ''}`}>
-                <div className={`card card-pricing card-awesome-black text-center px-3 hover-scale-105 relative ${plan.popular ? 'border border-[#D4AF37]' : ''}`}>
-                    {plan.popular && (
-                        <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 text-[10px] font-bold tracking-wider uppercase rounded-full bg-gradient-to-r from-[#5A2D82] to-[#D4AF37] text-white shadow">
-                            Most Popular
-                        </span>
-                    )}
-                    <div className="card-header py-5 border-0 delimiter-bottom">
-                        <div className="h1 text-center mb-0 !text-white">
-                            {isEnterprise ? (
-                                <span className="font-weight-bolder">Custom</span>
-                            ) : (
-                                <>
-                                    $<span className="price font-weight-bolder">{plan.price}</span>
-                                    <span className="text-base font-normal text-white/55">/mo</span>
-                                </>
-                            )}
-                        </div>
-                        <span className="h6 !text-white">{plan.title}</span>
-                    </div>
-                    <div className="card-body !p-1 !text-white">
-                        <span className="h6 !text-white" style={{ fontWeight: 'bold' }}>Features:</span>
-                        <ul className="list-unstyled text-sm mb-4">
-                            {plan.features.map((text) => (
-                                <li key={text} className="py-2 !text-left flex gap-2 items-start">
-                                    <IoMdCheckmark className="text-[#D4AF37] mt-1 shrink-0" /> <span>{text}</span>
-                                </li>
-                            ))}
-                        </ul>
-                        {isCurrent ? (
-                            <a className="btn btn-sm !bg-[#1ebbc4] !text-white hover-translate-y-n3 hover-shadow-lg mb-3 cursor-default">
-                                Current Plan
-                            </a>
-                        ) : isFreePlan ? (
-                            <a className="btn btn-sm !bg-white/10 !text-white hover-translate-y-n3 hover-shadow-lg mb-3 cursor-default">
-                                Free Forever
-                            </a>
+            <div
+                key={plan.key}
+                className={`relative flex flex-col rounded-2xl p-5 sm:p-6 bg-[#1A1A1A] border transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl ${
+                    plan.popular
+                        ? 'border-[#D4AF37]/60 shadow-lg shadow-[#D4AF37]/10'
+                        : 'border-white/10'
+                }`}
+            >
+                {plan.popular && (
+                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 text-[10px] font-bold tracking-wider uppercase rounded-full bg-gradient-to-r from-[#5A2D82] to-[#D4AF37] text-white shadow">
+                        Most Popular
+                    </span>
+                )}
+
+                <div className="pb-4 border-b border-white/10">
+                    <h3 className="text-xs font-semibold text-white/60 uppercase tracking-wider">
+                        {plan.title}
+                    </h3>
+                    <div className="mt-2 flex items-baseline gap-1">
+                        {isEnterprise ? (
+                            <span className="text-3xl sm:text-4xl font-bold text-white">Custom</span>
                         ) : (
-                            <a
-                                onClick={(e) => handlePurchase(e, plan.key)}
-                                className="btn btn-sm !bg-[#1ebbc4] !text-white hover-translate-y-n3 hover-shadow-lg mb-3 cursor-pointer"
-                            >
-                                {isEnterprise ? 'Contact Sales' : 'Purchase Now'}
-                            </a>
+                            <>
+                                <span className="text-3xl sm:text-4xl font-bold text-white">${plan.price}</span>
+                                <span className="text-sm font-normal text-white/55">/mo</span>
+                            </>
                         )}
                     </div>
+                </div>
+
+                <ul className="mt-4 space-y-2.5 flex-1">
+                    {plan.features.map((text) => (
+                        <li key={text} className="flex gap-2 items-start text-sm text-white/85">
+                            <IoMdCheckmark className="text-[#D4AF37] mt-1 shrink-0" />
+                            <span className="break-words">{text}</span>
+                        </li>
+                    ))}
+                </ul>
+
+                <div className="mt-5">
+                    {isCurrent ? (
+                        <button className="w-full py-2.5 rounded-lg bg-white/10 text-white text-sm font-medium cursor-default">
+                            Current Plan
+                        </button>
+                    ) : isFreePlan ? (
+                        <button className="w-full py-2.5 rounded-lg bg-white/10 text-white text-sm font-medium cursor-default">
+                            Free Forever
+                        </button>
+                    ) : (
+                        <button
+                            onClick={(e) => handlePurchase(e, plan.key)}
+                            className={`w-full py-2.5 rounded-lg text-sm font-semibold transition-all ${
+                                plan.popular
+                                    ? 'bg-gradient-to-r from-[#5A2D82] to-[#D4AF37] text-white hover:shadow-lg hover:shadow-[#D4AF37]/30'
+                                    : 'bg-[#1ebbc4] text-white hover:bg-[#1ebbc4]/90'
+                            }`}
+                        >
+                            {isEnterprise ? 'Contact Sales' : 'Get Started'}
+                        </button>
+                    )}
                 </div>
             </div>
         );
     };
 
     return (
-        <div className="zeeshan">
+        <div className="zeeshan overflow-x-hidden">
             <Navbar2 />
-            <section className="slice bg-cover bg-no-repeat !pt-[10rem] !bg-bg-dark relative overflow-hidden min-h-screen text-gray-400 body-font pb-14">
+            <section className="slice bg-cover bg-no-repeat !pt-[7rem] md:!pt-[10rem] !pb-10 md:!pb-16 !bg-bg-dark relative overflow-hidden text-gray-400 body-font">
                 <div className="light-ray-container opacity-20" />
-                <div className="container relative z-10 px-6 mx-auto">
-                    <div className="flex items-center justify-center flex-col mb-12">
-                        <h2 className="mt-4 text-gradient">Pricing for every congregation</h2>
-                        <div className="mt-2 text-white/80">
-                            <p className="leading-7 max-w-[40rem] text-center font-[300] text-[1.125rem]">
-                                Start free. Upgrade when your worship outgrows the room.
-                                All plans include lyrics mode, prayer requests, and donations.
-                            </p>
-                        </div>
+                <div className="container relative z-10 px-4 sm:px-6 mx-auto">
+                    <div className="flex items-center justify-center flex-col mb-6 md:mb-10 text-center">
+                        <span className="inline-block px-3 sm:px-4 py-1.5 mb-3 text-[10px] sm:text-xs font-semibold text-[#D4AF37] uppercase tracking-[0.2em] border border-[#D4AF37]/30 rounded-full bg-[#D4AF37]/5">
+                            Pricing Plans
+                        </span>
+                        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gradient !leading-tight">
+                            Pricing for every team
+                        </h1>
+                        <p className="mt-3 mb-0 !text-white leading-7 max-w-[40rem] text-center font-[300] text-base sm:text-[1.125rem] px-2">
+                            Start free. Upgrade as your audience grows.
+                            All plans include live meetings, recordings, and real-time collaboration.
+                        </p>
                     </div>
                 </div>
 
-                {/* Church track */}
-                <div className="container relative z-10 px-6 mx-auto mb-10">
-                    <h3 className="text-center text-white/85 mb-6 text-xl font-semibold">For churches & ministries</h3>
-                    <div className="flex flex-wrap items-stretch justify-center gap-7">
-                        {churchPlans.map(renderCard)}
+                {/* Standard plans */}
+                <div className="container relative z-10 px-4 sm:px-6 mx-auto mb-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 max-w-7xl mx-auto items-stretch">
+                        {standardPlans.map(renderCard)}
                     </div>
                 </div>
 
                 {/* Enterprise */}
                 {enterprisePlans.length > 0 && (
-                    <div className="container relative z-10 px-6 mx-auto mb-12">
-                        <h3 className="text-center text-white/85 mb-6 text-xl font-semibold">Large organizations</h3>
-                        <div className="flex flex-wrap items-stretch justify-center gap-7">
+                    <div className="container relative z-10 px-4 sm:px-6 mx-auto mb-12">
+                        <div className="max-w-2xl mx-auto">
                             {enterprisePlans.map(renderCard)}
                         </div>
                     </div>
                 )}
 
-                <div className="mt-5 text-center">
+                <div className="mt-5 text-center px-4">
                     <p className="mb-2 text-white/80">
                         All paid plans include priority support. Questions?
                     </p>

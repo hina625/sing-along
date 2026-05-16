@@ -32,7 +32,7 @@ import {
   Pin, Monitor, AppWindow, Copy, Check, Send,
   CircleDashed, Eraser, Music, HandHeart, HeartHandshake, Disc, CircleDot,
   StickyNote, PenTool, Paperclip, BookOpen, Share2, Cross, Group, ArrowLeft,
-  Play, Pause, FileMusic, Volume2, SkipForward
+  Play, Pause, FileMusic, Volume2, SkipForward, MoreHorizontal
 } from 'lucide-react';
 
 import {
@@ -2577,7 +2577,28 @@ const GoogleMeetBottomBar = ({
   const { localParticipant } = useLocalParticipant();
   const [showReactions, setShowReactions] = useState(false);
   const [handRaised, setHandRaised] = useState(() => isHandRaised(localParticipant));
+  const [moreOpen, setMoreOpen] = useState(false);
+  const moreWrapRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+
+  // Close the overflow dropup on outside click / ESC. Only active when open.
+  useEffect(() => {
+    if (!moreOpen) return;
+    const onDown = (e: MouseEvent) => {
+      if (moreWrapRef.current && !moreWrapRef.current.contains(e.target as Node)) {
+        setMoreOpen(false);
+      }
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMoreOpen(false);
+    };
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onDown);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [moreOpen]);
   
   const devices = useMediaDevices({ kind: 'videoinput' });
   const mics = useMediaDevices({ kind: 'audioinput' });
@@ -2819,10 +2840,6 @@ const GoogleMeetBottomBar = ({
 
       <div className="meet-bar-left">
         <Clock />
-        <span className="meet-bar-sep" aria-hidden>|</span>
-        <span className="meet-meeting-code" title="Meeting code">
-          {formatRoomId(room)}
-        </span>
       </div>
 
       <div className="meet-bar-center">
@@ -2978,8 +2995,14 @@ const GoogleMeetBottomBar = ({
           <span className="meet-btn-label">Camera</span>
           </div>
 
-          <span className="meet-cluster-divider" aria-hidden />
+          <span className="meet-cluster-divider meet-overflow-divider" aria-hidden />
 
+          <div
+            ref={moreWrapRef}
+            className="meet-overflow"
+            data-open={moreOpen ? 'true' : 'false'}
+            onClick={() => { if (moreOpen) setMoreOpen(false); }}
+          >
           <div className="meet-btn-stack">
             <button type="button" className="meet-icon-button" title="React" onClick={() => setShowReactions(!showReactions)}><Smile /></button>
             <span className="meet-btn-label">React</span>
@@ -3160,6 +3183,104 @@ const GoogleMeetBottomBar = ({
             </div>
           )}
 
+          {/* Mobile-only: pull the right-side utility buttons into the dropup
+              since .meet-bar-right is hidden at this viewport. The original
+              right-bar still renders on desktop/tablet and stays the source
+              of truth for activePanel — these are visual duplicates. */}
+          <div className="meet-mobile-utility-overflow">
+            <span className="meet-overflow-sep" aria-hidden />
+            <div className="meet-btn-stack">
+              <button
+                type="button"
+                className={`meet-icon-button ${activePanel === 'info' ? 'meet-icon-button-active' : ''}`}
+                title="Meeting details"
+                onClick={() => setActivePanel(activePanel === 'info' ? null : 'info')}
+              >
+                <Info />
+              </button>
+              <span className="meet-btn-label">Details</span>
+            </div>
+            <div className="meet-btn-stack">
+              <button
+                type="button"
+                className={`meet-icon-button meet-utility-with-badge ${activePanel === 'people' ? 'meet-icon-button-active' : ''}`}
+                title="People"
+                onClick={() => setActivePanel(activePanel === 'people' ? null : 'people')}
+              >
+                <Users />
+                {participantCount > 0 && <span className="meet-badge">{participantCount}</span>}
+              </button>
+              <span className="meet-btn-label">People</span>
+            </div>
+            {canModerate && (
+              <div className="meet-btn-stack">
+                <button
+                  type="button"
+                  className={`meet-icon-button meet-utility-with-badge ${activePanel === 'waiting' ? 'meet-icon-button-active' : ''}`}
+                  title={waitingCount > 0 ? `${waitingCount} waiting to join` : 'Waiting room'}
+                  onClick={() => setActivePanel(activePanel === 'waiting' ? null : 'waiting')}
+                >
+                  <Hand />
+                  {waitingCount > 0 && <span className="meet-badge">{waitingCount}</span>}
+                </button>
+                <span className="meet-btn-label">Waiting</span>
+              </div>
+            )}
+            <div className="meet-btn-stack">
+              <button
+                type="button"
+                className={`meet-icon-button ${activePanel === 'chat' ? 'meet-icon-button-active' : ''}`}
+                title="Chat with everyone"
+                onClick={() => setActivePanel(activePanel === 'chat' ? null : 'chat')}
+              >
+                <MessageSquare />
+              </button>
+              <span className="meet-btn-label">Chat</span>
+            </div>
+            {isBusinessMode && (
+              <div className="meet-btn-stack">
+                <button
+                  type="button"
+                  className={`meet-icon-button ${activePanel === 'notes' ? 'meet-icon-button-active' : ''}`}
+                  title="Meeting notes"
+                  onClick={() => setActivePanel(activePanel === 'notes' ? null : 'notes')}
+                >
+                  <StickyNote />
+                </button>
+                <span className="meet-btn-label">Notes</span>
+              </div>
+            )}
+            {isWorshipMode && (
+              <div className="meet-btn-stack">
+                <button
+                  type="button"
+                  className={`meet-icon-button ${activePanel === 'bible' ? 'meet-icon-button-active' : ''}`}
+                  title="Bible"
+                  onClick={() => setActivePanel(activePanel === 'bible' ? null : 'bible')}
+                >
+                  <BookOpen />
+                </button>
+                <span className="meet-btn-label">Bible</span>
+              </div>
+            )}
+          </div>
+          </div>
+
+          <div className="meet-btn-stack meet-more-toggle-stack">
+            <button
+              type="button"
+              className={`meet-icon-button meet-more-toggle ${moreOpen ? 'is-active' : ''}`}
+              title={moreOpen ? 'Close more options' : 'More options'}
+              aria-expanded={moreOpen}
+              aria-haspopup="menu"
+              onMouseDown={(e) => e.stopPropagation()}
+              onClick={() => setMoreOpen((v) => !v)}
+            >
+              <MoreHorizontal />
+            </button>
+            <span className="meet-btn-label">More</span>
+          </div>
+
           <span className="meet-cluster-divider" aria-hidden />
 
           <div className="meet-btn-stack">
@@ -3182,7 +3303,6 @@ const GoogleMeetBottomBar = ({
               }}
             >
               <PhoneOff className="meet-end-for-all-icon" />
-              <span className="meet-end-for-all-label">End for all</span>
             </button>
             <span className="meet-btn-label">End all</span>
             </div>
@@ -4302,7 +4422,6 @@ const GoogleMeetLayout = ({ room, onLeave, userId }: { room: string, onLeave: ()
       <div className="meet-stage flex-1 flex overflow-hidden min-h-0 pb-[100px] sm:pb-[88px] relative">
         {/* Mobile Top Bar (Google Meet Style) */}
         <div className="meet-mobile-top-bar sm:hidden">
-          <div className="meet-mobile-code">{formatRoomId(room)}</div>
           <button type="button" className="meet-mobile-util" onClick={toggleCamera} title="Switch camera">
             <Video size={20} />
           </button>
@@ -4447,7 +4566,12 @@ const LiveKitMeeting = ({ room, identity, userId, admitKey, onDisconnected }: Li
   // onDisconnected during teardown — without this guard we'd interpret the
   // remount as a user-initiated leave and bounce them to the feedback page.
   const isUnmountingRef = useRef(false);
-  useEffect(() => () => { isUnmountingRef.current = true; }, []);
+  // Reset on (re)mount so React 18 StrictMode's dev mount→unmount→remount
+  // dance doesn't leave the ref stuck `true` and silently swallow Leave clicks.
+  useEffect(() => {
+    isUnmountingRef.current = false;
+    return () => { isUnmountingRef.current = true; };
+  }, []);
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -4497,13 +4621,21 @@ const LiveKitMeeting = ({ room, identity, userId, admitKey, onDisconnected }: Li
 
   if (!token) return <Loader />;
 
+  // User-initiated leave (UI button). Always navigates — no isUnmounting guard.
   const handleLeave = () => {
-    if (isUnmountingRef.current) return;
     if (onDisconnected) {
       onDisconnected();
     } else {
       router.push('/?show_feedback=1');
     }
+  };
+
+  // LiveKit room disconnect event. Guarded against StrictMode's dev
+  // mount→unmount→remount dance, which fires a phantom disconnect we
+  // must not interpret as a user-initiated leave.
+  const handleRoomDisconnected = () => {
+    if (isUnmountingRef.current) return;
+    handleLeave();
   };
 
   return (
@@ -4512,7 +4644,7 @@ const LiveKitMeeting = ({ room, identity, userId, admitKey, onDisconnected }: Li
       audio={true}
       token={token}
       serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_URL || ''}
-      onDisconnected={handleLeave}
+      onDisconnected={handleRoomDisconnected}
       onError={(err) => {
         if (isUnmountingRef.current) return;
         console.error('LiveKit room error:', err);

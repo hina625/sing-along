@@ -116,7 +116,7 @@ const page = () => {
       <div className='flex items-center justify-center flex-wrap gap-5'>
         {
           publicRooms && publicRooms.map((room: IRoomDetails, idex: number) => (
-            <div className="w-[21rem] min-h-[29rem] bg-background-3 rounded-lg shadow text-white relative z-50">
+            <div className="w-full max-w-[21rem] min-h-[29rem] bg-background-3 rounded-lg shadow text-white relative z-50">
               <div className='flex items-center justify-center p-1'>
 
                 <img className="rounded-t-lg w-full h-[17rem] object-cover" src={room.image?.url || fallbackImage} alt="" />

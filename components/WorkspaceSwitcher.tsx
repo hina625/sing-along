@@ -2,22 +2,8 @@
 
 import Link from 'next/link';
 import { useContext, useEffect, useRef, useState } from 'react';
-import { ChevronDown, Plus, Check, Mic2, Briefcase, Users } from 'lucide-react';
+import { ChevronDown, Plus, Check } from 'lucide-react';
 import { WorkspaceContext } from '@/providers/WorkspaceProvider';
-
-const MODE_ICON: Record<string, React.ReactNode> = {
-  worship: <Mic2 size={14} />,
-  business: <Briefcase size={14} />,
-  community: <Users size={14} />,
-  hybrid: <Mic2 size={14} />,
-};
-
-const MODE_LABEL: Record<string, string> = {
-  worship: 'Worship',
-  business: 'Business',
-  community: 'Community',
-  hybrid: 'Hybrid',
-};
 
 const initials = (name: string) =>
   name.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toUpperCase() || '?';
@@ -47,9 +33,6 @@ const WorkspaceSwitcher = () => {
         <span className="ws-switcher-avatar" aria-hidden>{initials(display.name)}</span>
         <span className="ws-switcher-name">
           <span className="ws-switcher-name-text">{display.name}</span>
-          <span className="ws-switcher-mode">
-            {MODE_ICON[display.mode]} {MODE_LABEL[display.mode]}
-          </span>
         </span>
         <ChevronDown size={16} className="ws-switcher-chev" />
       </button>
@@ -70,12 +53,11 @@ const WorkspaceSwitcher = () => {
                     <span className="ws-switcher-item-avatar">{initials(w.name)}</span>
                     <span className="ws-switcher-item-text">
                       <span className="ws-switcher-item-name">{w.name}</span>
-                      <span className="ws-switcher-item-mode">
-                        {MODE_ICON[w.mode]} {MODE_LABEL[w.mode]}
-                        {w.myRole && w.myRole !== 'member' && (
-                          <span className="ws-switcher-item-role">· {w.myRole}</span>
-                        )}
-                      </span>
+                      {w.myRole && w.myRole !== 'member' && (
+                        <span className="ws-switcher-item-mode">
+                          <span className="ws-switcher-item-role">{w.myRole}</span>
+                        </span>
+                      )}
                     </span>
                     {active && <Check size={16} className="ws-switcher-item-check" />}
                   </button>
