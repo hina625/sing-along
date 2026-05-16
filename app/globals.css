@@ -5021,7 +5021,26 @@ html.light .ws-switcher-trigger {
   border-color: rgba(90, 45, 130, 0.2);
   color: #0B1F3A;
 }
-html.light .ws-switcher-name-text { color: #0B1F3A; }
+html.light .ws-switcher-name-text { color: #fff; }
+
+/* Dashboard navbar is always dark — keep its contents readable in light mode */
+html.light .dashboard-navbar .text-white,
+html.light .dashboard-navbar .\!text-white { color: #ffffff !important; }
+html.light .dashboard-navbar .ws-switcher-trigger { color: #ffffff; }
+html.light .dashboard-navbar .ws-switcher-name-text,
+html.light .dashboard-navbar .ws-switcher-chev,
+html.light .dashboard-navbar .ws-switcher-mode { color: #ffffff; }
+html.light .dashboard-navbar .theme-toggle,
+html.light .dashboard-navbar .notif-bell-trigger {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+html.light .dashboard-navbar .theme-toggle:hover,
+html.light .dashboard-navbar .notif-bell-trigger:hover {
+  background: rgba(212, 175, 55, 0.18);
+  color: #D4AF37;
+}
 html.light .ws-switcher-menu {
   background: #ffffff;
   border-color: rgba(90, 45, 130, 0.2);

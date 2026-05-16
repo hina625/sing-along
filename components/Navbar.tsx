@@ -16,7 +16,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="fixed z-50 top-0 right-0 left-0 lg:left-[264px] flex items-center justify-between lg:justify-end px-6 py-3 lg:px-10 max-sm:px-3 max-sm:py-2 bg-background-3/85 backdrop-blur-md border-b border-white/5 gap-3">
+    <nav className="dashboard-navbar fixed z-50 top-0 right-0 left-0 lg:left-[264px] flex items-center justify-between lg:justify-end px-6 py-3 lg:px-10 max-sm:px-3 max-sm:py-2 bg-background-3/85 backdrop-blur-md border-b border-white/5 gap-3">
       <div className="flex items-center gap-2 lg:hidden">
         <MobileNav />
       </div>
