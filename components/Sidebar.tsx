@@ -65,7 +65,7 @@ const Sidebar = () => {
             height={88}
             alt="Sing Along logo"
           />
-          <p className="text-[#024d04] text-sm font-bold tracking-[0.25em] -mt-1 uppercase" style={{ fontFamily: "'Marcellus', serif" }}>Connect</p>
+          <p className="text-[#16A34A] text-sm font-bold tracking-[0.25em] -mt-1 uppercase" style={{ fontFamily: "'Marcellus', serif" }}>Connect</p>
         </Link>
       </div>
 

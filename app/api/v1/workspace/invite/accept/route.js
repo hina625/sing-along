@@ -73,11 +73,28 @@ export async function GET(req) {
 export async function POST(req) {
     try {
         await connectDB();
-        const { userId } = auth();
-        if (!userId) {
-            return NextResponse.json({ success: false, message: 'Sign in required' }, { status: 401 });
+        // Browser callers use the Clerk session cookie. Mobile callers (no
+        // cookie) pass `user_id` in the body — same trust model as the rest
+        // of the /api/v1/workspace/* endpoints. Email-match below still
+        // prevents anyone from accepting an invite that wasn't sent to them.
+        const body = await req.json();
+        const { token, user_id: bodyUserId } = body || {};
+
+        let userId = null;
+        try {
+            const sessionAuth = auth();
+            userId = sessionAuth?.userId || null;
+        } catch {
+            // auth() can throw in some edge contexts — fall through to body.
         }
-        const { token } = await req.json();
+        if (!userId && bodyUserId) userId = String(bodyUserId);
+
+        if (!userId) {
+            return NextResponse.json(
+                { success: false, message: 'Sign in required (or pass user_id from a mobile client).' },
+                { status: 401 }
+            );
+        }
         if (!token) {
             return NextResponse.json({ success: false, message: 'token required' }, { status: 400 });
         }

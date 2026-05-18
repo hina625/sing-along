@@ -81,7 +81,7 @@ const MobileNav = () => {
                   height={100}
                   alt="Sing Along logo"
                 />
-                <span className='text-[#024d04] font-bold text-[14px] leading-tight' style={{ fontFamily: "'Marcellus', serif" }}>Connect</span>
+                <span className='text-[#16A34A] font-bold text-[14px] leading-tight' style={{ fontFamily: "'Marcellus', serif" }}>Connect</span>
               </Link>
               <ThemeToggle />
             </div>
