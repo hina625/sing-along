@@ -6,6 +6,29 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ===== AI Chat Widget animations ===== */
+.aichat-typing-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  background-color: rgba(255, 255, 255, 0.7);
+  animation: aichat-bounce 1.2s infinite ease-in-out;
+}
+@keyframes aichat-bounce {
+  0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+  40% { transform: translateY(-4px); opacity: 1; }
+}
+.aichat-typing-caret {
+  display: inline-block;
+  margin-left: 2px;
+  color: #34d399;
+  animation: aichat-blink 1s steps(2, start) infinite;
+}
+@keyframes aichat-blink {
+  to { visibility: hidden; }
+}
+
 
 
 

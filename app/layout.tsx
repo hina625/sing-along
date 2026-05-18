@@ -7,6 +7,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/providers/ThemeProvider";
+import AiChatWidget from "@/components/AiChatWidget";
 
 const rubik = Rubik({ subsets: ["latin"] });
 
@@ -40,6 +41,7 @@ export default function RootLayout({
           <ClerkProvider>
             <Toaster />
             {children}
+            <AiChatWidget />
           </ClerkProvider>
         </ThemeProvider>
 

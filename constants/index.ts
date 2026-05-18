@@ -7,14 +7,9 @@
  *   - 'worship'  → only in worship + hybrid + community workspaces
  *   - 'business' → only in business + hybrid + community workspaces
  *
- * Community = worship + business: a community workspace sees every link
- * (worship-audience and business-audience) and gets its own blended copy
- * ("Start Gathering" etc).
- *
- * Label resolution per workspace mode (see `sidebarLabelFor`):
- *   - community         → `communityLabel` ?? `worshipLabel` ?? `label`
- *   - worship / hybrid  → `worshipLabel` ?? `label`
- *   - business          → `label` (neutral copy: "Start Meeting")
+ * `worshipLabel` / `communityLabel` overrides are optional — if absent,
+ * `sidebarLabelFor` falls back to `label`. Currently all entries share a
+ * single neutral label across modes.
  */
 export type SidebarAudience = 'all' | 'worship' | 'business';
 
@@ -35,15 +30,15 @@ export interface SidebarLink {
 
 export const sidebarLinks: SidebarLink[] = [
   { Icon: 4, route: '/dashboard', label: 'Dashboard', audience: 'all' },
-  { Icon: 1, route: '/dashboard/create-meeting', label: 'Start Meeting', communityLabel: 'Start Gathering', audience: 'all', resource: 'meetings', action: 'manage' },
-  { Icon: 2, route: '/dashboard/upcoming', label: 'Upcoming Meetings', communityLabel: 'Upcoming Gatherings', audience: 'all', resource: 'meetings' },
+  { Icon: 1, route: '/dashboard/create-meeting', label: 'Start Session', audience: 'all', resource: 'meetings', action: 'manage' },
+  { Icon: 2, route: '/dashboard/upcoming', label: 'Upcoming Events', audience: 'all', resource: 'meetings' },
   { Icon: 5, route: '/dashboard/members', label: 'Team', audience: 'all', resource: 'members' },
   { Icon: 3, route: '/dashboard/recordings', label: 'Recordings', audience: 'all', resource: 'recordings' },
-  { Icon: 8, route: '/dashboard/prayer-requests', label: 'Prayer Requests', audience: 'worship', resource: 'prayerRequests' },
-  { Icon: 10, route: '/dashboard/songs', label: 'Song Library', audience: 'worship', resource: 'songs' },
-  { Icon: 11, route: '/dashboard/daily-verses', label: 'Daily Verses', audience: 'worship', resource: 'dailyVerses' },
-  { Icon: 6, route: '/dashboard/donations', label: 'Partner with Us', audience: 'worship', resource: 'donations' },
-  { Icon: 9, route: '/dashboard/activity', label: 'Activity', audience: 'all', resource: 'activity' },
+  { Icon: 8, route: '/dashboard/prayer-requests', label: 'Requests', audience: 'worship', resource: 'prayerRequests' },
+  { Icon: 10, route: '/dashboard/songs', label: 'Media Library', audience: 'worship', resource: 'songs' },
+  { Icon: 11, route: '/dashboard/daily-verses', label: 'Daily Feed', audience: 'worship', resource: 'dailyVerses' },
+  { Icon: 6, route: '/dashboard/donations', label: 'Partnerships', audience: 'worship', resource: 'donations' },
+  { Icon: 9, route: '/dashboard/activity', label: 'Activity Center', audience: 'all', resource: 'activity' },
   { Icon: 7, route: '/dashboard/settings', label: 'Settings', audience: 'all', resource: 'settings' },
 ];
 
@@ -76,6 +71,14 @@ export const avatarImages = [
 export interface Plan {
   title: string;
   price: number;
+  /** Annual price (used when shown alongside monthly). */
+  yearlyPrice?: number;
+  /** Short audience descriptor displayed under the price. */
+  bestFor?: string;
+  /** Override the primary CTA label on pricing cards. */
+  ctaText?: string;
+  /** Hide from /plans and homepage pricing grid (kept in planslist for DB-key back-compat). */
+  hidden?: boolean;
   popular?: boolean;
   features: string[];
   /** Per-meeting duration cap, in minutes. */
@@ -109,13 +112,15 @@ export interface Plan {
  * backward compat with existing subscriptions.
  */
 export const planslist: Record<string, Plan> = {
-  // ---- Standard plans ----
+  // DB key 'free' → displayed as "Starter (Free)".
   "free": {
-    title: "Free",
+    title: "Starter",
     price: 0,
+    bestFor: "Individuals & small groups",
+    ctaText: "Get Started Free",
     min: 40,
     saving: 0,
-    participantCap: 50,
+    participantCap: 25,
     meetingsPerDay: 20,
     canRecord: false,
     recordingQuality: 'none',
@@ -126,40 +131,55 @@ export const planslist: Record<string, Plan> = {
     brandedFooter: true,
     audience: 'standard',
     features: [
-      "Up to 50 participants",
+      "Up to 25 participants",
       "40-minute meetings",
-      "Basic engagement features (chat, reactions, polls)",
-      "Contributions enabled",
-      "Singalong branding",
+      "5 GB storage",
+      "Basic community features",
+      "1 workspace",
+      "Chat & announcements",
+      "Mobile access",
     ],
   },
+  // DB key 'starter' → displayed as "Professional".
   "starter": {
-    title: "Starter",
+    title: "Professional",
     price: 12,
-    min: 240, // 4 hours per meeting (effectively unlimited for a service)
-    saving: 2,
+    yearlyPrice: 99,
+    bestFor: "Small teams, creators, communities",
+    ctaText: "Start Professional",
     popular: true,
+    min: 240,
+    saving: 2,
     participantCap: 100,
     meetingsPerDay: 0,
     canRecord: true,
     recordingQuality: 'sd',
-    analytics: false,
+    analytics: true,
     donations: true,
     multiHost: false,
-    customBranding: false,
+    customBranding: true,
     brandedFooter: true,
     audience: 'standard',
     features: [
+      "Everything in Starter, plus:",
       "Up to 100 participants",
-      "Unlimited meeting time",
-      "Basic recording",
-      "Custom organization name",
-      "Contributions enabled",
+      "Unlimited meeting duration",
+      "Recording access",
+      "Media library",
+      "Event scheduling",
+      "Member management",
+      "Shared notes",
+      "Basic analytics",
+      "Custom branding",
     ],
   },
+  // DB key 'growth' → displayed as "Business".
   "growth": {
-    title: "Growth",
-    price: 30,
+    title: "Business",
+    price: 29,
+    yearlyPrice: 290,
+    bestFor: "Growing organizations & businesses",
+    ctaText: "Upgrade to Business",
     min: 240,
     saving: 6,
     participantCap: 300,
@@ -173,17 +193,24 @@ export const planslist: Record<string, Plan> = {
     brandedFooter: false,
     audience: 'standard',
     features: [
+      "Everything in Professional, plus:",
       "Up to 300 participants",
-      "HD recording",
-      "Contributions + analytics dashboard",
-      "Custom branding (logo + colors)",
-      "Multi-host support",
+      "Team roles & permissions",
+      "Task management",
+      "Advanced analytics",
+      "Calendar integrations",
+      "File sharing",
+      "Priority support",
+      "Automation tools",
+      "Multiple admins",
     ],
   },
+  // Legacy 1000-seat tier; preserved for back-compat but no longer displayed.
   "ministry_pro": {
-    title: "Pro",
+    title: "Pro (legacy)",
     price: 80,
-    min: 480, // 8h
+    hidden: true,
+    min: 480,
     saving: 16,
     participantCap: 1000,
     meetingsPerDay: 0,
@@ -204,10 +231,11 @@ export const planslist: Record<string, Plan> = {
     ],
   },
 
-  // ---- Enterprise (custom) ----
   "enterprise": {
     title: "Enterprise",
-    price: 0, // contact sales — display "Custom"
+    price: 99,
+    bestFor: "Large organizations & networks",
+    ctaText: "Contact Sales",
     min: 480,
     saving: 0,
     participantCap: 10000,
@@ -221,20 +249,24 @@ export const planslist: Record<string, Plan> = {
     brandedFooter: false,
     audience: 'enterprise',
     features: [
-      "10,000+ participants",
-      "Full HD streaming + recording",
-      "SSO / SAML",
-      "Dedicated infrastructure",
-      "Custom contracts & SLAs",
-      "White-label option",
+      "Everything in Business, plus:",
+      "Unlimited participants",
+      "Multiple workspaces",
+      "White-label branding",
+      "API access",
+      "Advanced security",
+      "Dedicated support",
+      "Custom integrations",
+      "SSO login",
+      "Enterprise analytics",
     ],
   },
 
-  // ---- Legacy alias kept for backward compatibility ----
-  // Old subscriptions saved 'plus' before the rename; treat as Growth.
+  // Legacy alias: old subscriptions saved 'plus' before the rename — treat as Business.
   "plus": {
-    title: "Growth (legacy)",
-    price: 30,
+    title: "Business (legacy)",
+    price: 29,
+    hidden: true,
     min: 240,
     saving: 6,
     participantCap: 300,

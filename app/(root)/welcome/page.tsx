@@ -17,37 +17,33 @@ interface ModeCard {
   icon: React.ReactNode;
   title: string;
   pitch: string;
-  forList: string[];
   defaultName: (firstName?: string | null) => string;
 }
 
 const MODE_CARDS: ModeCard[] = [
   {
-    mode: 'worship',
-    emoji: '🎶',
-    icon: <Mic2 size={28} />,
-    title: 'Faith-based Organization',
-    pitch: 'Lyrics, member requests, contributions, scheduled services.',
-    forList: ['Faith communities', 'Ministries', 'Online congregations'],
-    defaultName: (n) => (n ? `${n}'s Community` : 'My Faith Community'),
-  },
-  {
     mode: 'business',
     emoji: '💼',
     icon: <Briefcase size={26} />,
-    title: 'Business Meetings',
-    pitch: 'Whiteboard, notes, calendar, task & file sharing.',
-    forList: ['Teams', 'Coaching', 'Clients', 'Companies'],
+    title: 'Teams & Business',
+    pitch: 'For meetings, collaboration, and project management.',
     defaultName: (n) => (n ? `${n}'s Team` : 'My Team Space'),
   },
   {
     mode: 'community',
     emoji: '🌍',
     icon: <Users size={26} />,
-    title: 'Community',
-    pitch: 'Worship tools and meeting tools together — gatherings plus the work behind them.',
-    forList: ['Faith communities', 'Small groups', 'Ministries & teams', 'Events & classes'],
+    title: 'Communities & Groups',
+    pitch: 'For memberships, events, and engagement.',
     defaultName: (n) => (n ? `${n}'s Community` : 'My Community'),
+  },
+  {
+    mode: 'worship',
+    emoji: '🎶',
+    icon: <Mic2 size={28} />,
+    title: 'Organizations & Networks',
+    pitch: 'For recurring sessions, content, and audience management.',
+    defaultName: (n) => (n ? `${n}'s Community` : 'My Faith Community'),
   },
 ];
 
@@ -59,7 +55,7 @@ const WelcomePage = () => {
   const { toast } = useToast();
   const { workspaces, loading, refresh, setActive } = useContext(WorkspaceContext);
 
-  const [selected, setSelected] = useState<Mode>('worship');
+  const [selected, setSelected] = useState<Mode>('business');
   const [name, setName] = useState('');
   const [creating, setCreating] = useState(false);
   const [touchedName, setTouchedName] = useState(false);
@@ -128,9 +124,7 @@ const WelcomePage = () => {
               : `Welcome${user?.firstName ? `, ${user.firstName}` : ''}`}
           </h1>
           <p className="welcome-subtitle">
-            {isAddingAnother
-              ? <>Pick a mode and name for your new <strong>Singalong</strong> space.</>
-              : <>What would you like to use <strong>Singalong</strong> for?</>}
+            How would you like to use your workspace?
           </p>
           <p className="welcome-foot-hint">You can switch modes or add more spaces later.</p>
         </div>
@@ -150,11 +144,6 @@ const WelcomePage = () => {
                 <div className="welcome-card-emoji">{card.emoji}</div>
                 <h3 className="welcome-card-title">{card.title}</h3>
                 <p className="welcome-card-pitch">{card.pitch}</p>
-                <ul className="welcome-card-for">
-                  {card.forList.map((f) => (
-                    <li key={f}>{f}</li>
-                  ))}
-                </ul>
                 {active && <span className="welcome-card-check"><Check size={14} /> Selected</span>}
               </button>
             );

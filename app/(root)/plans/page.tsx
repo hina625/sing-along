@@ -33,21 +33,17 @@ const PlansPage = () => {
         router.push(`/checkout?plan=${key}`);
     };
 
-    // Hide legacy aliases from the public page (kept in `planslist` only for
-    // backwards-compat with users whose subscription row still says 'plus').
-    const HIDDEN_KEYS = useMemo(() => new Set(['plus']), []);
-
     const standardPlans: VisiblePlan[] = useMemo(
         () => Object.entries(planslist)
-            .filter(([k, p]) => !HIDDEN_KEYS.has(k) && p.audience === 'standard')
+            .filter(([, p]) => !p.hidden && p.audience === 'standard')
             .map(([key, p]) => ({ key, ...p })),
-        [HIDDEN_KEYS],
+        [],
     );
     const enterprisePlans: VisiblePlan[] = useMemo(
         () => Object.entries(planslist)
-            .filter(([k, p]) => !HIDDEN_KEYS.has(k) && p.audience === 'enterprise')
+            .filter(([, p]) => !p.hidden && p.audience === 'enterprise')
             .map(([key, p]) => ({ key, ...p })),
-        [HIDDEN_KEYS],
+        [],
     );
 
     const renderCard = (plan: VisiblePlan) => {
@@ -75,16 +71,17 @@ const PlansPage = () => {
                     <h3 className="text-xs font-semibold text-white/60 uppercase tracking-wider">
                         {plan.title}
                     </h3>
-                    <div className="mt-2 flex items-baseline gap-1">
-                        {isEnterprise ? (
-                            <span className="text-3xl sm:text-4xl font-bold text-white">Custom</span>
-                        ) : (
-                            <>
-                                <span className="text-3xl sm:text-4xl font-bold text-white">${plan.price}</span>
-                                <span className="text-sm font-normal text-white/55">/mo</span>
-                            </>
-                        )}
+                    <div className="mt-2 flex items-baseline gap-1 flex-wrap">
+                        <span className="text-3xl sm:text-4xl font-bold text-white">${plan.price}</span>
+                        <span className="text-sm font-normal text-white/55">/mo</span>
+                        {isEnterprise && <span className="text-xs font-normal text-white/55 ml-1">and up</span>}
                     </div>
+                    {plan.yearlyPrice ? (
+                        <p className="mt-1 mb-0 text-xs text-white/55">or ${plan.yearlyPrice}/yr</p>
+                    ) : null}
+                    {plan.bestFor ? (
+                        <p className="mt-2 mb-0 text-xs text-white/65 italic">{plan.bestFor}</p>
+                    ) : null}
                 </div>
 
                 <ul className="mt-4 space-y-2.5 flex-1">
@@ -114,7 +111,7 @@ const PlansPage = () => {
                                     : 'bg-[#1ebbc4] text-white hover:bg-[#1ebbc4]/90'
                             }`}
                         >
-                            {isEnterprise ? 'Contact Sales' : 'Get Started'}
+                            {plan.ctaText || 'Get Started'}
                         </button>
                     )}
                 </div>

@@ -52,6 +52,46 @@ function getStyle(num: number) {
   return customStyle
 }
 
+const categories = [
+  {
+    key: 'professional',
+    title: 'Professional Workspace',
+    description: 'Manage meetings, projects, clients, and team collaboration from a single workspace.',
+    features: ['Team Meetings', 'Client Sessions', 'Shared Notes', 'File Sharing', 'Task Tracking', 'Calendar Sync'],
+  },
+  {
+    key: 'community',
+    title: 'Community Hub',
+    description: 'Bring people together through live events, discussions, announcements, and member spaces.',
+    features: ['Live Events', 'Group Spaces', 'Member Access', 'Announcements', 'Discussions', 'Event Scheduling'],
+  },
+  {
+    key: 'organization',
+    title: 'Organization Suite',
+    description: 'Organize recurring sessions, member engagement, shared content, and audience management tools.',
+    features: ['Recurring Sessions', 'Media Library', 'Member Contributions', 'Request Management', 'Scheduled Broadcasts', 'Engagement Tools'],
+  },
+];
+
+const featureGroups = [
+  {
+    title: 'Meetings & Events',
+    features: ['HD Video Calls', 'Screen Sharing', 'Live Chat', 'Session Recording'],
+  },
+  {
+    title: 'Collaboration Tools',
+    features: ['Shared Notes', 'Task Management', 'Team Spaces', 'File Sharing'],
+  },
+  {
+    title: 'Community Engagement',
+    features: ['Member Access', 'Announcements', 'Event Scheduling', 'Discussions'],
+  },
+  {
+    title: 'Content & Media',
+    features: ['Media Library', 'Live Broadcasts', 'Shared Resources', 'Content Management'],
+  },
+];
+
 const products = [
   {
     brandPrefix: "HG",
@@ -129,6 +169,7 @@ const page = () => {
   const [publicRooms, setPublicRooms] = useState<IRoomDetails[]>([])
   const [openshare, setOpenShare] = useState(false)
   const [freePlanModel, setFreePlanModel] = useState(false);
+  const [activeCategory, setActiveCategory] = useState(categories[0].key);
   const router = useRouter()
   const { toast } = useToast()
   const { subscription } = useContext(subscriptionContext)
@@ -253,23 +294,17 @@ const page = () => {
                 className="text-3xl md:text-5xl lg:text-6xl text-center text-md-left mb-4 leading-tight"
                 style={{ color: '#ffffff', fontWeight: 700 }}
               >
-                It's time to set up your <strong className="text-gradient">virtual meetings</strong>
+                One Platform for Meetings, Communities &amp; Collaboration
               </h1>
               <p
                 className="lead text-center text-md-left"
                 style={{ color: 'rgba(255,255,255,0.9)', fontWeight: 400 }}
               >
-                Now you can set up your secured and high-quality virtual meetings on Sing Along.
-              </p>
-              <p
-                className="text-center text-md-left mt-3"
-                style={{ color: 'rgba(255,255,255,0.7)', fontWeight: 400, fontSize: '0.95rem' }}
-              >
-                Designed for businesses, teams, communities, nonprofits, and faith-based organizations.
+                Host live sessions, manage teams, engage members, and organize everything in one workspace.
               </p>
               <div className="text-center text-md-left mt-5">
-                <a href="/dashboard" className="btn btn-primary !border-none !bg-royal-purple hover:!bg-burgundy transition-all btn-icon shadow-lg shadow-royal-purple/20">
-                  <span className="btn-inner--text">Get started</span>
+                <a href="/sign-up" className="btn btn-primary !border-none !bg-royal-purple hover:!bg-burgundy transition-all btn-icon shadow-lg shadow-royal-purple/20">
+                  <span className="btn-inner--text">Start Free</span>
                   <span className="btn-inner--icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em"
                     height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
                     strokeLinecap="round" strokeLinejoin="round"
@@ -277,13 +312,81 @@ const page = () => {
                     <polyline points="9 18 15 12 9 6"></polyline>
                   </svg></span>
                 </a>
-                <a href="/how-to-use"
-                  className="btn btn-neutral btn-icon d-none d-lg-inline-block !border-2 hover:!border-foregroud-primary"
-                  style={{ color: '#ffffff', fontWeight: 600 }}
-                >Read Guidelines</a>
+
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="!bg-bg-dark relative overflow-hidden pt-10 pb-12 md:pt-14 md:pb-16">
+        <div className="container relative z-10">
+          <div className="flex flex-col items-center text-center mb-6">
+            <span className="inline-block px-4 py-1.5 mb-3 text-xs font-semibold text-[#D4AF37] uppercase tracking-[0.2em] border border-[#D4AF37]/30 rounded-full bg-[#D4AF37]/5">
+              One workspace, every use case
+            </span>
+            <h2 className="text-3xl md:text-5xl font-bold text-gradient leading-tight m-0">
+              Choose how you'll use Singalong
+            </h2>
+          </div>
+
+          <div className="flex flex-wrap justify-center gap-2 md:gap-3 mb-6">
+            {categories.map((cat) => {
+              const isActive = activeCategory === cat.key;
+              return (
+                <button
+                  key={cat.key}
+                  type="button"
+                  onClick={() => setActiveCategory(cat.key)}
+                  className="px-4 md:px-6 py-2.5 rounded-full text-sm md:text-base font-semibold transition-all"
+                  style={{
+                    background: isActive
+                      ? 'linear-gradient(90deg, #5A2D82, #D4AF37)'
+                      : 'rgba(255,255,255,0.06)',
+                    color: '#ffffff',
+                    border: isActive ? 'none' : '1px solid rgba(255,255,255,0.12)',
+                    boxShadow: isActive ? '0 6px 18px rgba(90,45,130,0.35)' : 'none',
+                  }}
+                >
+                  {cat.title}
+                </button>
+              );
+            })}
+          </div>
+
+          {categories
+            .filter((cat) => cat.key === activeCategory)
+            .map((cat) => (
+              <div
+                key={cat.key}
+                className="max-w-4xl mx-auto rounded-2xl p-6 md:p-8 text-center"
+                style={{
+                  backgroundColor: '#1A1A1A',
+                  border: '1px solid rgba(212, 175, 55, 0.25)',
+                  boxShadow: '0 10px 30px -10px rgba(0,0,0,0.5)',
+                }}
+              >
+                <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">{cat.title}</h3>
+                <p className="text-base md:text-lg max-w-2xl mx-auto mb-6" style={{ color: 'rgba(255,255,255,0.8)' }}>
+                  {cat.description}
+                </p>
+                <div className="flex flex-wrap justify-center gap-2 md:gap-3">
+                  {cat.features.map((f) => (
+                    <span
+                      key={f}
+                      className="px-3 py-1.5 rounded-full text-xs md:text-sm font-medium"
+                      style={{
+                        backgroundColor: 'rgba(212, 175, 55, 0.1)',
+                        color: '#D4AF37',
+                        border: '1px solid rgba(212, 175, 55, 0.3)',
+                      }}
+                    >
+                      {f}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
         </div>
       </section>
 
@@ -596,6 +699,50 @@ const page = () => {
       </section>
 
 
+      <section className="!bg-bg-dark pt-10 pb-12 md:pt-14 md:pb-16 relative overflow-hidden">
+        <div className="container relative z-10">
+          <div className="flex flex-col items-center text-center mb-8">
+            <span className="inline-block px-4 py-1.5 mb-3 text-xs font-semibold text-[#D4AF37] uppercase tracking-[0.2em] border border-[#D4AF37]/30 rounded-full bg-[#D4AF37]/5">
+              Everything you need
+            </span>
+            <h2 className="text-3xl md:text-5xl font-bold text-gradient leading-tight m-0">
+              Features built for every workspace
+            </h2>
+            <p className="mt-3 max-w-2xl text-base md:text-lg mb-0" style={{ color: 'rgba(255,255,255,0.8)' }}>
+              From hosting live sessions to managing communities — Singalong brings it all together.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-6xl mx-auto">
+            {featureGroups.map((group) => (
+              <div
+                key={group.title}
+                className="rounded-xl p-5 md:p-6 transition-all duration-300 hover:-translate-y-1"
+                style={{
+                  backgroundColor: '#1A1A1A',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                }}
+              >
+                <h3 className="text-lg md:text-xl font-bold text-white mb-4 pb-3 border-b border-white/10">
+                  {group.title}
+                </h3>
+                <ul className="list-none p-0 m-0 space-y-2.5">
+                  {group.features.map((feat) => (
+                    <li
+                      key={feat}
+                      className="flex items-start gap-2 text-sm md:text-base"
+                      style={{ color: 'rgba(255,255,255,0.85)' }}
+                    >
+                      <IoMdCheckmark className="text-[#D4AF37] mt-1 shrink-0" />
+                      <span>{feat}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
 
       <section className="slice slice-lg !bg-bg-dark pt-5 pt-lg-8 relative overflow-hidden">
@@ -682,11 +829,12 @@ const page = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-6xl mx-auto items-stretch">
             {Object.keys(planslist)
-              .filter((key) => key !== 'plus' && planslist[key].audience !== 'enterprise')
+              .filter((key) => !planslist[key].hidden)
               .map((key) => {
                 const plan = planslist[key];
                 const isCurrent = subscription === key;
                 const isFreePlan = key === 'free';
+                const isEnterprise = key === 'enterprise';
                 const showFreePlanBadge = isFreePlan && subscription !== 'free';
 
                 return (
@@ -729,12 +877,19 @@ const page = () => {
                       >
                         {plan.title}
                       </h3>
-                      <div className="mt-2 flex items-baseline gap-1">
+                      <div className="mt-2 flex items-baseline gap-1 flex-wrap">
                         <span className="text-3xl sm:text-4xl font-bold text-white leading-none">
                           ${plan.price}
                         </span>
                         <span className="text-sm text-white/55">/mo</span>
+                        {isEnterprise && <span className="text-xs text-white/55 ml-1">and up</span>}
                       </div>
+                      {plan.yearlyPrice ? (
+                        <p className="mt-1 mb-0 text-xs text-white/55">or ${plan.yearlyPrice}/yr</p>
+                      ) : null}
+                      {plan.bestFor ? (
+                        <p className="mt-2 mb-0 text-xs text-white/65 italic">{plan.bestFor}</p>
+                      ) : null}
                     </div>
 
                     <ul className="mt-3 sm:mt-4 mb-0 p-0 list-none flex-1">
@@ -785,7 +940,7 @@ const page = () => {
                         </button>
                       ) : (
                         <button
-                          onClick={(e) => handlePurchanse(e, key)}
+                          onClick={(e) => isEnterprise ? router.push('/contact-us?subject=enterprise') : handlePurchanse(e, key)}
                           style={{
                             width: '100%',
                             padding: '0.625rem',
@@ -801,7 +956,7 @@ const page = () => {
                             transition: 'all 0.2s',
                           }}
                         >
-                          Get Started
+                          {plan.ctaText || 'Get Started'}
                         </button>
                       )}
                     </div>
@@ -1187,13 +1342,14 @@ const page = () => {
                     id="footer-logo"
                   />
                 </a>
+                <p className="pr-lg-4 mb-2" style={{ color: '#ffffff', fontWeight: 600, fontSize: '18px', lineHeight: '27px' }}>
+                  Built for teams, organizations, creators, and communities.
+                </p>
                 <p className="pr-lg-4" style={{ color: 'rgba(255,255,255,0.9)', fontWeight: 400, fontSize: '18px', lineHeight: '27px' }}>
                   SingAlong Connect is a professional video conferencing and
-                  collaboration platform powered by Hallelujah Gospel Globally.
-                  Designed for businesses, teams, communities, nonprofits, and
-                  faith-based organizations — we provide high-quality, secure, and
-                  reliable communication tools for meetings, conferences, networking,
-                  collaboration, and virtual events.{" "}
+                  collaboration platform powered by Hallelujah Gospel Globally —
+                  high-quality, secure, and reliable communication tools for meetings,
+                  conferences, networking, collaboration, and virtual events.{" "}
                 </p>
               </div>
 
