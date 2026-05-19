@@ -533,7 +533,7 @@ const InviteModal = ({ workspaceId, workspaceName, userId, onClose, onSent }: In
               </select>
               <p className="text-xs text-white/40 mt-1.5">
                 {role === 'admin' && 'Full control — can invite, remove, and change roles.'}
-                {role === 'host' && 'Can run sessions and lead worship/meetings.'}
+                {role === 'host' && 'Can run sessions and lead meetings.'}
                 {role === 'cohost' && 'Assists hosts with moderation in sessions.'}
                 {role === 'member' && 'Standard access to workspace content.'}
                 {role === 'guest' && 'Limited, one-off attendee access.'}

@@ -84,14 +84,14 @@ const DonationsPage = () => {
 
   const cancelRecurring = async (row: DonationRow) => {
     if (!row.subscriptionId || !user?.id) return;
-    if (typeof window !== 'undefined' && !window.confirm(`Cancel this ${row.frequency} partnership of $${row.amount}? Future charges will stop.`)) return;
+    if (typeof window !== 'undefined' && !window.confirm(`Cancel this ${row.frequency} contribution of $${row.amount}? Future charges will stop.`)) return;
     setCancellingId(row._id);
     try {
       const res = await axios.delete('/api/v1/donate/recurring', {
         data: { subscriptionId: row.subscriptionId, donorUserId: user.id },
       });
       if (res.data?.success) {
-        toast({ title: 'Recurring partnership cancelled', description: 'No future charges will be made.' });
+        toast({ title: 'Recurring contribution cancelled', description: 'No future charges will be made.' });
         fetchReports();
       } else {
         throw new Error(res.data?.message || 'Cancel failed');
@@ -139,10 +139,10 @@ const DonationsPage = () => {
         <div>
           <h2 className="text-3xl sm:text-4xl font-bold flex items-center gap-3">
             <DollarSign className="text-deep-gold" size={32} />
-            Partner with Us
+            Contributions
           </h2>
-          <p className="text-white/60 mt-2 italic text-sm">
-            Partner contributions across <strong>{activeWorkspace?.name || 'your workspace'}</strong>.
+          <p className="text-white/60 mt-2 text-sm">
+            Contributions across <strong>{activeWorkspace?.name || 'your workspace'}</strong>.
           </p>
         </div>
         <button type="button" onClick={fetchReports} className="hero-quick-link" disabled={loading}>
@@ -173,10 +173,10 @@ const DonationsPage = () => {
           {/* === Active recurring subscriptions === */}
           <div className="card-premium p-5">
             <h4 className="text-deep-gold font-semibold mb-3 flex items-center gap-2">
-              <Repeat size={18} /> Active recurring partnerships
+              <Repeat size={18} /> Active recurring contributions
             </h4>
             {data.recurring.length === 0 ? (
-              <p className="text-white/50 text-sm italic">No active recurring partnerships yet.</p>
+              <p className="text-white/50 text-sm italic">No active recurring contributions yet.</p>
             ) : (
               <ul className="flex flex-col gap-2">
                 {data.recurring.map((row) => (
@@ -216,10 +216,10 @@ const DonationsPage = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div className="card-premium p-5">
               <h4 className="text-deep-gold font-semibold mb-3 flex items-center gap-2">
-                <Users size={18} /> Top partners
+                <Users size={18} /> Top contributors
               </h4>
               {data.topDonors.length === 0 ? (
-                <p className="text-white/50 text-sm italic">No partners yet.</p>
+                <p className="text-white/50 text-sm italic">No contributors yet.</p>
               ) : (
                 <ul className="flex flex-col gap-2">
                   {data.topDonors.map((d, i) => (

@@ -82,10 +82,10 @@ const RecordingsPage = () => {
         <div>
           <h2 className="text-3xl sm:text-4xl font-bold flex items-center gap-3">
             <Disc className="text-deep-gold" size={32} />
-            Past Services
+            Recordings
           </h2>
-          <p className="text-white/60 mt-2 italic text-sm">
-            Recorded worship & sermons — re-watch, share, archive.
+          <p className="text-white/60 mt-2 text-sm">
+            Recorded sessions — re-watch, share, and archive.
           </p>
         </div>
         <button
@@ -104,7 +104,7 @@ const RecordingsPage = () => {
         <div className="card-premium p-10 text-center text-white/60">
           <Disc size={40} className="mx-auto mb-4 text-deep-gold/60" />
           <p className="text-lg">No recordings yet.</p>
-          <p className="text-sm mt-2">Press the record button during a worship session to capture it here.</p>
+          <p className="text-sm mt-2">Press the record button during a session to capture it here.</p>
         </div>
       ) : (
         <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">

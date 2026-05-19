@@ -61,8 +61,8 @@ const SongsPage = () => {
       const res = await axios.get(`/api/v1/songs?workspace_id=${activeWorkspace._id}`);
       if (res.data?.success) setSongs(res.data.songs || []);
     } catch (err) {
-      console.error('Failed to load songs', err);
-      toast({ title: 'Could not load songs', variant: 'destructive' });
+      console.error('Failed to load media library', err);
+      toast({ title: 'Could not load media library', variant: 'destructive' });
     } finally {
       setLoading(false);
     }
@@ -97,7 +97,7 @@ const SongsPage = () => {
       fd.append('artist', pendingArtist.trim());
       const res = await axios.post('/api/v1/songs', fd);
       if (!res.data?.success) throw new Error(res.data?.message || 'Upload failed');
-      toast({ title: '🎵 Song added', description: pendingTitle.trim() });
+      toast({ title: 'File added', description: pendingTitle.trim() });
       setPendingFile(null);
       setPendingTitle('');
       setPendingArtist('');
@@ -167,10 +167,10 @@ const SongsPage = () => {
         <div>
           <h2 className="text-3xl sm:text-4xl font-bold flex items-center gap-3">
             <Music className="text-deep-gold" size={32} />
-            Song Library
+            Media Library
           </h2>
-          <p className="text-white/60 mt-2 italic text-sm">
-            Upload worship songs once — pick them in any service from <strong>{activeWorkspace?.name || 'your workspace'}</strong>.
+          <p className="text-white/60 mt-2 text-sm">
+            Upload audio once — pick it in any session from <strong>{activeWorkspace?.name || 'your workspace'}</strong>.
           </p>
         </div>
         <button type="button" onClick={fetchSongs} className="hero-quick-link" disabled={loading}>
@@ -181,7 +181,7 @@ const SongsPage = () => {
       {/* === Upload card === */}
       {canManage && (
       <div className="card-premium p-5 flex flex-col gap-3">
-        <h3 className="text-deep-gold font-semibold">Add a song</h3>
+        <h3 className="text-deep-gold font-semibold">Add a file</h3>
         {!pendingFile ? (
           <button
             type="button"
@@ -265,8 +265,8 @@ const SongsPage = () => {
       ) : filtered.length === 0 ? (
         <div className="card-premium p-10 text-center text-white/60">
           <Music size={40} className="mx-auto mb-4 text-deep-gold/60" />
-          <p className="text-lg">{songs.length === 0 ? 'No songs in your library yet.' : 'No songs match your search.'}</p>
-          {songs.length === 0 && <p className="text-sm mt-2">Upload your first song above to start your worship library.</p>}
+          <p className="text-lg">{songs.length === 0 ? 'Your media library is empty.' : 'Nothing matches your search.'}</p>
+          {songs.length === 0 && <p className="text-sm mt-2">Upload your first audio file above to get started.</p>}
         </div>
       ) : (
         <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">

@@ -168,7 +168,7 @@ const DashboardPage = () => {
   }, [stats]);
 
   const prayerPie = useMemo(() => ({
-    labels: ['Pending', 'Prayed', 'Archived'],
+    labels: ['Pending', 'Supported', 'Archived'],
     datasets: [
       {
         data: [
@@ -215,8 +215,8 @@ const DashboardPage = () => {
     return <Loader />;
   }
 
-  // Mode-aware copy: business → team-meeting framing, worship/hybrid → worship,
-  // community → blended "gathering" framing (worship tools + meeting tools).
+  // Mode-aware copy: business → team-meeting framing, community → blended
+  // framing, worship/hybrid → neutral default (no religion-specific phrasing).
   const wsMode = activeWorkspace.mode;
   const isBusinessWs = wsMode === 'business';
   const isCommunityWs = wsMode === 'community';
@@ -231,19 +231,19 @@ const DashboardPage = () => {
     ? {
         eyebrow: 'Go Live',
         headline: 'Bring your community together',
-        subline: 'One click to open a gathering — lyrics, prayer, and giving alongside notes, files, whiteboard, and recording.',
+        subline: 'One click to open a gathering with notes, files, whiteboard, recording, and contributions — everything your community needs in one room.',
       }
     : {
         eyebrow: 'Go Live',
-        headline: 'Gather your community',
-        subline: 'One click to open a meeting with lyrics, reactions, member requests, and contributions — everything your community needs in one room.',
+        headline: 'Start a meeting',
+        subline: 'One click to open a room with notes, files, whiteboard, and recording — everything your group needs in one place.',
       };
 
   const welcomeSub = isBusinessWs
     ? 'Built for the way your team actually meets.'
     : isCommunityWs
-    ? 'One space for worship and the work that keeps it running.'
-    : '"Sing to the Lord a new song" — Psalm 96:1';
+    ? 'One space for your community and the work that keeps it running.'
+    : 'Your meetings, recordings, and contributions — all in one place.';
 
   return (
     <section className="flex size-full flex-col gap-8 text-white pb-12">
@@ -294,7 +294,7 @@ const DashboardPage = () => {
               </Link>
               {!isBusinessWs && (
                 <Link href="/donate" className="hero-quick-link hero-quick-link-gold">
-                  <HandHeart size={16} /> Partner with Us
+                  <HandHeart size={16} /> Contribute
                 </Link>
               )}
             </div>
@@ -302,12 +302,8 @@ const DashboardPage = () => {
         </div>
       </div>
 
-      {/* === Daily Verse (worship + hybrid + community workspaces) === */}
-      {(activeWorkspace?.mode !== 'business') && (
-        <div className="px-4 max-w-6xl mx-auto w-full">
-          <DailyVerseCard />
-        </div>
-      )}
+      {/* === Daily Verse — opt-in: only renders if the workspace has curated verses. === */}
+      {(activeWorkspace?.mode !== 'business') && <DailyVerseCard />}
 
       {/* === Live stats grid === */}
       <div className="px-4 max-w-6xl mx-auto w-full">
@@ -329,12 +325,12 @@ const DashboardPage = () => {
           <StatTile icon={<Mic2 size={18} />} label="Total sessions" value={stats?.totals.sessions ?? '—'} loading={statsLoading} />
           <StatTile icon={<Disc size={18} />} label="Recordings" value={stats?.totals.recordings ?? '—'} loading={statsLoading} />
           {!isBusinessWs && (
-            <StatTile icon={<HandHeart size={18} />} label="Prayers" value={stats?.totals.prayers ?? '—'} loading={statsLoading} />
+            <StatTile icon={<HandHeart size={18} />} label="Requests" value={stats?.totals.prayers ?? '—'} loading={statsLoading} />
           )}
           {!isBusinessWs && (
             <StatTile
               icon={<DollarSign size={18} />}
-              label="Partner with Us"
+              label="Contributions"
               value={stats ? `$${stats.totals.donationsAmount.toLocaleString()}` : '—'}
               sub={stats ? `${stats.totals.donationsCount} contributions` : undefined}
               tone="gold"
@@ -354,10 +350,10 @@ const DashboardPage = () => {
         </div>
         {!isBusinessWs && (
           <div className="card-premium p-5">
-            <h4 className="text-deep-gold font-semibold mb-2">Prayer requests</h4>
+            <h4 className="text-deep-gold font-semibold mb-2">Requests</h4>
             <div className="h-[260px] flex items-center justify-center">
               {(stats?.totals.prayers || 0) === 0 ? (
-                <p className="text-white/50 text-sm">No prayer requests yet.</p>
+                <p className="text-white/50 text-sm">No requests yet.</p>
               ) : (
                 <Pie data={prayerPie} options={pieOpts} />
               )}

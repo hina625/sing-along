@@ -44,8 +44,8 @@ export default function FeaturesPage() {
                             <div className="col-lg-12">
                                 {/* Heading */}
                                 <h1 className="text-3xl md:text-5xl lg:text-6xl text-gradient text-center text-lg-left my-4">
-                                     Our Features
-                                 </h1>
+                                    Our Features
+                                </h1>
                                 {/* Text */}
                                 <p className="text-base md:text-lg text-white text-center text-lg-left opacity-8">
                                     Our platform provides cutting-edge online meeting solutions for businesses of all sizes.
@@ -87,8 +87,8 @@ export default function FeaturesPage() {
                             <div className="col-lg-12">
 
                                 <h2 className=" mt-4 text-gradient text-2xl md:text-4xl">
-                                     Reliable and Scalable Meeting Server Solutions
-                                 </h2>
+                                    Reliable and Scalable Meeting Server Solutions
+                                </h2>
                                 <div className="mt-2">
                                     <p className="text-base md:text-lg lh-180 text-white/80">
                                         Empower your business with a robust meeting platform designed for seamless collaboration, high performance, and enhanced security.
@@ -123,7 +123,7 @@ export default function FeaturesPage() {
                                     <div className="px-4 pb-4 pt-4">
                                         <div className="py-2 md:py-4">
                                             <div className="icon text-warning icon-sm mx-auto">
-                                                <EarthLock  size={30} />
+                                                <EarthLock size={30} />
                                             </div>
                                         </div>
                                         <h5 className="">End-to-End Encryption</h5>
@@ -141,7 +141,7 @@ export default function FeaturesPage() {
                                     <div className="px-4 pb-4 pt-4">
                                         <div className="py-2 md:py-4">
                                             <div className="icon text-warning icon-sm mx-auto">
-                                                <Bitcoin  size={30} />
+                                                <Bitcoin size={30} />
                                             </div>
                                         </div>
                                         <h5 className="">Custom Branding</h5>
@@ -157,7 +157,7 @@ export default function FeaturesPage() {
                                     <div className="px-4 pb-4 pt-4">
                                         <div className="py-2 md:py-4">
                                             <div className="icon text-warning icon-sm mx-auto">
-                                            <Feather size={30} />
+                                                <Feather size={30} />
                                             </div>
                                         </div>
                                         <h5 className="">Interactive Features</h5>
@@ -173,7 +173,7 @@ export default function FeaturesPage() {
                                     <div className="px-4 pb-4 pt-4">
                                         <div className="py-2 md:py-4">
                                             <div className="icon text-warning icon-sm mx-auto">
-                                            <SignalHigh size={30} />
+                                                <SignalHigh size={30} />
                                             </div>
                                         </div>
                                         <h5 className="">Global Reach with Low Latency</h5>
@@ -189,7 +189,7 @@ export default function FeaturesPage() {
                                     <div className="px-4 pb-4 pt-4">
                                         <div className="py-2 md:py-4">
                                             <div className="icon text-warning icon-sm mx-auto">
-                                            <Disc3 size={30} />
+                                                <Disc3 size={30} />
                                             </div>
                                         </div>
                                         <h5 className="">Meeting Recording and Playback</h5>
@@ -321,7 +321,7 @@ export default function FeaturesPage() {
                         <div className="row align-items-center justify-content-md-between pb-4">
                             <div className="col-md-6">
                                 <div className="copyright text-sm font-weight-bold text-center text-md-left">
-                                    © 2024{" "}
+                                    © 2026{" "}
                                     <a
                                         href="https://hgsingalong.com/"
                                         className="font-weight-bold"

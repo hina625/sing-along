@@ -56,7 +56,7 @@ const PrivacyPolicyPage = () => {
                             <div className="space-y-4">
                                 <div className="p-4 rounded-xl bg-white/5 border border-white/5 flex items-center gap-4">
                                     <div className="text-deep-gold text-2xl"><IoMdInformationCircle /></div>
-                                    <p className="text-sm text-white/60">Effective July 6, 2024</p>
+                                    <p className="text-sm text-white/60">Effective July 6, 2026</p>
                                 </div>
                                 <div className="p-4 rounded-xl bg-white/5 border border-white/5 flex items-center gap-4">
                                     <div className="text-royal-purple text-2xl"><IoMdGlobe /></div>
@@ -68,23 +68,23 @@ const PrivacyPolicyPage = () => {
                             initial={{ opacity: 0, scale: 0.9 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}
-                            className="w-full md:w-1/2 grid grid-cols-2 gap-4"
+                            className="w-full md:w-1/2 grid grid-cols-2 gap-3 md:gap-4"
                         >
-                            <div className="p-8 rounded-2xl bg-white/[0.03] border border-white/5 backdrop-blur-sm flex flex-col items-center text-center">
+                            <div className="p-4 md:p-8 rounded-2xl bg-white/[0.03] border border-white/5 backdrop-blur-sm flex flex-col items-center text-center min-w-0">
                                 <h4 className="text-white font-bold mb-2">Policy</h4>
-                                <p className="text-[10px] text-white/40 uppercase tracking-widest">Core Document</p>
+                                <p className="text-[9px] md:text-[10px] text-white/40 uppercase tracking-wider break-words">Core Document</p>
                             </div>
-                            <div className="p-8 rounded-2xl bg-white/[0.03] border border-white/5 backdrop-blur-sm flex flex-col items-center text-center">
+                            <div className="p-4 md:p-8 rounded-2xl bg-white/[0.03] border border-white/5 backdrop-blur-sm flex flex-col items-center text-center min-w-0">
                                 <h4 className="text-white font-bold mb-2">Services</h4>
-                                <p className="text-[10px] text-white/40 uppercase tracking-widest">Meeting Suite</p>
+                                <p className="text-[9px] md:text-[10px] text-white/40 uppercase tracking-wider break-words">Meeting Suite</p>
                             </div>
-                            <div className="p-8 rounded-2xl bg-white/[0.03] border border-white/5 backdrop-blur-sm flex flex-col items-center text-center">
+                            <div className="p-4 md:p-8 rounded-2xl bg-white/[0.03] border border-white/5 backdrop-blur-sm flex flex-col items-center text-center min-w-0">
                                 <h4 className="text-white font-bold mb-2">Users</h4>
-                                <p className="text-[10px] text-white/40 uppercase tracking-widest">Participants</p>
+                                <p className="text-[9px] md:text-[10px] text-white/40 uppercase tracking-wider break-words">Participants</p>
                             </div>
-                            <div className="p-8 rounded-2xl bg-white/[0.03] border border-white/5 backdrop-blur-sm flex flex-col items-center text-center">
+                            <div className="p-4 md:p-8 rounded-2xl bg-white/[0.03] border border-white/5 backdrop-blur-sm flex flex-col items-center text-center min-w-0">
                                 <h4 className="text-white font-bold mb-2">Data</h4>
-                                <p className="text-[10px] text-white/40 uppercase tracking-widest">Personal Info</p>
+                                <p className="text-[9px] md:text-[10px] text-white/40 uppercase tracking-wider break-words">Personal Info</p>
                             </div>
                         </motion.div>
                     </div>

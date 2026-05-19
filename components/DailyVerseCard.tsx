@@ -28,6 +28,7 @@ const DailyVerseCard = () => {
   const { activeWorkspace } = useContext(WorkspaceContext);
   const [translation, setTranslation] = useState<string>('kjv');
   const [verse, setVerse] = useState<DailyVerse | null>(null);
+  const [hasVerses, setHasVerses] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
   const [shared, setShared] = useState(false);
   const [dateLabel, setDateLabel] = useState<string>('');
@@ -50,9 +51,16 @@ const DailyVerseCard = () => {
         const res = await fetch(`/api/v1/bible/daily-verse?${params.toString()}`);
         const data = await res.json();
         if (cancelled) return;
-        if (data?.success) setVerse(data);
+        if (data?.success && data?.hasVerses) {
+          setVerse(data);
+          setHasVerses(true);
+        } else {
+          setVerse(null);
+          setHasVerses(false);
+        }
       } catch (e) {
         console.error('daily verse fetch failed', e);
+        setHasVerses(false);
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -88,8 +96,11 @@ const DailyVerseCard = () => {
     }
   };
 
+  // Opt-in: card stays hidden until an admin curates verses for this workspace.
+  if (!loading && !hasVerses) return null;
+
   return (
-    <div className="daily-verse-card">
+    <div className="px-4 max-w-6xl mx-auto w-full"><div className="daily-verse-card">
       <div className="daily-verse-rays" aria-hidden />
       <div className="daily-verse-body">
         <div className="daily-verse-head">
@@ -141,6 +152,7 @@ const DailyVerseCard = () => {
           <p className="daily-verse-loading">Could not load today's verse. Refresh to try again.</p>
         )}
       </div>
+    </div>
     </div>
   );
 };

@@ -1428,7 +1428,7 @@ const page = () => {
             <div className="row align-items-center justify-content-md-between pb-4">
               <div className="col-md-6">
                 <div className="copyright text-sm font-weight-bold text-center text-md-left">
-                  © 2024{" "}
+                  © 2026{" "}
                   <a
                     href="https://hgsingalong.com/"
                     className="font-weight-bold"

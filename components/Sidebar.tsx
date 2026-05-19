@@ -121,7 +121,7 @@ const Sidebar = () => {
               type="button"
               className="sidebar-partner-link w-full text-xs font-semibold text-deep-gold/90 hover:text-deep-gold text-left transition-colors"
             >
-              Partner with us →
+              Contribute →
             </button>
           </PartnerDialog>
         )}

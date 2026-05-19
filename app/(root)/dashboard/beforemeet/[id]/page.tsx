@@ -151,7 +151,7 @@ const page = ({ params }: PropsType) => {
                 </div>
                 <CalendarShare
                     roomId={params?.id}
-                    title={meetingInfo?.title || 'Singalong Worship Service'}
+                    title={meetingInfo?.title || 'Singalong Session'}
                     meetingUrl={url}
                     startISO={meetingInfo?.scheduleTime || meetingInfo?.startTime || new Date().toISOString()}
                     endISO={meetingInfo?.endTime || undefined}
@@ -220,7 +220,7 @@ const page = ({ params }: PropsType) => {
 
 
             <InvitePeaople isOpen={isOpen} onClose={() => setIsOpen(false)}>
-                <h1 className='text-3xl text-black text-center font-semibold'>Invite Your Congregation</h1>
+                <h1 className='text-3xl text-black text-center font-semibold'>Invite People</h1>
                 <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
                     {/* === Email column === */}
                     <div className='flex flex-col gap-4 bg-gray-50 rounded-xl p-5'>

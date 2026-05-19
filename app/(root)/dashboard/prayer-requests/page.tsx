@@ -9,6 +9,8 @@ import PermissionGate from '@/components/PermissionGate';
 import { useToast } from '@/components/ui/use-toast';
 import { WorkspaceContext } from '@/providers/WorkspaceProvider';
 
+// 'prayed' is preserved as the backend status value to avoid a data migration;
+// the UI renders it as "Supported".
 type Status = 'pending' | 'prayed' | 'archived';
 type Visibility = 'public' | 'private' | 'all';
 
@@ -26,7 +28,7 @@ interface PrayerRequest {
 
 const STATUS_TABS: { key: Status; label: string }[] = [
   { key: 'pending', label: 'Pending' },
-  { key: 'prayed', label: 'Prayed' },
+  { key: 'prayed', label: 'Supported' },
   { key: 'archived', label: 'Archived' },
 ];
 
@@ -50,7 +52,7 @@ const PrayerRequestsPage = () => {
         visibility,
         limit: '200',
       });
-      // The "Prayed" tab is per-user — show only prayers this user has lifted up.
+      // The "Supported" tab is per-user — show only requests this user has supported.
       // Pending / Archived stay tied to the global status.
       if (tab === 'prayed') {
         params.set('prayed_by', user.id);
@@ -63,8 +65,8 @@ const PrayerRequestsPage = () => {
         setRequests(res.data.requests || []);
       }
     } catch (err) {
-      console.error('Failed to load prayer requests', err);
-      toast({ title: 'Could not load prayer requests', variant: 'destructive' });
+      console.error('Failed to load requests', err);
+      toast({ title: 'Could not load requests', variant: 'destructive' });
     } finally {
       setLoading(false);
     }
@@ -81,13 +83,13 @@ const PrayerRequestsPage = () => {
     return () => clearInterval(t);
   }, [isLoaded, fetchRequests]);
 
-  const togglePray = async (req: PrayerRequest) => {
+  const toggleSupport = async (req: PrayerRequest) => {
     if (!user?.id) return;
     // Optimistic — flip locally immediately so the heart fills without a roundtrip lag.
-    const isPraying = (req.prayedBy || []).includes(user.id);
+    const isSupporting = (req.prayedBy || []).includes(user.id);
     setRequests((cur) => cur.map((r) => {
       if (r._id !== req._id) return r;
-      const next = isPraying
+      const next = isSupporting
         ? (r.prayedBy || []).filter((u) => u !== user.id)
         : [...(r.prayedBy || []), user.id];
       return { ...r, prayedBy: next };
@@ -101,11 +103,11 @@ const PrayerRequestsPage = () => {
       if (!res.data?.success) throw new Error(res.data?.message || 'Failed');
       // Sync to server's truth.
       const serverPrayedBy: string[] = res.data.request?.prayedBy || [];
-      const nowPraying: boolean = !!res.data.praying;
+      const nowSupporting: boolean = !!res.data.praying;
       setRequests((cur) => {
-        // On the Prayed tab, drop the row when the user un-prays — it no longer
+        // On the Supported tab, drop the row when the user un-supports — it no longer
         // belongs in that filter.
-        if (tab === 'prayed' && !nowPraying) {
+        if (tab === 'prayed' && !nowSupporting) {
           return cur.filter((r) => r._id !== req._id);
         }
         return cur.map((r) => (r._id === req._id ? { ...r, prayedBy: serverPrayedBy } : r));
@@ -116,7 +118,7 @@ const PrayerRequestsPage = () => {
         if (r._id !== req._id) return r;
         return { ...r, prayedBy: req.prayedBy || [] };
       }));
-      toast({ title: 'Could not record your prayer', variant: 'destructive' });
+      toast({ title: 'Could not record your support', variant: 'destructive' });
     }
   };
 
@@ -128,12 +130,12 @@ const PrayerRequestsPage = () => {
       if (res.data?.success) {
         setRequests((cur) => cur.filter((r) => r._id !== id));
         toast({
-          title: status === 'prayed' ? '🙏 Marked as prayed' : status === 'archived' ? 'Archived' : 'Restored',
+          title: status === 'prayed' ? 'Marked as supported' : status === 'archived' ? 'Archived' : 'Restored',
           className: 'bg-white/10 border-none text-white',
         });
       }
     } catch (err) {
-      toast({ title: 'Could not update prayer', variant: 'destructive' });
+      toast({ title: 'Could not update request', variant: 'destructive' });
     } finally {
       setBusyId(null);
     }
@@ -153,10 +155,10 @@ const PrayerRequestsPage = () => {
         <div>
           <h2 className="text-3xl sm:text-4xl font-bold flex items-center gap-3">
             <HandHeart className="text-deep-gold" size={32} />
-            Prayer Requests
+            Requests
           </h2>
-          <p className="text-white/60 mt-2 italic text-sm">
-            "Pray for one another, that you may be healed." — James 5:16
+          <p className="text-white/60 mt-2 text-sm">
+            Requests submitted by your community — review, support, and follow up.
           </p>
         </div>
         <button
@@ -216,13 +218,13 @@ const PrayerRequestsPage = () => {
           <HandHeart size={40} className="mx-auto mb-4 text-deep-gold/60" />
           {tab === 'prayed' ? (
             <>
-              <p className="text-lg">You haven&apos;t prayed for any requests yet.</p>
-              <p className="text-sm mt-2">Open the Pending tab and tap “Pray for this” to add one here.</p>
+              <p className="text-lg">You haven&apos;t supported any requests yet.</p>
+              <p className="text-sm mt-2">Open the Pending tab and tap “Support” to add one here.</p>
             </>
           ) : (
             <>
-              <p className="text-lg">No {tab} prayer requests.</p>
-              <p className="text-sm mt-2">When someone submits a prayer in worship, it will appear here.</p>
+              <p className="text-lg">No {tab} requests.</p>
+              <p className="text-sm mt-2">When someone submits a request, it will appear here.</p>
             </>
           )}
         </div>
@@ -249,25 +251,25 @@ const PrayerRequestsPage = () => {
                   <p className="text-white whitespace-pre-wrap leading-relaxed">{r.content}</p>
 
                   {(() => {
-                    const prayedBy = r.prayedBy || [];
-                    const meIsPraying = !!user?.id && prayedBy.includes(user.id);
-                    const count = prayedBy.length;
+                    const supportedBy = r.prayedBy || [];
+                    const meIsSupporting = !!user?.id && supportedBy.includes(user.id);
+                    const count = supportedBy.length;
                     return (
                       <button
                         type="button"
-                        onClick={() => togglePray(r)}
+                        onClick={() => toggleSupport(r)}
                         className={`mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium border transition ${
-                          meIsPraying
+                          meIsSupporting
                             ? 'bg-rose-500/15 border-rose-400/40 text-rose-200 hover:bg-rose-500/25'
                             : 'bg-white/5 border-white/15 text-white/75 hover:bg-white/10 hover:text-white'
                         }`}
-                        title={meIsPraying ? 'You are praying for this' : 'Mark that you prayed for this'}
+                        title={meIsSupporting ? 'You are supporting this' : 'Mark that you support this'}
                       >
                         <Heart
                           size={14}
-                          className={meIsPraying ? 'fill-rose-400 text-rose-400' : ''}
+                          className={meIsSupporting ? 'fill-rose-400 text-rose-400' : ''}
                         />
-                        {meIsPraying ? 'Praying' : 'Pray for this'}
+                        {meIsSupporting ? 'Supporting' : 'Support'}
                         {count > 0 && (
                           <span className="text-xs text-white/55 font-normal">· {count}</span>
                         )}
@@ -284,7 +286,7 @@ const PrayerRequestsPage = () => {
                         disabled={busyId === r._id}
                         className="px-3 py-2 rounded-lg bg-gradient-to-r from-royal-purple to-deep-gold text-white text-sm font-semibold flex items-center gap-2 hover:brightness-110 transition disabled:opacity-50"
                       >
-                        <Check size={16} /> Prayed
+                        <Check size={16} /> Mark Supported
                       </button>
                     )}
                     {tab !== 'archived' && (

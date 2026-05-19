@@ -37,7 +37,7 @@ export const sidebarLinks: SidebarLink[] = [
   { Icon: 8, route: '/dashboard/prayer-requests', label: 'Requests', audience: 'worship', resource: 'prayerRequests' },
   { Icon: 10, route: '/dashboard/songs', label: 'Media Library', audience: 'worship', resource: 'songs' },
   { Icon: 11, route: '/dashboard/daily-verses', label: 'Daily Feed', audience: 'worship', resource: 'dailyVerses' },
-  { Icon: 6, route: '/dashboard/donations', label: 'Partnerships', audience: 'worship', resource: 'donations' },
+  { Icon: 6, route: '/dashboard/donations', label: 'Contributions', audience: 'worship', resource: 'donations' },
   { Icon: 9, route: '/dashboard/activity', label: 'Activity Center', audience: 'all', resource: 'activity' },
   { Icon: 7, route: '/dashboard/settings', label: 'Settings', audience: 'all', resource: 'settings' },
 ];

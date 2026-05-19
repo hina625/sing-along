@@ -33,8 +33,8 @@ const TYPE_LABEL: Record<EventType, string> = {
   'recording.ready':   'Recording',
   'recording.failed':  'Recording',
   'note.added':        'Note',
-  'prayer.new':        'Prayer',
-  'donation.received': 'Gift',
+  'prayer.new':        'Request',
+  'donation.received': 'Contribution',
   'file.shared':       'File',
 };
 
@@ -63,8 +63,8 @@ const FILTERS: { key: 'all' | EventType; label: string }[] = [
   { key: 'session.started', label: 'Sessions' },
   { key: 'recording.ready', label: 'Recordings' },
   { key: 'note.added', label: 'Notes' },
-  { key: 'prayer.new', label: 'Prayers' },
-  { key: 'donation.received', label: 'Gifts' },
+  { key: 'prayer.new', label: 'Requests' },
+  { key: 'donation.received', label: 'Contributions' },
   { key: 'file.shared', label: 'Files' },
 ];
 

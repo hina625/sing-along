@@ -172,11 +172,11 @@ const DailyVersesPage = () => {
           Daily Verses
         </h1>
         <p className="text-white/60 text-sm mt-1">
-          Customize the verse rotation shown on the <strong>{activeWorkspace.name}</strong> dashboard.
+          Manage the daily verse rotation shown on the <strong>{activeWorkspace.name}</strong> dashboard.
           {verses.length > 0 ? (
             <> Verses cycle by day-of-year — {verses.length} in rotation, ~{Math.ceil(365 / verses.length)}× per year each.</>
           ) : (
-            <> No custom verses yet — the global 61-verse rotation is shown.</>
+            <> No verses yet — the daily verse card stays hidden until you add one.</>
           )}
         </p>
       </div>
