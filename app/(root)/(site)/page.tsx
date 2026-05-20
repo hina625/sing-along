@@ -302,7 +302,7 @@ const page = () => {
               >
                 Host live sessions, manage teams, engage members, and organize everything in one workspace.
               </p>
-              <div className="text-center text-md-left mt-5">
+              <div className="text-center text-md-left mt-4 md:mt-5">
                 <a href="/sign-up" className="btn btn-primary !border-none !bg-royal-purple hover:!bg-burgundy transition-all btn-icon shadow-lg shadow-royal-purple/20">
                   <span className="btn-inner--text">Start Free</span>
                   <span className="btn-inner--icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em"
@@ -359,15 +359,15 @@ const page = () => {
             .map((cat) => (
               <div
                 key={cat.key}
-                className="max-w-4xl mx-auto rounded-2xl p-6 md:p-8 text-center"
+                className="max-w-4xl mx-auto rounded-2xl p-4 md:p-8 text-center"
                 style={{
                   backgroundColor: '#1A1A1A',
                   border: '1px solid rgba(212, 175, 55, 0.25)',
                   boxShadow: '0 10px 30px -10px rgba(0,0,0,0.5)',
                 }}
               >
-                <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">{cat.title}</h3>
-                <p className="text-base md:text-lg max-w-2xl mx-auto mb-6" style={{ color: 'rgba(255,255,255,0.8)' }}>
+                <h3 className="text-xl md:text-3xl font-bold text-white mb-2 md:mb-3">{cat.title}</h3>
+                <p className="text-sm md:text-lg max-w-2xl mx-auto mb-4 md:mb-6" style={{ color: 'rgba(255,255,255,0.8)' }}>
                   {cat.description}
                 </p>
                 <div className="flex flex-wrap justify-center gap-2 md:gap-3">
