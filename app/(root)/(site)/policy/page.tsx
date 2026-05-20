@@ -156,7 +156,7 @@ const PrivacyPolicyPage = () => {
                         <p className="text-white/60 max-w-xl mx-auto">Providing users with full control over their digital information in accordance with global privacy laws.</p>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
                         {[
                             { title: "Review", desc: "Access your provided information anytime" },
                             { title: "Correction", desc: "Request updates to your data record" },
@@ -171,11 +171,11 @@ const PrivacyPolicyPage = () => {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ delay: i * 0.05 }}
                                 viewport={{ once: true }}
-                                className="flex flex-col p-6 rounded-xl bg-white/5 border border-white/5 group hover:bg-white/10 transition-all cursor-default"
+                                className="flex flex-col p-3 md:p-6 rounded-xl bg-white/5 border border-white/5 group hover:bg-white/10 transition-all cursor-default"
                             >
-                                <h4 className="text-white font-bold text-lg mb-2">{right.title}</h4>
-                                <p className="text-xs text-white/50">{right.desc}</p>
-                                <div className="mt-4 w-8 h-1 bg-deep-gold/30 rounded-full group-hover:w-full transition-all"></div>
+                                <h4 className="text-white font-bold text-sm md:text-lg mb-1 md:mb-2">{right.title}</h4>
+                                <p className="text-[11px] md:text-xs text-white/50 leading-snug">{right.desc}</p>
+                                <div className="mt-2 md:mt-4 w-6 md:w-8 h-1 bg-deep-gold/30 rounded-full group-hover:w-full transition-all"></div>
                             </motion.div>
                         ))}
                     </div>
@@ -189,7 +189,7 @@ const PrivacyPolicyPage = () => {
                         <div className="text-4xl text-deep-gold flex justify-center mb-4"><IoMdPerson /></div>
                         <h3 className="text-xl md:text-2xl font-bold text-white mb-3 md:mb-4">Contact Privacy Team</h3>
                         <p className="text-sm md:text-base text-white/70 mb-6">Have specific questions regarding your data or our practices?</p>
-                        <a href="mailto:info@hgsingalong.com" className="inline-block px-6 md:px-10 py-3 md:py-4 rounded-full bg-gradient-to-r from-royal-purple to-burgundy text-white font-bold text-sm md:text-base shadow-xl shadow-royal-purple/20 hover:scale-105 transition-transform break-all">
+                        <a href="mailto:info@hgsingalong.com" className="inline-block max-w-full px-5 md:px-10 py-3 md:py-4 rounded-full bg-gradient-to-r from-royal-purple to-burgundy text-white font-bold text-xs sm:text-sm md:text-base shadow-xl shadow-royal-purple/20 hover:scale-105 transition-transform whitespace-nowrap">
                             info@hgsingalong.com
                         </a>
                     </motion.div>
