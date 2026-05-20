@@ -7230,4 +7230,47 @@ html.light[data-ws-mode] .card-premium.card-teal {
   border: 1px solid rgba(0, 137, 123, 0.4) !important;
   color: #ffffff !important;
 }
+
+/* Landing page spacing utilities — beats `.zeeshan .py-N` legacy overrides in quick-website.css */
+.zeeshan section.lp-section,
+.zeeshan div.lp-section {
+  padding-top: 1.5rem !important;
+  padding-bottom: 1.5rem !important;
+}
+@media (min-width: 768px) {
+  .zeeshan section.lp-section,
+  .zeeshan div.lp-section {
+    padding-top: 4rem !important;
+    padding-bottom: 4rem !important;
+  }
+}
+
+.zeeshan section.lp-section-hero {
+  padding-top: 5rem !important;
+  padding-bottom: 1rem !important;
+}
+@media (min-width: 768px) {
+  .zeeshan section.lp-section-hero {
+    padding-top: 8rem !important;
+    padding-bottom: 3rem !important;
+  }
+}
+
+.zeeshan div.lp-header-mb {
+  margin-bottom: 1rem !important;
+}
+@media (min-width: 768px) {
+  .zeeshan div.lp-header-mb {
+    margin-bottom: 2.5rem !important;
+  }
+}
+
+.zeeshan div.lp-header-mb-sm {
+  margin-bottom: 0.75rem !important;
+}
+@media (min-width: 768px) {
+  .zeeshan div.lp-header-mb-sm {
+    margin-bottom: 1.5rem !important;
+  }
+}
 
