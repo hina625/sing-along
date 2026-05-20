@@ -275,7 +275,7 @@ const page = () => {
       {/* Navbar */}
       <Navbar2 />
       {/* Main content */}
-      <section className="slice bg-cover bg-no-repeat !pt-[8rem] !bg-bg-dark relative overflow-hidden" >
+      <section className="bg-cover bg-no-repeat !pt-24 md:!pt-[8rem] pb-6 md:pb-12 !bg-bg-dark relative overflow-hidden" >
         <div className="light-ray-container opacity-20"></div>
         <div className="container relative z-10">
           <div className="row row-grid align-items-center">
@@ -319,7 +319,7 @@ const page = () => {
         </div>
       </section>
 
-      <section className="!bg-bg-dark relative overflow-hidden pt-10 pb-12 md:pt-14 md:pb-16">
+      <section className="!bg-bg-dark relative overflow-hidden py-8 md:py-16">
         <div className="container relative z-10">
           <div className="flex flex-col items-center text-center mb-6">
             <span className="inline-block px-4 py-1.5 mb-3 text-xs font-semibold text-[#D4AF37] uppercase tracking-[0.2em] border border-[#D4AF37]/30 rounded-full bg-[#D4AF37]/5">
@@ -390,7 +390,7 @@ const page = () => {
         </div>
       </section>
 
-      <section className="py-12 md:py-16 !bg-bg-dark relative overflow-hidden">
+      <section className="py-8 md:py-16 !bg-bg-dark relative overflow-hidden">
         <div className='absolute top-1 left-1 z-0'>
         </div>
         <div className='absolute bottom-0 right-0 z-0'>
@@ -517,7 +517,7 @@ const page = () => {
 
 
 
-      <section className='section py-12 px-5 !flex !flex-col !items-center !justify-center relative overflow-hidden'
+      <section className='py-8 md:py-16 px-5 !flex !flex-col !items-center !justify-center relative overflow-hidden'
         style={{
           backgroundImage: `linear-gradient(135deg, rgba(11, 31, 58, 0.95), rgba(90, 45, 130, 0.9)), url('/images/bg-2.jpg')`,
           backgroundPosition: 'center',
@@ -527,7 +527,7 @@ const page = () => {
         <div className="light-ray-container opacity-10"></div>
         <div className="pattern-bg absolute inset-0 opacity-10"></div>
 
-        <div className="flex items-center justify-center flex-col mb-12">
+        <div className="flex items-center justify-center flex-col mb-8 md:mb-12">
 
           <h2 className="mt-4 main-header !text-white text-2xl md:text-4xl">
             Why SingAlong Connect
@@ -699,7 +699,7 @@ const page = () => {
       </section>
 
 
-      <section className="py-12 md:py-16 !bg-bg-dark relative overflow-hidden">
+      <section className="py-8 md:py-16 !bg-bg-dark relative overflow-hidden">
         <div className="container relative z-10">
           <div className="flex flex-col items-center text-center mb-8">
             <span className="inline-block px-4 py-1.5 mb-3 text-xs font-semibold text-[#D4AF37] uppercase tracking-[0.2em] border border-[#D4AF37]/30 rounded-full bg-[#D4AF37]/5">
@@ -745,7 +745,7 @@ const page = () => {
       </section>
 
 
-      <section className="py-12 md:py-16 !bg-bg-dark relative overflow-hidden">
+      <section className="py-8 md:py-16 !bg-bg-dark relative overflow-hidden">
         <div className="pattern-bg absolute inset-0 opacity-5"></div>
         <div className='absolute top-1 left-1 z-0'>
         </div>
@@ -802,7 +802,7 @@ const page = () => {
 
 
 
-      <section className="slice !bg-bg-dark !pt-8 md:!pt-12 !pb-10 md:!pb-16 relative overflow-hidden">
+      <section className="py-8 md:py-16 !bg-bg-dark relative overflow-hidden">
 
         <div className='absolute bottom-1 left-1 z-0'>
           <img src='/images/bottom-box-shape.png' />
@@ -995,14 +995,14 @@ const page = () => {
 
 
 
-      <section className='py-12 md:py-16 !bg-bg-dark relative overflow-hidden'>
+      <section className='py-8 md:py-16 !bg-bg-dark relative overflow-hidden'>
         <div className="pattern-bg absolute inset-0 opacity-5"></div>
         <div className='absolute top-1 left-1 z-0'>
         </div>
         <div className='absolute bottom-0 right-0 z-0'>
           <img src='/images/bottom-line.png' />
         </div>
-        <div className="flex items-center justify-center flex-col mb-12">
+        <div className="flex items-center justify-center flex-col mb-8 md:mb-12">
 
           <h2 className="mt-4 main-header !text-white text-2xl md:text-4xl">
             How it works
@@ -1143,7 +1143,7 @@ const page = () => {
       </section>
 
 
-      <div className="bg-gray-700 py-12 md:py-16 px-4 sm:px-6 lg:px-8">
+      <div className="bg-gray-700 py-8 md:py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-center mb-4 !text-white leading-tight">
             Discover Our Products
@@ -1241,7 +1241,7 @@ const page = () => {
       </div>
 
 
-      <section className="slice slice-sm !bg-background-3 relative overflow-hidden">
+      <section className="py-8 md:py-12 !bg-background-3 relative overflow-hidden">
         <div className='absolute bottom-1 left-1 z-0'>
           <img src='/images/bottom-box-shape.png' />
         </div>
