@@ -11,7 +11,7 @@ const PrivacyPolicyPage = () => {
             <Navbar2 />
 
             {/* Hero Section */}
-            <section className="slice !pt-[10rem] !pb-24 !bg-bg-dark relative overflow-hidden">
+            <section className="slice !pt-28 md:!pt-[10rem] !pb-16 md:!pb-24 !bg-bg-dark relative overflow-hidden">
                 <div className="light-ray-container opacity-25"></div>
                 <div className="pattern-bg absolute inset-0 opacity-5"></div>
 
@@ -21,10 +21,10 @@ const PrivacyPolicyPage = () => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 1, ease: "easeOut" }}
                     >
-                        <h1 className="main-header text-3xl md:text-7xl lg:text-8xl mb-6">
+                        <h1 className="main-header text-4xl md:text-7xl lg:text-8xl mb-4 md:mb-6">
                             Privacy <span className="text-white">Policy</span>
                         </h1>
-                        <p className="main-para max-w-2xl mx-auto text-xl opacity-80 leading-relaxed font-light">
+                        <p className="main-para max-w-2xl mx-auto text-base md:text-xl opacity-80 leading-relaxed font-light">
                             Committed to protecting your digital presence with transparency, security, and the highest standards of data integrity.
                         </p>
                     </motion.div>
@@ -39,9 +39,9 @@ const PrivacyPolicyPage = () => {
             </div>
 
             {/* Section 1: Introduction & Definitions */}
-            <section className="slice slice-lg !bg-[#121212] relative py-20">
+            <section className="slice slice-lg !bg-[#121212] relative py-12 md:py-20">
                 <div className="container relative z-10 mx-auto px-6">
-                    <div className="flex flex-col md:flex-row items-center gap-16">
+                    <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16">
                         <motion.div
                             initial={{ opacity: 0, x: -30 }}
                             whileInView={{ opacity: 1, x: 0 }}
@@ -70,19 +70,19 @@ const PrivacyPolicyPage = () => {
                             viewport={{ once: true }}
                             className="w-full md:w-1/2 grid grid-cols-2 gap-3 md:gap-4"
                         >
-                            <div className="p-4 md:p-8 rounded-2xl bg-white/[0.03] border border-white/5 backdrop-blur-sm flex flex-col items-center text-center min-w-0">
+                            <div className="p-3 md:p-8 rounded-2xl bg-white/[0.03] border border-white/5 backdrop-blur-sm flex flex-col items-center text-center min-w-0">
                                 <h4 className="text-white font-bold mb-2">Policy</h4>
                                 <p className="text-[9px] md:text-[10px] text-white/40 uppercase tracking-wider break-words">Core Document</p>
                             </div>
-                            <div className="p-4 md:p-8 rounded-2xl bg-white/[0.03] border border-white/5 backdrop-blur-sm flex flex-col items-center text-center min-w-0">
+                            <div className="p-3 md:p-8 rounded-2xl bg-white/[0.03] border border-white/5 backdrop-blur-sm flex flex-col items-center text-center min-w-0">
                                 <h4 className="text-white font-bold mb-2">Services</h4>
                                 <p className="text-[9px] md:text-[10px] text-white/40 uppercase tracking-wider break-words">Meeting Suite</p>
                             </div>
-                            <div className="p-4 md:p-8 rounded-2xl bg-white/[0.03] border border-white/5 backdrop-blur-sm flex flex-col items-center text-center min-w-0">
+                            <div className="p-3 md:p-8 rounded-2xl bg-white/[0.03] border border-white/5 backdrop-blur-sm flex flex-col items-center text-center min-w-0">
                                 <h4 className="text-white font-bold mb-2">Users</h4>
                                 <p className="text-[9px] md:text-[10px] text-white/40 uppercase tracking-wider break-words">Participants</p>
                             </div>
-                            <div className="p-4 md:p-8 rounded-2xl bg-white/[0.03] border border-white/5 backdrop-blur-sm flex flex-col items-center text-center min-w-0">
+                            <div className="p-3 md:p-8 rounded-2xl bg-white/[0.03] border border-white/5 backdrop-blur-sm flex flex-col items-center text-center min-w-0">
                                 <h4 className="text-white font-bold mb-2">Data</h4>
                                 <p className="text-[9px] md:text-[10px] text-white/40 uppercase tracking-wider break-words">Personal Info</p>
                             </div>
@@ -99,9 +99,9 @@ const PrivacyPolicyPage = () => {
             </div>
 
             {/* Section 2: Why We Process Data */}
-            <section className="slice slice-lg !bg-bg-dark relative py-20">
+            <section className="slice slice-lg !bg-bg-dark relative py-12 md:py-20">
                 <div className="container relative z-10 mx-auto px-6">
-                    <div className="flex flex-col md:flex-row-reverse items-center gap-16">
+                    <div className="flex flex-col md:flex-row-reverse items-center gap-10 md:gap-16">
                         <motion.div
                             initial={{ opacity: 0, x: 30 }}
                             whileInView={{ opacity: 1, x: 0 }}
@@ -128,10 +128,10 @@ const PrivacyPolicyPage = () => {
                             viewport={{ once: true }}
                             className="w-full md:w-1/2"
                         >
-                            <div className="card-awesome-black p-10 rounded-3xl border border-white/10 relative overflow-hidden">
-                                <div className="absolute top-0 right-0 p-8 text-6xl text-white/5"><IoMdLock /></div>
-                                <h3 className="text-2xl font-bold text-white mb-6">Security First</h3>
-                                <p className="text-sm text-white/50 leading-relaxed italic">
+                            <div className="card-awesome-black !p-6 md:!p-10 rounded-3xl border border-white/10 relative overflow-hidden">
+                                <div className="absolute top-0 right-0 p-4 md:p-8 text-4xl md:text-6xl text-white/5 pointer-events-none"><IoMdLock /></div>
+                                <h3 className="text-xl md:text-2xl font-bold text-white mb-3 md:mb-6 relative z-10">Security First</h3>
+                                <p className="text-sm md:text-base text-white/60 leading-relaxed italic relative z-10">
                                     "We prioritize data integrity through advanced encryption and regular audits, ensuring your virtual interactions remain private."
                                 </p>
                             </div>
@@ -148,9 +148,9 @@ const PrivacyPolicyPage = () => {
             </div>
 
             {/* Section 3: Data Protection & EU Rights */}
-            <section className="slice slice-lg !bg-[#121212] relative py-20">
+            <section className="slice slice-lg !bg-[#121212] relative py-12 md:py-20">
                 <div className="container relative z-10 mx-auto px-6">
-                    <div className="text-center mb-16">
+                    <div className="text-center mb-10 md:mb-16">
                         <span className="text-deep-gold font-bold tracking-widest text-xs mb-4 block uppercase">03 / Protection</span>
                         <h2 className="text-2xl md:text-5xl text-gradient mb-4">Your Data Rights</h2>
                         <p className="text-white/60 max-w-xl mx-auto">Providing users with full control over their digital information in accordance with global privacy laws.</p>
@@ -184,12 +184,12 @@ const PrivacyPolicyPage = () => {
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="mt-20 p-8 rounded-3xl bg-gradient-to-r from-royal-purple/10 to-burgundy/10 border border-white/10 text-center"
+                        className="mt-12 md:mt-20 p-6 md:p-8 rounded-3xl bg-gradient-to-r from-royal-purple/10 to-burgundy/10 border border-white/10 text-center"
                     >
                         <div className="text-4xl text-deep-gold flex justify-center mb-4"><IoMdPerson /></div>
-                        <h3 className="text-2xl font-bold text-white mb-4">Contact Privacy Team</h3>
-                        <p className="text-white/70 mb-6">Have specific questions regarding your data or our practices?</p>
-                        <a href="mailto:info@hgsingalong.com" className="inline-block px-10 py-4 rounded-full bg-gradient-to-r from-royal-purple to-burgundy text-white font-bold shadow-xl shadow-royal-purple/20 hover:scale-105 transition-transform">
+                        <h3 className="text-xl md:text-2xl font-bold text-white mb-3 md:mb-4">Contact Privacy Team</h3>
+                        <p className="text-sm md:text-base text-white/70 mb-6">Have specific questions regarding your data or our practices?</p>
+                        <a href="mailto:info@hgsingalong.com" className="inline-block px-6 md:px-10 py-3 md:py-4 rounded-full bg-gradient-to-r from-royal-purple to-burgundy text-white font-bold text-sm md:text-base shadow-xl shadow-royal-purple/20 hover:scale-105 transition-transform break-all">
                             info@hgsingalong.com
                         </a>
                     </motion.div>
