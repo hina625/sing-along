@@ -977,11 +977,36 @@ button.cl-formButtonPrimary.cl-button.🔒️.cl-internal-ttumny {
 }
 
 .meet-more-toggle-stack {
-  display: none !important;
+  display: flex !important;
 }
 
 .meet-more-toggle.is-active {
   background-color: #5f6368 !important;
+}
+
+/* Prayer & Give live in the More dropdown on desktop; hide their inline
+   stacks so they don't appear in the bottom bar. They are still shown
+   inside the mobile overflow popup (.meet-overflow[data-open="true"]). */
+.meet-overflow-worship-item {
+  display: none !important;
+}
+
+/* Prayer & Give items inside the More dropdown */
+.meet-dropdown-item-prayer {
+  color: #D4AF37 !important;
+}
+.meet-dropdown-item-prayer:hover,
+.meet-dropdown-item-prayer:focus {
+  background: rgba(212, 175, 55, 0.18) !important;
+  color: #D4AF37 !important;
+}
+.meet-dropdown-item-give {
+  color: #F57C00 !important;
+}
+.meet-dropdown-item-give:hover,
+.meet-dropdown-item-give:focus {
+  background: rgba(245, 124, 0, 0.18) !important;
+  color: #F57C00 !important;
 }
 
 /* Duplicate utility-button group rendered inside the dropup. Hidden except
@@ -6371,6 +6396,14 @@ html.light .bg-background-4 {
     font-size: 11px !important;
     max-width: 72px !important;
   }
+  /* Surface Prayer & Give inside the mobile overflow popup */
+  .meet-overflow[data-open="true"] .meet-overflow-worship-item {
+    display: flex !important;
+  }
+  /* Avoid showing the desktop Prayer/Give dropdown alongside the mobile popup */
+  .meet-more-menu {
+    display: none !important;
+  }
 }
 
 @media (max-width: 768px) {
@@ -6452,6 +6485,14 @@ html.light .bg-background-4 {
     display: block !important;
     font-size: 11px !important;
     max-width: 72px !important;
+  }
+  /* Surface Prayer & Give inside the mobile overflow popup */
+  .meet-overflow[data-open="true"] .meet-overflow-worship-item {
+    display: flex !important;
+  }
+  /* Avoid showing the desktop Prayer/Give dropdown alongside the mobile popup */
+  .meet-more-menu {
+    display: none !important;
   }
 
   /* Surface the duplicated right-side utility buttons inside the dropup */

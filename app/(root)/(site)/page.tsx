@@ -390,7 +390,7 @@ const page = () => {
         </div>
       </section>
 
-      <section className="slice slice-lg pt-lg-6 pb-0 pb-lg-6 !bg-bg-dark relative overflow-hidden">
+      <section className="py-12 md:py-16 !bg-bg-dark relative overflow-hidden">
         <div className='absolute top-1 left-1 z-0'>
         </div>
         <div className='absolute bottom-0 right-0 z-0'>
@@ -399,14 +399,14 @@ const page = () => {
         <div className="container z-10">
           {/* Title */}
           {/* Section title */}
-          <div className="row mb-5 justify-content-center text-center">
+          <div className="row mb-3 justify-content-center text-center">
             <div className="col-lg-10">
               {/*
         <span className="badge badge-soft-success badge-pill badge-lg">
           Get started
         </span>
           */}
-              <h2 className="mt-4 main-header !text-white text-2xl md:text-4xl leading-snug" style={{ color: 'white' }}>
+              <h2 className="main-header !text-white text-2xl md:text-4xl leading-snug" style={{ color: 'white' }}>
                 Ready to use + carefully crafted performance for quality meetings
               </h2>
               <div className="mt-2">
@@ -418,7 +418,7 @@ const page = () => {
             </div>
           </div>
           {/* Card */}
-          <div className="row mt-5">
+          <div className="row mt-3">
 
             <div className="col-md-4 flex justify-center">
               <div className=' card card-awesome-black soft-glow'>
@@ -699,7 +699,7 @@ const page = () => {
       </section>
 
 
-      <section className="!bg-bg-dark pt-10 pb-12 md:pt-14 md:pb-16 relative overflow-hidden">
+      <section className="py-12 md:py-16 !bg-bg-dark relative overflow-hidden">
         <div className="container relative z-10">
           <div className="flex flex-col items-center text-center mb-8">
             <span className="inline-block px-4 py-1.5 mb-3 text-xs font-semibold text-[#D4AF37] uppercase tracking-[0.2em] border border-[#D4AF37]/30 rounded-full bg-[#D4AF37]/5">
@@ -745,7 +745,7 @@ const page = () => {
       </section>
 
 
-      <section className="slice slice-lg !bg-bg-dark pt-5 pt-lg-8 relative overflow-hidden">
+      <section className="py-12 md:py-16 !bg-bg-dark relative overflow-hidden">
         <div className="pattern-bg absolute inset-0 opacity-5"></div>
         <div className='absolute top-1 left-1 z-0'>
         </div>
@@ -769,7 +769,7 @@ const page = () => {
         </div>
         {/* Container */}
 
-        <div className='max-w-6xl mx-auto flex items-center flex-col md:flex-row gap-8 px-6 md:px-8 py-10'>
+        <div className='max-w-6xl mx-auto flex items-center flex-col md:flex-row gap-8 px-6 md:px-8'>
           <div className="w-full md:w-1/2 flex flex-col items-center md:items-start gap-4">
             <h2
               className="text-2xl md:text-4xl lg:text-5xl text-gradient leading-tight text-center md:text-left"
@@ -995,7 +995,7 @@ const page = () => {
 
 
 
-      <section className='section !bg-bg-dark relative overflow-hidden'>
+      <section className='py-12 md:py-16 !bg-bg-dark relative overflow-hidden'>
         <div className="pattern-bg absolute inset-0 opacity-5"></div>
         <div className='absolute top-1 left-1 z-0'>
         </div>
@@ -1143,7 +1143,7 @@ const page = () => {
       </section>
 
 
-      <div className="bg-gray-700 pt-2 pb-12 px-4 sm:px-6 lg:px-8">
+      <div className="bg-gray-700 py-12 md:py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-center mb-4 !text-white leading-tight">
             Discover Our Products

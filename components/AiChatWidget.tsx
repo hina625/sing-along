@@ -43,10 +43,11 @@ const AiChatWidget = () => {
     const scrollRef = useRef<HTMLDivElement>(null);
     const typingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-    // The widget should NOT appear inside a meeting room.
+    // The widget should NOT appear inside a meeting room or the whiteboard embed
+    // (the embed is loaded inside the mobile app's WebView whiteboard panel).
     const isInsideMeeting = useMemo(() => {
         if (!pathname) return false;
-        return pathname.startsWith('/meeting/');
+        return pathname.startsWith('/meeting/') || pathname.startsWith('/whiteboard-embed/');
     }, [pathname]);
 
     useEffect(() => {

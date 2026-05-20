@@ -3126,7 +3126,7 @@ const GoogleMeetBottomBar = ({
           )}
 
           {isWorshipMode && (
-            <div className="meet-btn-stack">
+            <div className="meet-btn-stack meet-overflow-worship-item">
             <button
               type="button"
               className="meet-icon-button meet-icon-button-prayer"
@@ -3140,7 +3140,7 @@ const GoogleMeetBottomBar = ({
           )}
 
           {isWorshipMode && (
-            <div className="meet-btn-stack">
+            <div className="meet-btn-stack meet-overflow-worship-item">
             <button
               type="button"
               className="meet-icon-button meet-icon-button-give"
@@ -3267,17 +3267,30 @@ const GoogleMeetBottomBar = ({
           </div>
 
           <div className="meet-btn-stack meet-more-toggle-stack">
-            <button
-              type="button"
-              className={`meet-icon-button meet-more-toggle ${moreOpen ? 'is-active' : ''}`}
-              title={moreOpen ? 'Close more options' : 'More options'}
-              aria-expanded={moreOpen}
-              aria-haspopup="menu"
-              onMouseDown={(e) => e.stopPropagation()}
-              onClick={() => setMoreOpen((v) => !v)}
-            >
-              <MoreHorizontal />
-            </button>
+            <DropdownMenu modal={false} open={moreOpen} onOpenChange={setMoreOpen}>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  className={`meet-icon-button meet-more-toggle ${moreOpen ? 'is-active' : ''}`}
+                  title={moreOpen ? 'Close more options' : 'More options'}
+                  aria-expanded={moreOpen}
+                  aria-haspopup="menu"
+                  onMouseDown={(e) => e.stopPropagation()}
+                >
+                  <MoreHorizontal />
+                </button>
+              </DropdownMenuTrigger>
+              {isWorshipMode && (
+                <DropdownMenuContent {...dropdownContentProps} className="meet-dropdown-content meet-more-menu">
+                  <DropdownMenuItem className="meet-dropdown-item meet-dropdown-item-prayer" onClick={onOpenPrayer}>
+                    <HandHeart className="shrink-0" /> Prayer
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="meet-dropdown-item meet-dropdown-item-give" onClick={onOpenGive}>
+                    <HeartHandshake className="shrink-0" /> Give
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              )}
+            </DropdownMenu>
             <span className="meet-btn-label">More</span>
           </div>
 
