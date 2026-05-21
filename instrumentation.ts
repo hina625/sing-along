@@ -34,7 +34,9 @@ export async function register() {
   const tick = async () => {
     try {
       const result = await runIdleSweep();
-      if (result.warned || result.ended || result.reaped) {
+      // Log whenever there's at least one tracked room, so it's clear whether
+      // the sweep is seeing your meetings. Silent only when nothing is live.
+      if (result.scanned || result.warned || result.ended || result.reaped) {
         console.log('[idle-sweep]', result);
       }
     } catch (e) {

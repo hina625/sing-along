@@ -3500,7 +3500,7 @@ const MeetingIdleGuard = ({ room, userId }: { room: string; userId?: string }) =
           toast({
             title: '💤 This meeting looks inactive',
             description: `It will close automatically if there's no activity in about ${grace} minute${grace === 1 ? '' : 's'}.`,
-            duration: 10000,
+            duration: Infinity,
             className: 'bg-white/10 border-none text-white',
           });
         }
@@ -4322,7 +4322,7 @@ const GoogleMeetLayout = ({ room, onLeave, userId }: { room: string, onLeave: ()
             description: mins
               ? `It will close automatically in about ${mins} minute${mins === 1 ? '' : 's'} without activity.`
               : 'It will close automatically soon without activity.',
-            duration: 10000,
+            duration: Infinity,
             className: 'bg-white/10 border-none text-white',
           });
         }
