@@ -58,6 +58,9 @@ export async function POST(req) {
         if (!room) {
             return NextResponse.json({ success: false, message: 'room is required' }, { status: 400 });
         }
+        // TEMP DIAGNOSTIC: which client signal bumped activity (and reset idle).
+        // Remove once the "meeting never ends" cause is confirmed.
+        console.log(`[activity] heartbeat room=${room} source=${body?.source || 'n/a'}`);
         // Single indexed update — no plan lookup on the hot path. Don't revive a
         // room that has already ended.
         const updated = await roomModel.findOneAndUpdate(

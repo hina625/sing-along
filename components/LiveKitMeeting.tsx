@@ -3425,11 +3425,19 @@ const MeetingIdleGuard = ({ room, userId }: { room: string; userId?: string }) =
   const { toast } = useToast();
   const lastActivityRef = useRef<number>(Date.now());
   const lastSentRef = useRef<number>(0);
+  const lastSourceRef = useRef<string>('join');
   const warnedRef = useRef<boolean>(false);
   const [policy, setPolicy] = useState<{ warnMin: number; endMin: number } | null>(null);
 
-  const markActive = useCallback(() => {
-    lastActivityRef.current = Date.now();
+  const markActive = useCallback((source: string = 'unknown') => {
+    const now = Date.now();
+    const idleSec = ((now - lastActivityRef.current) / 1000).toFixed(0);
+    // TEMP DIAGNOSTIC: log what reset the idle clock and how much idle it discarded.
+    // Remove once the "meeting never ends" cause is confirmed.
+    // eslint-disable-next-line no-console
+    console.log(`[idle-guard] markActive source=${source} discardedIdleSec=${idleSec}`);
+    lastSourceRef.current = source;
+    lastActivityRef.current = now;
     // Activity resumed → allow a fresh warning if it goes idle again later.
     warnedRef.current = false;
   }, []);
@@ -3446,23 +3454,28 @@ const MeetingIdleGuard = ({ room, userId }: { room: string; userId?: string }) =
     return () => { cancelled = true; };
   }, [room]);
 
-  // DOM interaction = activity.
+  // DOM interaction = activity. Mouse (mousemove/mousedown/wheel) and keyboard
+  // (keydown) are deliberately excluded: they're too weak a signal and were
+  // resetting the idle clock whenever the "inactive" warning drew attention,
+  // so the room could never progress to ended. Only touch taps count as local
+  // engagement now; real presence is better signalled by speech and data below.
   useEffect(() => {
-    const events = ['mousemove', 'mousedown', 'keydown', 'touchstart', 'wheel'];
+    const events = ['touchstart'];
     const opts: AddEventListenerOptions = { passive: true };
-    events.forEach((e) => window.addEventListener(e, markActive, opts));
-    return () => events.forEach((e) => window.removeEventListener(e, markActive));
+    const onDom = (ev: Event) => markActive(`dom:${ev.type}`);
+    events.forEach((e) => window.addEventListener(e, onDom, opts));
+    return () => events.forEach((e) => window.removeEventListener(e, onDom));
   }, [markActive]);
 
   // LiveKit media/presence = activity.
   useEffect(() => {
-    const onSpeakers = (speakers: unknown[]) => { if (speakers && speakers.length) markActive(); };
+    const onSpeakers = (speakers: unknown[]) => { if (speakers && speakers.length) markActive('speaker'); };
     // Ignore our own idle warning (topic 'idle') — otherwise receiving the
     // warning would itself reset the idle clock, so the room could never
     // progress from "warned" to "ended".
     const onDataActivity = (_p: Uint8Array, _participant?: unknown, _kind?: unknown, topic?: string) => {
       if (topic === 'idle') return;
-      markActive();
+      markActive('data');
     };
     // Only genuine "in use" signals reset the idle clock. Deliberately NOT
     // TrackSubscribed/TrackPublished/LocalTrackPublished/Participant(Dis)connected
@@ -3485,7 +3498,7 @@ const MeetingIdleGuard = ({ room, userId }: { room: string; userId?: string }) =
     fetch('/api/v1/meeting/activity', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ room, userId }),
+      body: JSON.stringify({ room, userId, source: lastSourceRef.current }),
     }).catch(() => {});
   }, [room, userId]);
 
