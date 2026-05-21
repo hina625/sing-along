@@ -3404,6 +3404,114 @@ const GoogleMeetBottomBar = ({
   );
 };
 
+/**
+ * Idle / auto-end guard (client side of the feature).
+ *
+ * - Watches local activity: mouse/keyboard/touch + LiveKit events (speaking,
+ *   track publish/subscribe, participant join/leave, data messages).
+ * - Heartbeats /api/v1/meeting/activity while active so the server-side
+ *   idle-sweep cron knows the room is alive. Throttled to ~once per window.
+ * - Surfaces a local "closing soon" warning once local idle crosses the plan's
+ *   warnMin (the server cron also pushes an `idle:warning` data message as a
+ *   synced backstop, handled in GoogleMeetLayout's onData).
+ *
+ * Renders nothing. Mounted inside <LiveKitRoom> so the room context is live.
+ */
+const ACTIVITY_HEARTBEAT_MS = 45_000;
+const ACTIVITY_CHECK_MS = 30_000;
+
+const MeetingIdleGuard = ({ room, userId }: { room: string; userId?: string }) => {
+  const lkRoom = useRoomContext();
+  const { toast } = useToast();
+  const lastActivityRef = useRef<number>(Date.now());
+  const lastSentRef = useRef<number>(0);
+  const warnedRef = useRef<boolean>(false);
+  const [policy, setPolicy] = useState<{ warnMin: number; endMin: number } | null>(null);
+
+  const markActive = useCallback(() => {
+    lastActivityRef.current = Date.now();
+    // Activity resumed → allow a fresh warning if it goes idle again later.
+    warnedRef.current = false;
+  }, []);
+
+  // Fetch this room's idle policy once (drives the local warning threshold).
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`/api/v1/meeting/activity?room=${encodeURIComponent(room)}`)
+      .then((r) => r.json())
+      .then((d) => {
+        if (!cancelled && d?.success && d.policy) setPolicy(d.policy);
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [room]);
+
+  // DOM interaction = activity.
+  useEffect(() => {
+    const events = ['mousemove', 'mousedown', 'keydown', 'touchstart', 'wheel'];
+    const opts: AddEventListenerOptions = { passive: true };
+    events.forEach((e) => window.addEventListener(e, markActive, opts));
+    return () => events.forEach((e) => window.removeEventListener(e, markActive));
+  }, [markActive]);
+
+  // LiveKit media/presence = activity.
+  useEffect(() => {
+    const onSpeakers = (speakers: unknown[]) => { if (speakers && speakers.length) markActive(); };
+    const handlers: Array<[RoomEvent, (...a: any[]) => void]> = [
+      [RoomEvent.ActiveSpeakersChanged, onSpeakers],
+      [RoomEvent.TrackPublished, markActive],
+      [RoomEvent.LocalTrackPublished, markActive],
+      [RoomEvent.TrackSubscribed, markActive],
+      [RoomEvent.ParticipantConnected, markActive],
+      [RoomEvent.ParticipantDisconnected, markActive],
+      [RoomEvent.DataReceived, markActive],
+    ];
+    handlers.forEach(([ev, fn]) => lkRoom.on(ev, fn));
+    return () => { handlers.forEach(([ev, fn]) => lkRoom.off(ev, fn)); };
+  }, [lkRoom, markActive]);
+
+  const sendHeartbeat = useCallback(() => {
+    lastSentRef.current = Date.now();
+    fetch('/api/v1/meeting/activity', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ room, userId }),
+    }).catch(() => {});
+  }, [room, userId]);
+
+  // Heartbeat-while-active + local idle warning.
+  useEffect(() => {
+    sendHeartbeat(); // initial beat on join
+    const id = setInterval(() => {
+      const now = Date.now();
+      const idleMs = now - lastActivityRef.current;
+
+      // Report activity only when there's been some recently, and not more
+      // often than the heartbeat window — keeps writes off the hot path.
+      if (idleMs < ACTIVITY_HEARTBEAT_MS && now - lastSentRef.current >= ACTIVITY_HEARTBEAT_MS) {
+        sendHeartbeat();
+      }
+
+      if (policy) {
+        const idleMin = idleMs / 60000;
+        if (idleMin >= policy.warnMin && idleMin < policy.endMin && !warnedRef.current) {
+          warnedRef.current = true;
+          const grace = Math.max(1, policy.endMin - policy.warnMin);
+          toast({
+            title: '💤 This meeting looks inactive',
+            description: `It will close automatically if there's no activity in about ${grace} minute${grace === 1 ? '' : 's'}.`,
+            duration: 10000,
+            className: 'bg-white/10 border-none text-white',
+          });
+        }
+      }
+    }, ACTIVITY_CHECK_MS);
+    return () => clearInterval(id);
+  }, [policy, sendHeartbeat, toast]);
+
+  return null;
+};
+
 const GoogleMeetLayout = ({ room, onLeave, userId }: { room: string, onLeave: () => void, userId?: string }) => {
   const { localParticipant } = useLocalParticipant();
   const lkRoom = useRoomContext();
@@ -4205,6 +4313,18 @@ const GoogleMeetLayout = ({ room, onLeave, userId }: { room: string, onLeave: ()
           refetchBreakout();
         } else if (data.type === 'music:now-playing') {
           setNowPlaying(typeof data.title === 'string' ? data.title : null);
+        } else if (data.type === 'idle:warning') {
+          // Server idle-sweep flagged this room as inactive. Mirror the local
+          // warning so every still-connected client sees it in sync.
+          const mins = typeof data.closesInMin === 'number' ? Math.max(1, data.closesInMin) : null;
+          toast({
+            title: '💤 This meeting looks inactive',
+            description: mins
+              ? `It will close automatically in about ${mins} minute${mins === 1 ? '' : 's'} without activity.`
+              : 'It will close automatically soon without activity.',
+            duration: 10000,
+            className: 'bg-white/10 border-none text-white',
+          });
         }
       } catch (e) {
         console.error('Failed to parse incoming data:', e);
@@ -4280,6 +4400,7 @@ const GoogleMeetLayout = ({ room, onLeave, userId }: { room: string, onLeave: ()
 
   return (
     <div className="meet-bg meet-root h-screen w-full flex flex-col overflow-hidden text-white">
+      <MeetingIdleGuard room={room} userId={userId} />
       {isLocalPresenting && (
         <div className="meet-status-overlay" role="status">
           <span className="meet-status-text">You’re presenting to everyone</span>
