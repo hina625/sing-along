@@ -3465,11 +3465,15 @@ const MeetingIdleGuard = ({ room, userId }: { room: string; userId?: string }) =
       markActive();
     };
     // Only genuine "in use" signals reset the idle clock. Deliberately NOT
-    // TrackSubscribed/TrackPublished/Participant(Dis)connected — those fire on
-    // reconnect/renegotiation churn and would keep an idle room alive forever.
+    // TrackSubscribed/TrackPublished/LocalTrackPublished/Participant(Dis)connected
+    // — those fire on reconnect/renegotiation churn (network blips, ICE restarts,
+    // camera re-publish) with no human behind them, which would re-stamp
+    // lastActivityAt and keep an abandoned room alive forever (it never reaches
+    // endMin, so the sweep can only ever warn, never end). Real activity is:
+    // someone speaking, an inbound data message, or local DOM interaction (wired
+    // up in the effect above).
     const handlers: Array<[RoomEvent, (...a: any[]) => void]> = [
       [RoomEvent.ActiveSpeakersChanged, onSpeakers],
-      [RoomEvent.LocalTrackPublished, markActive],
       [RoomEvent.DataReceived, onDataActivity],
     ];
     handlers.forEach(([ev, fn]) => lkRoom.on(ev, fn));
