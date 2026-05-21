@@ -3457,13 +3457,12 @@ const MeetingIdleGuard = ({ room, userId }: { room: string; userId?: string }) =
   // LiveKit media/presence = activity.
   useEffect(() => {
     const onSpeakers = (speakers: unknown[]) => { if (speakers && speakers.length) markActive(); };
+    // Only genuine "in use" signals reset the idle clock. Deliberately NOT
+    // TrackSubscribed/TrackPublished/Participant(Dis)connected — those fire on
+    // reconnect/renegotiation churn and would keep an idle room alive forever.
     const handlers: Array<[RoomEvent, (...a: any[]) => void]> = [
       [RoomEvent.ActiveSpeakersChanged, onSpeakers],
-      [RoomEvent.TrackPublished, markActive],
       [RoomEvent.LocalTrackPublished, markActive],
-      [RoomEvent.TrackSubscribed, markActive],
-      [RoomEvent.ParticipantConnected, markActive],
-      [RoomEvent.ParticipantDisconnected, markActive],
       [RoomEvent.DataReceived, markActive],
     ];
     handlers.forEach(([ev, fn]) => lkRoom.on(ev, fn));
@@ -3501,7 +3500,7 @@ const MeetingIdleGuard = ({ room, userId }: { room: string; userId?: string }) =
             title: '💤 This meeting looks inactive',
             description: `It will close automatically if there's no activity in about ${grace} minute${grace === 1 ? '' : 's'}.`,
             duration: Infinity,
-            className: 'bg-white/10 border-none text-white',
+            className: 'bg-slate-900 border border-amber-400/50 text-white [&_*]:text-white shadow-xl',
           });
         }
       }
@@ -4323,7 +4322,7 @@ const GoogleMeetLayout = ({ room, onLeave, userId }: { room: string, onLeave: ()
               ? `It will close automatically in about ${mins} minute${mins === 1 ? '' : 's'} without activity.`
               : 'It will close automatically soon without activity.',
             duration: Infinity,
-            className: 'bg-white/10 border-none text-white',
+            className: 'bg-slate-900 border border-amber-400/50 text-white [&_*]:text-white shadow-xl',
           });
         }
       } catch (e) {
