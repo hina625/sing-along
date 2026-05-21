@@ -3457,13 +3457,20 @@ const MeetingIdleGuard = ({ room, userId }: { room: string; userId?: string }) =
   // LiveKit media/presence = activity.
   useEffect(() => {
     const onSpeakers = (speakers: unknown[]) => { if (speakers && speakers.length) markActive(); };
+    // Ignore our own idle warning (topic 'idle') — otherwise receiving the
+    // warning would itself reset the idle clock, so the room could never
+    // progress from "warned" to "ended".
+    const onDataActivity = (_p: Uint8Array, _participant?: unknown, _kind?: unknown, topic?: string) => {
+      if (topic === 'idle') return;
+      markActive();
+    };
     // Only genuine "in use" signals reset the idle clock. Deliberately NOT
     // TrackSubscribed/TrackPublished/Participant(Dis)connected — those fire on
     // reconnect/renegotiation churn and would keep an idle room alive forever.
     const handlers: Array<[RoomEvent, (...a: any[]) => void]> = [
       [RoomEvent.ActiveSpeakersChanged, onSpeakers],
       [RoomEvent.LocalTrackPublished, markActive],
-      [RoomEvent.DataReceived, markActive],
+      [RoomEvent.DataReceived, onDataActivity],
     ];
     handlers.forEach(([ev, fn]) => lkRoom.on(ev, fn));
     return () => { handlers.forEach(([ev, fn]) => lkRoom.off(ev, fn)); };
@@ -3500,7 +3507,7 @@ const MeetingIdleGuard = ({ room, userId }: { room: string; userId?: string }) =
             title: '💤 This meeting looks inactive',
             description: `It will close automatically if there's no activity in about ${grace} minute${grace === 1 ? '' : 's'}.`,
             duration: Infinity,
-            className: 'bg-slate-900 border border-amber-400/50 text-white [&_*]:text-white shadow-xl',
+            className: 'bg-slate-900 border border-amber-400/50 shadow-xl [&_*]:!text-white',
           });
         }
       }
@@ -4322,7 +4329,7 @@ const GoogleMeetLayout = ({ room, onLeave, userId }: { room: string, onLeave: ()
               ? `It will close automatically in about ${mins} minute${mins === 1 ? '' : 's'} without activity.`
               : 'It will close automatically soon without activity.',
             duration: Infinity,
-            className: 'bg-slate-900 border border-amber-400/50 text-white [&_*]:text-white shadow-xl',
+            className: 'bg-slate-900 border border-amber-400/50 shadow-xl [&_*]:!text-white',
           });
         }
       } catch (e) {
