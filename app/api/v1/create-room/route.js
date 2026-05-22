@@ -26,7 +26,7 @@ cloudinary.config(cloudinaryConfig);
 export const POST = async (req) => {
     try {
         await connectDB()
-        const { user_id, workspaceId, mode, room_id, start_time, user_plan, end_time: requestedEndTime, isSchedule, description, scheduleTime, status, image } = await req.json();
+        const { user_id, workspaceId, mode, room_id, start_time, user_plan, end_time: requestedEndTime, isSchedule, description, scheduleTime, status, image, passcodeEnabled, passcode } = await req.json();
         let end_time = requestedEndTime;
 
         // Idempotency: if a room with this room_id already exists, return it
@@ -36,8 +36,12 @@ export const POST = async (req) => {
         if (room_id) {
             const existing = await roomModel.findOne({ room_id });
             if (existing) {
+                // Don't echo the passcode back on this idempotent path — callers
+                // here aren't necessarily the host.
+                const safe = existing.toObject();
+                delete safe.passcode;
                 return NextResponse.json(
-                    { success: true, message: 'Room already exists', room: existing, alreadyExists: true },
+                    { success: true, message: 'Room already exists', room: safe, alreadyExists: true },
                     { status: 200 }
                 );
             }
@@ -90,6 +94,10 @@ export const POST = async (req) => {
             imagePublicId = result.public_id;
         }
 
+        // Optional passcode protection set at creation. Only persist a code when
+        // protection is explicitly enabled with a non-empty value.
+        const wantsPasscode = passcodeEnabled === true && !!(passcode ?? '').toString().trim();
+
         const room = await roomModel.create({
             user_id,
             workspaceId: workspaceId || null,
@@ -102,6 +110,8 @@ export const POST = async (req) => {
             description,
             scheduleTime,
             status,
+            passcodeEnabled: wantsPasscode,
+            passcode: wantsPasscode ? passcode.toString().trim() : null,
             image: { url: imageUrl, public_id: imagePublicId },
         });
 
@@ -118,7 +128,9 @@ export const GET = async (req) => {
         await connectDB()
         const query = new URLSearchParams(req.url.split('?')[1]);
         const room_id = query.get('room_id');
-        const room = await roomModel.findOne({ room_id })
+        // Exclude the passcode — this endpoint is read by every visitor on the
+        // join page. passcodeEnabled is fine to expose (drives the UI prompt).
+        const room = await roomModel.findOne({ room_id }, { passcode: 0 })
 
         return NextResponse.json({ success: true, room }, { status: 200 });
     } catch (error) {

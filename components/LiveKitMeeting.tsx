@@ -2167,6 +2167,10 @@ const SidebarPanel = ({
   allowAnyone,
   allowAnyoneBusy,
   onToggleAllowAnyone,
+  passcodeEnabled,
+  passcodeValue,
+  passcodeBusy,
+  onSavePasscode,
 }: {
   type: SidePanel;
   onClose: () => void;
@@ -2187,11 +2191,20 @@ const SidebarPanel = ({
   allowAnyone: boolean;
   allowAnyoneBusy: boolean;
   onToggleAllowAnyone: (next: boolean) => void;
+  passcodeEnabled: boolean;
+  passcodeValue: string;
+  passcodeBusy: boolean;
+  onSavePasscode: (enabled: boolean, code: string) => void;
 }) => {
   const { toast } = useToast();
   const [busyAction, setBusyAction] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const meetingUrl = typeof window !== 'undefined' ? window.location.href : '';
+
+  // Draft for the passcode input — seeded from the host-visible current value
+  // and re-synced whenever it changes (e.g. after the initial fetch).
+  const [pcDraft, setPcDraft] = useState(passcodeValue || '');
+  useEffect(() => { setPcDraft(passcodeValue || ''); }, [passcodeValue]);
 
   const moderate = async (
     action: 'mute' | 'mute-mic' | 'unmute-mic' | 'mute-camera' | 'unmute-camera' | 'remove' | 'promote' | 'demote',
@@ -2248,7 +2261,12 @@ const SidebarPanel = ({
 
   const copyJoiningInfo = async () => {
     try {
-      await navigator.clipboard.writeText(meetingUrl);
+      const lines = [
+        `Join link: ${meetingUrl}`,
+        `Meeting ID: ${room}`,
+      ];
+      if (passcodeEnabled && passcodeValue) lines.push(`Passcode: ${passcodeValue}`);
+      await navigator.clipboard.writeText(lines.join('\n'));
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
@@ -2393,9 +2411,23 @@ const SidebarPanel = ({
 
         {type === 'info' && (
           <div className="flex flex-col gap-6">
-            <div>
-              <h4 className="meet-info-label">Joining info</h4>
-              <p className="meet-info-url break-all">{meetingUrl}</p>
+            <div className="flex flex-col gap-4">
+              <div>
+                <h4 className="meet-info-label">Join link</h4>
+                <p className="meet-info-url break-all">{meetingUrl}</p>
+              </div>
+              <div>
+                <h4 className="meet-info-label">Meeting ID</h4>
+                <p className="meet-info-url break-all">{room}</p>
+              </div>
+              {passcodeEnabled && (
+                <div>
+                  <h4 className="meet-info-label">Passcode</h4>
+                  <p className="meet-info-url break-all">
+                    {passcodeValue || <span className="text-[#9aa0a6]">Set by host</span>}
+                  </p>
+                </div>
+              )}
               <button type="button" className="meet-copy-link" onClick={copyJoiningInfo}>
                 {copied ? <Check size={18} /> : <Copy size={18} />}
                 {copied ? 'Copied' : 'Copy joining info'}
@@ -2453,6 +2485,59 @@ const SidebarPanel = ({
                 />
               </button>
             </label>
+
+            {/* Passcode protection — composes with the toggle above:
+                passcode-only, knock-only, both, or open. */}
+            <div className="flex flex-col gap-2 rounded-lg border border-white/10 bg-white/5 p-3 mb-2">
+              <label className="flex items-start justify-between gap-3">
+                <div className="flex flex-col min-w-0">
+                  <span className="text-sm font-medium text-white">Require a passcode</span>
+                  <span className="text-xs text-[#9aa0a6]">
+                    {passcodeEnabled
+                      ? 'Guests must enter the passcode to join.'
+                      : 'Anyone with the link can request to join.'}
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={passcodeEnabled}
+                  disabled={passcodeBusy}
+                  onClick={() => {
+                    if (passcodeEnabled) onSavePasscode(false, '');
+                    else if (pcDraft.trim()) onSavePasscode(true, pcDraft.trim());
+                    else toast({ title: 'Enter a passcode first', variant: 'destructive' });
+                  }}
+                  className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors disabled:opacity-50 ${
+                    passcodeEnabled ? 'bg-[#1a73e8]' : 'bg-white/20'
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform ${
+                      passcodeEnabled ? 'translate-x-5' : 'translate-x-0.5'
+                    }`}
+                  />
+                </button>
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={pcDraft}
+                  onChange={(e) => setPcDraft(e.target.value)}
+                  placeholder="Set a passcode"
+                  className="flex-1 min-w-0 rounded-md border border-white/15 bg-black/30 px-3 py-1.5 text-sm text-white placeholder:text-[#9aa0a6] outline-none focus:border-[#1a73e8]"
+                />
+                <button
+                  type="button"
+                  disabled={passcodeBusy || !pcDraft.trim() || pcDraft.trim() === passcodeValue}
+                  onClick={() => onSavePasscode(true, pcDraft.trim())}
+                  className="rounded-md bg-[#1a73e8] hover:bg-[#1765c4] disabled:opacity-50 px-3 py-1.5 text-xs font-medium text-white transition-colors shrink-0"
+                >
+                  {passcodeBusy ? 'Saving…' : passcodeEnabled ? 'Update' : 'Set'}
+                </button>
+              </div>
+            </div>
+
             <p className="meet-people-hint text-sm text-[#9aa0a6] mb-3">
               Waiting to join ({waitingEntries.length})
             </p>
@@ -3637,6 +3722,11 @@ const GoogleMeetLayout = ({ room, onLeave, userId }: { room: string, onLeave: ()
   // route stops gating, so the host doesn't have to click Admit each time.
   const [allowAnyone, setAllowAnyone] = useState(false);
   const [allowAnyoneBusy, setAllowAnyoneBusy] = useState(false);
+  // Passcode protection (host-only). passcodeValue is the actual code, fetched
+  // for the host so they can view/share it. Composes with allowAnyone.
+  const [passcodeEnabled, setPasscodeEnabled] = useState(false);
+  const [passcodeValue, setPasscodeValue] = useState('');
+  const [passcodeBusy, setPasscodeBusy] = useState(false);
 
   useEffect(() => {
     if (!canModerate) return;
@@ -3650,6 +3740,52 @@ const GoogleMeetLayout = ({ room, onLeave, userId }: { room: string, onLeave: ()
       .catch((err) => console.error('policy lookup failed', err));
     return () => { cancelled = true; };
   }, [canModerate, room]);
+
+  // Fetch passcode status for everyone (so the info panel can reflect it); the
+  // actual value only comes back when user_id is the host, keeping it private.
+  useEffect(() => {
+    let cancelled = false;
+    const url = userId
+      ? `/api/v1/meeting/passcode?room_id=${encodeURIComponent(room)}&user_id=${encodeURIComponent(userId)}`
+      : `/api/v1/meeting/passcode?room_id=${encodeURIComponent(room)}`;
+    fetch(url)
+      .then((r) => r.json())
+      .then((data) => {
+        if (cancelled || !data?.success) return;
+        setPasscodeEnabled(!!data.passcodeEnabled);
+        setPasscodeValue(data.passcode || '');
+      })
+      .catch((err) => console.error('passcode lookup failed', err));
+    return () => { cancelled = true; };
+  }, [userId, room]);
+
+  const savePasscode = useCallback(async (enabled: boolean, code: string) => {
+    if (!userId || passcodeBusy) return;
+    setPasscodeBusy(true);
+    try {
+      const res = await fetch('/api/v1/meeting/passcode', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ room_id: room, callerUserId: userId, passcodeEnabled: enabled, passcode: code }),
+      });
+      const data = await res.json();
+      if (!data?.success) throw new Error(data?.message || 'Could not update passcode');
+      setPasscodeEnabled(!!data.passcodeEnabled);
+      setPasscodeValue(data.passcode || '');
+      toast({
+        title: enabled ? '🔑 Passcode required to join' : '🔓 Passcode protection off',
+        className: 'bg-white/10 border-none text-white',
+      });
+    } catch (e: any) {
+      toast({
+        title: 'Could not update passcode',
+        description: e?.message || 'Try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setPasscodeBusy(false);
+    }
+  }, [userId, room, passcodeBusy, toast]);
 
   const toggleAllowAnyone = useCallback(async (next: boolean) => {
     if (!userId || allowAnyoneBusy) return;
@@ -4670,6 +4806,10 @@ const GoogleMeetLayout = ({ room, onLeave, userId }: { room: string, onLeave: ()
             allowAnyone={allowAnyone}
             allowAnyoneBusy={allowAnyoneBusy}
             onToggleAllowAnyone={toggleAllowAnyone}
+            passcodeEnabled={passcodeEnabled}
+            passcodeValue={passcodeValue}
+            passcodeBusy={passcodeBusy}
+            onSavePasscode={savePasscode}
           />
         )}
       </div>

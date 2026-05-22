@@ -38,7 +38,7 @@ export async function GET(req) {
 
   try {
     await connectDB();
-    const roomDoc = await roomModel.findOne({ room_id: room }, { user_id: 1, allowAnyone: 1 }).lean();
+    const roomDoc = await roomModel.findOne({ room_id: room }, { user_id: 1, allowAnyone: 1, passcodeEnabled: 1 }).lean();
     if (!roomDoc) {
       return NextResponse.json({ error: 'Room not found' }, { status: 404 });
     }
@@ -53,7 +53,13 @@ export async function GET(req) {
     // strand participants when the host re-assigns them mid-call.
     const isBreakoutChild = /-bo-\d+$/.test(room);
 
-    if (!isHost && !allowAnyone && !isBreakoutChild) {
+    // A passcode-protected room ALWAYS requires a valid admission entry, even
+    // when allowAnyone is on: the passcode is verified at the knock step, which
+    // is the only thing that mints an admitted entry. Without this, allowAnyone
+    // would let anyone skip straight to a token and defeat the passcode.
+    const requiresAdmission = !allowAnyone || !!roomDoc.passcodeEnabled;
+
+    if (!isHost && requiresAdmission && !isBreakoutChild) {
       if (!admitKey) {
         return NextResponse.json(
           { error: 'Waiting for host approval', code: 'admission_required' },

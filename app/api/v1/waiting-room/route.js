@@ -33,6 +33,7 @@ export async function POST(req) {
         const room_id = (body?.room_id || '').toString().trim();
         const displayName = (body?.displayName || '').toString().trim();
         const userId = body?.userId ? body.userId.toString() : null;
+        const passcode = (body?.passcode ?? '').toString();
 
         if (!room_id || !displayName) {
             return NextResponse.json(
@@ -42,7 +43,10 @@ export async function POST(req) {
         }
 
         await connectDB();
-        const room = await roomModel.findOne({ room_id }, { user_id: 1, allowAnyone: 1 }).lean();
+        const room = await roomModel.findOne(
+            { room_id },
+            { user_id: 1, allowAnyone: 1, passcodeEnabled: 1, passcode: 1 }
+        ).lean();
         if (!room) {
             return NextResponse.json({ success: false, message: 'Room not found' }, { status: 404 });
         }
@@ -57,7 +61,7 @@ export async function POST(req) {
         // this room and the entry hasn't expired (1h TTL), reuse it. Without
         // this, returning from a breakout — or any page refresh — drops the
         // participant back into the waiting queue even though they were
-        // already approved.
+        // already approved. Already-admitted users skip the passcode re-prompt.
         if (userId) {
             const existingAdmitted = await waitingRoomModel
                 .findOne({ room_id, userId, status: 'admitted' })
@@ -67,6 +71,24 @@ export async function POST(req) {
                 return NextResponse.json(
                     { success: true, key: existingAdmitted.key, status: 'admitted' },
                     { status: 200 }
+                );
+            }
+        }
+
+        // Passcode gate — the host and breakout children bypass. Verified here so
+        // an admission entry only ever exists for callers with the right code;
+        // the token route then trusts that entry (see livekit/token).
+        if (room.passcodeEnabled && !isHostKnocking && !isBreakoutChild) {
+            if (!passcode) {
+                return NextResponse.json(
+                    { success: false, message: 'A passcode is required to join.', code: 'passcode_required' },
+                    { status: 403 }
+                );
+            }
+            if (passcode !== (room.passcode || '')) {
+                return NextResponse.json(
+                    { success: false, message: 'Incorrect passcode.', code: 'passcode_invalid' },
+                    { status: 403 }
                 );
             }
         }

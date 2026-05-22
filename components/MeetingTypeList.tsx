@@ -46,6 +46,7 @@ const MeetingTypeList = () => {
   const [id, setId] = useState('')
   const [meetings, setMeetings] = useState<IRoomDetails[]>([]);
   const [description,setDesc] = useState('')
+  const [passcode,setPasscode] = useState('')
   const [status,setStatus] = useState('private')
   const [image,setImage] = useState<string | null>(null);
   const [meetingState, setMeetingState] = useState<
@@ -123,7 +124,7 @@ const MeetingTypeList = () => {
       let res;
       if(meetingState === 'isScheduleMeeting'){
 
-        res = await axios.post('/api/v1/create-room',{user_id: user?.id, workspaceId: activeWorkspace?._id || null, room_id: id, user_plan: subscription,start_time: new Date().toUTCString(),end_time,isSchedule:true,description:description,scheduleTime:values.dateTime,status,image});
+        res = await axios.post('/api/v1/create-room',{user_id: user?.id, workspaceId: activeWorkspace?._id || null, room_id: id, user_plan: subscription,start_time: new Date().toUTCString(),end_time,isSchedule:true,description:description,scheduleTime:values.dateTime,status,image,passcodeEnabled: !!passcode.trim(),passcode: passcode.trim() || undefined});
       }else{
 
          res = await axios.post('/api/v1/create-room',{user_id: user?.id, workspaceId: activeWorkspace?._id || null, room_id: id, user_plan: subscription,start_time: new Date().toUTCString(),end_time,status:'private'});
@@ -289,6 +290,23 @@ const MeetingTypeList = () => {
               <option value={'private'} className="bg-[#1A1A1A] text-white">Private</option>
               <option value={'public'} className="bg-[#1A1A1A] text-white">Public</option>
             </select>
+          </div>
+
+          <div className="flex w-full flex-col gap-2.5">
+            <label className="text-base font-normal leading-[22.4px] text-white/85">
+              Passcode <span className="text-white/40 text-sm">(optional)</span>
+            </label>
+            <Input
+              placeholder="Leave blank for no passcode"
+              type="text"
+              value={passcode}
+              autoComplete="off"
+              onChange={(e) => setPasscode(e.target.value)}
+              className="bg-dark-3 text-white placeholder:text-white/40 border border-white/15 focus-visible:border-deep-gold/60 focus-visible:ring-0 focus-visible:ring-offset-0"
+            />
+            <span className="text-sm text-white/40">
+              When set, guests must enter this code to join.
+            </span>
           </div>
 
           <div className="flex flex-col gap-2.5">

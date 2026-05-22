@@ -47,6 +47,8 @@ export interface IRoomDetails {
   __v: number;
   _id: string;
   status?: 'private' | 'public';
+  // Passcode value is never sent to the client; only the flag.
+  passcodeEnabled?: boolean;
 }
 
 interface MeetingInfo {
@@ -86,6 +88,11 @@ const MeetingPage = ({ params }: PropsType) => {
   const [waitState, setWaitState] = useState<WaitState>('idle');
   const [admitKey, setAdmitKey] = useState<string | null>(null);
 
+  // Passcode entry (only relevant when the room is passcode-protected and the
+  // viewer isn't the host). joinError surfaces a wrong/missing passcode.
+  const [passcode, setPasscode] = useState('');
+  const [joinError, setJoinError] = useState<string | null>(null);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -116,6 +123,8 @@ const MeetingPage = ({ params }: PropsType) => {
   }, [user, guestName]);
 
   const isHostOfThisRoom = !!(user?.id && roomDetails?.user_id && user.id === roomDetails.user_id);
+  // The host bypasses the passcode; everyone else must enter it when set.
+  const needsPasscode = !!roomDetails?.passcodeEnabled && !isHostOfThisRoom;
 
   // Poll while waiting. Owned entirely by the effect so React's cleanup
   // can't race-kill an interval that was just started elsewhere.
@@ -144,6 +153,7 @@ const MeetingPage = ({ params }: PropsType) => {
 
   const knock = async (displayName: string) => {
     setJoining(true);
+    setJoinError(null);
     try {
       const res = await fetch('/api/v1/waiting-room', {
         method: 'POST',
@@ -152,16 +162,24 @@ const MeetingPage = ({ params }: PropsType) => {
           room_id: params.id,
           displayName,
           userId: user?.id || null,
+          passcode: passcode.trim() || undefined,
         }),
       });
       const data = await res.json();
       if (!data?.success || !data?.key) {
+        // Surface passcode problems inline so the user can correct and retry.
+        if (data?.code === 'passcode_required' || data?.code === 'passcode_invalid') {
+          setJoinError(data?.message || 'Incorrect passcode.');
+          setWaitState('idle');
+          return;
+        }
         throw new Error(data?.message || 'Could not request entry');
       }
       setAdmitKey(data.key);
       setWaitState(data.status === 'admitted' ? 'admitted' : 'waiting');
     } catch (err) {
       console.error('knock failed', err);
+      setJoinError('Could not request entry. Please try again.');
       setWaitState('idle');
     } finally {
       setJoining(false);
@@ -294,9 +312,24 @@ const MeetingPage = ({ params }: PropsType) => {
             <h3>Service starts {info.scheduleTime ? new Date(info.scheduleTime).toLocaleString() : 'soon'}</h3>
             <p>You're early — refresh closer to the start time, or join now to test your audio &amp; video.</p>
             {user ? (
-              <button type="button" className="hero-start-worship mt-3" onClick={handleSignedInJoin} disabled={joining}>
-                <Mic2 size={20} />{joining ? 'Requesting…' : 'Enter early'}
-              </button>
+              <>
+                {needsPasscode && (
+                  <PasscodeField
+                    passcode={passcode}
+                    setPasscode={(v) => { setPasscode(v); setJoinError(null); }}
+                    error={joinError}
+                    onEnter={handleSignedInJoin}
+                  />
+                )}
+                <button
+                  type="button"
+                  className="hero-start-worship mt-3"
+                  onClick={handleSignedInJoin}
+                  disabled={joining || (needsPasscode && !passcode.trim())}
+                >
+                  <Mic2 size={20} />{joining ? 'Requesting…' : 'Enter early'}
+                </button>
+              </>
             ) : (
               <GuestForm
                 guestName={guestName}
@@ -304,6 +337,10 @@ const MeetingPage = ({ params }: PropsType) => {
                 onSubmit={handleGuestJoin}
                 joining={joining}
                 onSignIn={() => router.push(`/sign-in?redirect_url=${typeof window !== 'undefined' ? window.location.href : ''}`)}
+                needsPasscode={needsPasscode}
+                passcode={passcode}
+                setPasscode={(v) => { setPasscode(v); setJoinError(null); }}
+                joinError={joinError}
               />
             )}
           </div>
@@ -312,7 +349,20 @@ const MeetingPage = ({ params }: PropsType) => {
             <p className="join-action-hint">
               Joining as <span>{user.fullName || user.username || user.primaryEmailAddress?.emailAddress}</span>
             </p>
-            <button type="button" className="hero-start-worship" onClick={handleSignedInJoin} disabled={joining}>
+            {needsPasscode && (
+              <PasscodeField
+                passcode={passcode}
+                setPasscode={(v) => { setPasscode(v); setJoinError(null); }}
+                error={joinError}
+                onEnter={handleSignedInJoin}
+              />
+            )}
+            <button
+              type="button"
+              className="hero-start-worship"
+              onClick={handleSignedInJoin}
+              disabled={joining || (needsPasscode && !passcode.trim())}
+            >
               <Mic2 size={22} />{joining
                 ? 'Requesting…'
                 : isHostOfThisRoom
@@ -330,6 +380,10 @@ const MeetingPage = ({ params }: PropsType) => {
             onSubmit={handleGuestJoin}
             joining={joining}
             onSignIn={() => router.push(`/sign-in?redirect_url=${typeof window !== 'undefined' ? window.location.href : ''}`)}
+            needsPasscode={needsPasscode}
+            passcode={passcode}
+            setPasscode={(v) => { setPasscode(v); setJoinError(null); }}
+            joinError={joinError}
           />
         )}
       </div>
@@ -337,16 +391,49 @@ const MeetingPage = ({ params }: PropsType) => {
   );
 };
 
+interface PasscodeFieldProps {
+  passcode: string;
+  setPasscode: (v: string) => void;
+  error: string | null;
+  onEnter?: () => void;
+}
+
+/** Shared passcode input — used on both the signed-in and guest join paths. */
+const PasscodeField = ({ passcode, setPasscode, error, onEnter }: PasscodeFieldProps) => (
+  <div className="join-passcode-wrap">
+    <label htmlFor="meetingPasscode" className="join-guest-label">
+      <Lock size={12} className="inline mr-1 -mt-0.5" /> Meeting passcode
+    </label>
+    <input
+      id="meetingPasscode"
+      type="text"
+      inputMode="text"
+      placeholder="Enter passcode"
+      value={passcode}
+      onChange={(e) => setPasscode(e.target.value)}
+      onKeyDown={(e) => { if (e.key === 'Enter' && onEnter) { e.preventDefault(); onEnter(); } }}
+      className="join-guest-input"
+      autoComplete="off"
+      aria-invalid={!!error}
+    />
+    {error && <p className="join-passcode-error">{error}</p>}
+  </div>
+);
+
 interface GuestFormProps {
   guestName: string;
   setGuestName: (v: string) => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   joining: boolean;
   onSignIn: () => void;
+  needsPasscode?: boolean;
+  passcode?: string;
+  setPasscode?: (v: string) => void;
+  joinError?: string | null;
 }
 
-const GuestForm = ({ guestName, setGuestName, onSubmit, joining, onSignIn }: GuestFormProps) => {
-  const valid = guestName.trim().length >= 2;
+const GuestForm = ({ guestName, setGuestName, onSubmit, joining, onSignIn, needsPasscode, passcode, setPasscode, joinError }: GuestFormProps) => {
+  const valid = guestName.trim().length >= 2 && (!needsPasscode || !!(passcode || '').trim());
   return (
     <form onSubmit={onSubmit} className="join-guest-form">
       <label htmlFor="guestName" className="join-guest-label">Your name</label>
@@ -362,6 +449,9 @@ const GuestForm = ({ guestName, setGuestName, onSubmit, joining, onSignIn }: Gue
         required
         minLength={2}
       />
+      {needsPasscode && setPasscode && (
+        <PasscodeField passcode={passcode || ''} setPasscode={setPasscode} error={joinError ?? null} />
+      )}
       <button type="submit" className="hero-start-worship mt-2" disabled={!valid || joining}>
         <Mic2 size={20} />{joining ? 'Requesting…' : 'Ask to join'}
       </button>
