@@ -1260,6 +1260,7 @@ button.cl-formButtonPrimary.cl-button.🔒️.cl-internal-ttumny {
   justify-content: space-between !important;
   font-size: 18px !important;
   font-weight: 400 !important;
+  color: #ffffff !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
 }
 
@@ -1310,10 +1311,20 @@ button.cl-formButtonPrimary.cl-button.🔒️.cl-internal-ttumny {
   overflow-y: auto !important;
   padding: 16px 20px 24px !important;
   min-height: 0 !important;
+  color: #ffffff !important;
+}
+
+/* Force white text everywhere in the dark sidebar (waiting room, people,
+   info, notes). Excludes the muted helper text and the light chat panel. */
+.meet-sidebar:not(.meet-sidebar-light) .meet-sidebar-content span:not([class*="9aa0a6"]),
+.meet-sidebar:not(.meet-sidebar-light) .meet-sidebar-content label,
+.meet-sidebar:not(.meet-sidebar-light) .meet-sidebar-content input {
+  color: #ffffff !important;
 }
 
 .meet-sidebar-content-light {
   background: #fff !important;
+  color: #202124 !important;
 }
 
 .chat-panel-content {

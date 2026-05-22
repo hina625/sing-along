@@ -3351,6 +3351,7 @@ const GoogleMeetBottomBar = ({
           </div>
           </div>
 
+          {isWorshipMode && (
           <div className="meet-btn-stack meet-more-toggle-stack">
             <DropdownMenu modal={false} open={moreOpen} onOpenChange={setMoreOpen}>
               <DropdownMenuTrigger asChild>
@@ -3365,19 +3366,18 @@ const GoogleMeetBottomBar = ({
                   <MoreHorizontal />
                 </button>
               </DropdownMenuTrigger>
-              {isWorshipMode && (
-                <DropdownMenuContent {...dropdownContentProps} className="meet-dropdown-content meet-more-menu">
-                  <DropdownMenuItem className="meet-dropdown-item meet-dropdown-item-prayer" onClick={onOpenPrayer}>
-                    <HandHeart className="shrink-0" /> Prayer
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="meet-dropdown-item meet-dropdown-item-give" onClick={onOpenGive}>
-                    <HeartHandshake className="shrink-0" /> Give
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              )}
+              <DropdownMenuContent {...dropdownContentProps} className="meet-dropdown-content meet-more-menu">
+                <DropdownMenuItem className="meet-dropdown-item meet-dropdown-item-prayer" onClick={onOpenPrayer}>
+                  <HandHeart className="shrink-0" /> Prayer
+                </DropdownMenuItem>
+                <DropdownMenuItem className="meet-dropdown-item meet-dropdown-item-give" onClick={onOpenGive}>
+                  <HeartHandshake className="shrink-0" /> Give
+                </DropdownMenuItem>
+              </DropdownMenuContent>
             </DropdownMenu>
             <span className="meet-btn-label">More</span>
           </div>
+          )}
 
           <span className="meet-cluster-divider" aria-hidden />
 
