@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import connectDB from '@/lib/connnectDB';
 import roomModel from '@/lib/roomModel';
 import waitingRoomModel from '@/lib/waitingRoomModel';
+import { canJoinRoom } from '@/lib/planLimits';
 
 /**
  * LiveKit Token Generation API
@@ -58,6 +59,19 @@ export async function GET(req) {
     // is the only thing that mints an admitted entry. Without this, allowAnyone
     // would let anyone skip straight to a token and defeat the passcode.
     const requiresAdmission = !allowAnyone || !!roomDoc.passcodeEnabled;
+
+    // Plan-tier participant cap. Host is exempt (they need in even at cap to
+    // manage). Breakout child rooms inherit the parent cap — checking the
+    // child's count would let us blow past the host's limit by spawning rooms.
+    if (!isHost && !isBreakoutChild) {
+        const capGuard = await canJoinRoom(room);
+        if (!capGuard.allowed) {
+            return NextResponse.json(
+                { error: capGuard.reason, code: 'plan_capacity' },
+                { status: 402 }
+            );
+        }
+    }
 
     if (!isHost && requiresAdmission && !isBreakoutChild) {
       if (!admitKey) {

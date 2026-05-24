@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { clerkClient } from "@clerk/nextjs/server";
 import connectDB from "@/lib/connnectDB";
 import workspaceMemberModel from "@/lib/workspaceMemberModel";
+import workspaceModel from "@/lib/workspaceModel";
+import { resolveUserPlan } from "@/lib/planLimits";
 
 /**
  * GET    ?workspace_id=...                       list memberships (with hydrated Clerk profiles)
@@ -104,6 +106,24 @@ export async function PATCH(req) {
         if (!(await isAdmin(workspace_id, user_id))) {
             return NextResponse.json({ success: false, message: 'Forbidden — admin only' }, { status: 403 });
         }
+
+        // Promoting someone to admin requires the multipleAdmins plan flag
+        // (Business+) — gated against the workspace owner's plan. Demoting to
+        // a non-admin role is always allowed.
+        if (role === 'admin') {
+            const ws = await workspaceModel.findById(workspace_id, { ownerUserId: 1 }).lean();
+            if (ws) {
+                const ownerPlan = await resolveUserPlan(ws.ownerUserId);
+                if (!ownerPlan.multipleAdmins) {
+                    return NextResponse.json({
+                        success: false,
+                        code: 'plan_multiple_admins',
+                        message: `Multiple admins are available on Business and above. Your ${ownerPlan.title} plan supports one admin.`,
+                    }, { status: 402 });
+                }
+            }
+        }
+
         const updated = await workspaceMemberModel.findOneAndUpdate(
             { workspaceId: workspace_id, userId: targetUserId },
             { role },

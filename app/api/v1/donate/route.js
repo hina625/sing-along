@@ -12,11 +12,7 @@ function formatDate(date) {
     let year = date.getFullYear();
     let month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
     let day = String(date.getDate()).padStart(2, '0');
-    
-    let hours = String(date.getHours()).padStart(2, '0');
-    let minutes = String(date.getMinutes()).padStart(2, '0');
-    
-    return `${year}-${month}-${day} ${hours}:${minutes}`;
+    return `${month}/${day}/${year}`;
 }
 
 export const POST = async (req) => {
@@ -126,10 +122,10 @@ export const POST = async (req) => {
                     await notify({
                         userId,
                         type: 'donation.received',
-                        title: '💛 Thank you for your gift',
-                        body: `Your $${Number(amount).toLocaleString()} offering was received. Be blessed.`,
+                        title: '🎉 Partnership Support Received Successfully!',
+                        body: `Thank you for partnering with Hallelujah Gospel Globally. Partnership Amount: $${Number(amount).toLocaleString()}.`,
                         link: '/dashboard',
-                        icon: '💛',
+                        icon: '🎉',
                     });
                 }
             } catch (logErr) {
@@ -137,31 +133,22 @@ export const POST = async (req) => {
             }
 
             try {
-                const message = `Donation Successful! 🎉
+                const fullName = `${firstName || ''} ${lastName || ''}`.trim();
+                const message = `🎉 Partnership Support Received Successfully!
 
-                    Hello ${firstName || ''} ${lastName || ''},
+Hello ${fullName},
 
-                    Thank you for your generous donation to HG Sing-Along! 🎤✨ Your support helps us continue to bring joy and create unforgettable karaoke experiences. We’re grateful to have you as part of our community!
+Thank you for partnering with Hallelujah Gospel Globally. Your support and generosity help us continue building meaningful connections and creating a platform that brings people together worldwide.
 
-                    Here are the details of your donation:
+Partnership Amount: $${amount}
+Date: ${formatDate(new Date())}
 
-                    Amount Donated: ${amount}
-                    Date of Donation: ${formatDate(new Date())}
-                    Your contribution enables us to:
+We truly appreciate your trust and support. Thank you for being part of our journey.
 
-                    Expand our song library 🎶
-                    Enhance karaoke features 🎤
-                    Host special events and competitions 🎉
-                    We truly appreciate your support, and we hope you continue enjoying the fun and excitement that HG Sing-Along offers. If you have any questions or need assistance, feel free to contact us anytime!
+Warm regards,
+The Hallelujah Gospel Globally Team`;
 
-                    Keep singing and spreading joy!
-
-                    Best regards,
-                    The HG Sing-Along Team
-    
-                    `
-    
-                await sendEmail(email,'Subscription Successful! 🎉',message); 
+                await sendEmail(email, '🎉 Partnership Support Received Successfully!', message);
             } catch (error) {
                 console.log('error during send mail : ', error.message)
             }

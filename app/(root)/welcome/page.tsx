@@ -101,7 +101,19 @@ const WelcomePage = () => {
       await refresh();
       router.replace('/dashboard');
     } catch (e: any) {
-      toast({ title: 'Could not create workspace', description: e?.message || 'Try again.', variant: 'destructive' });
+      // Plan cap rejection — show the upgrade-path message verbatim.
+      const status = e?.response?.status;
+      const apiMsg = e?.response?.data?.message;
+      const apiCode = e?.response?.data?.code;
+      if (status === 402 || apiCode === 'plan_workspace_limit') {
+        toast({
+          title: 'Workspace limit reached',
+          description: apiMsg || 'Upgrade your plan to add more workspaces.',
+          variant: 'destructive',
+        });
+      } else {
+        toast({ title: 'Could not create workspace', description: apiMsg || e?.message || 'Try again.', variant: 'destructive' });
+      }
     } finally {
       setCreating(false);
     }

@@ -4,7 +4,8 @@ import React, { useCallback, useContext, useEffect, useMemo, useState } from 're
 import axios from 'axios';
 import Image from 'next/image';
 import { useUser } from '@clerk/nextjs';
-import { Copy, Loader2, Mail, Phone, Shield, Trash2, UserPlus, X } from 'lucide-react';
+import Link from 'next/link';
+import { Copy, Loader2, Lock, Mail, Phone, Shield, Trash2, UserPlus, X } from 'lucide-react';
 import Loader from '@/components/Loader';
 import PermissionGate from '@/components/PermissionGate';
 import { useToast } from '@/components/ui/use-toast';
@@ -75,6 +76,12 @@ const MembersPage = () => {
     [members, user?.id]
   );
   const isAdmin = myMembership?.role === 'admin';
+  // Plan-feature gates billed against the workspace owner, not the viewer.
+  const canInvite = activeWorkspace?.ownerPlan?.memberManagement !== false; // default permissive while loading
+  const canEditRoles = activeWorkspace?.ownerPlan?.customRoles !== false;
+  const canMultipleAdmins = activeWorkspace?.ownerPlan?.multipleAdmins !== false;
+  const ownerPlanTitle = activeWorkspace?.ownerPlan?.title || 'Starter';
+  const adminUpsellTitle = `Multiple admins are available on Business and above. This workspace is on ${ownerPlanTitle}.`;
 
   const refresh = useCallback(async () => {
     if (!activeWorkspace?._id || !user?.id) return;
@@ -217,18 +224,38 @@ const MembersPage = () => {
         </div>
         {isAdmin && (
           <div className="flex items-center gap-2 flex-wrap">
-            <button
-              onClick={() => setShowRoles(true)}
-              className="flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-4 py-2.5 font-semibold text-white hover:bg-white/10"
-            >
-              <Shield size={18} /> Manage roles
-            </button>
-            <button
-              onClick={() => setShowInvite(true)}
-              className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#5A2D82] to-[#D4AF37] px-5 py-2.5 font-semibold text-white shadow-lg"
-            >
-              <UserPlus size={18} /> Invite people
-            </button>
+            {canEditRoles ? (
+              <button
+                onClick={() => setShowRoles(true)}
+                className="flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-4 py-2.5 font-semibold text-white hover:bg-white/10"
+              >
+                <Shield size={18} /> Manage roles
+              </button>
+            ) : (
+              <Link
+                href="/plans"
+                title={`Custom roles & permissions are available on Business and above. This workspace is on ${ownerPlanTitle}.`}
+                className="flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-4 py-2.5 font-semibold text-white/60 hover:bg-white/10"
+              >
+                <Lock size={16} /> Manage roles
+              </Link>
+            )}
+            {canInvite ? (
+              <button
+                onClick={() => setShowInvite(true)}
+                className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#5A2D82] to-[#D4AF37] px-5 py-2.5 font-semibold text-white shadow-lg"
+              >
+                <UserPlus size={18} /> Invite people
+              </button>
+            ) : (
+              <Link
+                href="/plans"
+                title={`Member invites are available on Professional and above. This workspace is on ${ownerPlanTitle}.`}
+                className="flex items-center gap-2 rounded-lg border border-deep-gold/50 bg-deep-gold/10 px-5 py-2.5 font-semibold text-deep-gold hover:bg-deep-gold/20"
+              >
+                <Lock size={16} /> Upgrade to invite teammates
+              </Link>
+            )}
           </div>
         )}
       </div>
@@ -312,10 +339,21 @@ const MembersPage = () => {
                         value={m.role}
                         onChange={(e) => changeRole(m, e.target.value as Role)}
                         className="bg-background-3/60 border border-white/15 rounded-md text-sm px-2.5 py-1.5 text-white focus:outline-none focus:border-[#D4AF37]"
+                        title={!canMultipleAdmins ? adminUpsellTitle : undefined}
                       >
-                        {ROLES.map((r) => (
-                          <option key={r} value={r} className="bg-[#1A1A1A]">{ROLE_LABEL[r]}</option>
-                        ))}
+                        {ROLES.map((r) => {
+                          const lockAdmin = r === 'admin' && !canMultipleAdmins;
+                          return (
+                            <option
+                              key={r}
+                              value={r}
+                              disabled={lockAdmin}
+                              className="bg-[#1A1A1A]"
+                            >
+                              {ROLE_LABEL[r]}{lockAdmin ? ' 🔒' : ''}
+                            </option>
+                          );
+                        })}
                       </select>
                     ) : (
                       <span className={`text-xs uppercase tracking-widest font-bold border rounded-full px-3 py-1 ${ROLE_BADGE[m.role]}`}>
@@ -344,6 +382,8 @@ const MembersPage = () => {
           workspaceId={activeWorkspace._id}
           workspaceName={activeWorkspace.name}
           userId={user!.id}
+          canMultipleAdmins={canMultipleAdmins}
+          adminUpsellTitle={adminUpsellTitle}
           onClose={() => setShowInvite(false)}
           onSent={() => {
             setShowInvite(false);
@@ -368,11 +408,13 @@ interface InviteModalProps {
   workspaceId: string;
   workspaceName: string;
   userId: string;
+  canMultipleAdmins: boolean;
+  adminUpsellTitle: string;
   onClose: () => void;
   onSent: () => void;
 }
 
-const InviteModal = ({ workspaceId, workspaceName, userId, onClose, onSent }: InviteModalProps) => {
+const InviteModal = ({ workspaceId, workspaceName, userId, canMultipleAdmins, adminUpsellTitle, onClose, onSent }: InviteModalProps) => {
   const { toast } = useToast();
   const [email, setEmail] = useState('');
   const [role, setRole] = useState<Role>('member');
@@ -526,10 +568,21 @@ const InviteModal = ({ workspaceId, workspaceName, userId, onClose, onSent }: In
                 value={role}
                 onChange={(e) => setRole(e.target.value as Role)}
                 className="w-full bg-background-3/60 border border-white/15 rounded-lg px-3 py-2.5 text-white focus:outline-none focus:border-[#D4AF37]"
+                title={!canMultipleAdmins ? adminUpsellTitle : undefined}
               >
-                {ROLES.map((r) => (
-                  <option key={r} value={r} className="bg-[#1A1A1A]">{ROLE_LABEL[r]}</option>
-                ))}
+                {ROLES.map((r) => {
+                  const lockAdmin = r === 'admin' && !canMultipleAdmins;
+                  return (
+                    <option
+                      key={r}
+                      value={r}
+                      disabled={lockAdmin}
+                      className="bg-[#1A1A1A]"
+                    >
+                      {ROLE_LABEL[r]}{lockAdmin ? ' 🔒' : ''}
+                    </option>
+                  );
+                })}
               </select>
               <p className="text-xs text-white/40 mt-1.5">
                 {role === 'admin' && 'Full control — can invite, remove, and change roles.'}

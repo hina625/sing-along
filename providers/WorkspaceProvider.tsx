@@ -8,6 +8,18 @@ import { canForRole } from '@/lib/rolePermissions';
 type Role = 'admin' | 'host' | 'cohost' | 'member' | 'guest';
 type PermissionAction = 'view' | 'manage';
 
+export interface OwnerPlanSnapshot {
+  title: string;
+  memberManagement: boolean;
+  customRoles: boolean;
+  multipleAdmins: boolean;
+  mediaLibrary: boolean;
+  customBranding: boolean;
+  canRecord: boolean;
+  analytics: boolean;
+  donations: boolean;
+}
+
 export interface Workspace {
   _id: string;
   name: string;
@@ -18,6 +30,8 @@ export interface Workspace {
   createdAt: string;
   myRole?: Role;
   rolePermissions?: Record<string, Record<string, { view: boolean; manage: boolean }>>;
+  /** Flat plan-flag snapshot for the workspace owner (the billing user). */
+  ownerPlan?: OwnerPlanSnapshot | null;
 }
 
 interface WorkspaceContextValue {

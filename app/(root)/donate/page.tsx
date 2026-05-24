@@ -127,14 +127,15 @@ const page = ({ searchParams }: props) => {
       setLoading(false);
 
       if (res.data.success) {
+        const donorName = encodeURIComponent(`${firstname || ''} ${lastname || ''}`.trim());
         if (isRecurring) {
           toast({
-            title: '💛 Recurring gift set up',
-            description: `Your ${frequency} gift of $${donationAmount} is scheduled.`,
+            title: '🎉 Partnership Support Received Successfully!',
+            description: `Your ${frequency} partnership of $${donationAmount} is scheduled.`,
           });
-          router.push(`/success?subscription_id=${res.data.subscriptionId}&recurring=1`);
+          router.push(`/success?subscription_id=${res.data.subscriptionId}&recurring=1&amount=${donationAmount}&name=${donorName}&frequency=${frequency}`);
         } else {
-          router.push(`/success?session_id=${res.data.transactionId}`);
+          router.push(`/success?session_id=${res.data.transactionId}&amount=${donationAmount}&name=${donorName}`);
         }
       }
 

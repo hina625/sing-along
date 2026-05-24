@@ -7,6 +7,7 @@ import recordingModel from "@/lib/recordingModel";
 import prayerRequestModel from "@/lib/prayerRequestModel";
 import donationModel from "@/lib/donationModel";
 import { mergeWithDefaults } from "@/lib/rolePermissions";
+import { canCreateWorkspace, resolveUserPlan } from "@/lib/planLimits";
 
 const VALID_MODES = ['worship', 'business', 'community', 'hybrid'];
 
@@ -62,10 +63,33 @@ export async function GET(req) {
         // Decorate with the user's role + the role-permission matrix so the client
         // can gate UI without a second round-trip per workspace.
         const roleMap = new Map(memberships.map((m) => [String(m.workspaceId), m.role]));
+
+        // Resolve each unique owner's plan flags once. Returned as a compact
+        // object (memberManagement, customRoles, multipleAdmins, mediaLibrary, …)
+        // so the client can lock Invite/Manage-roles buttons against the actual
+        // billing plan rather than the viewer's plan.
+        const uniqueOwners = [...new Set(workspaces.map((w) => w.ownerUserId).filter(Boolean))];
+        const ownerPlanByUserId = new Map();
+        await Promise.all(uniqueOwners.map(async (uid) => {
+            const p = await resolveUserPlan(uid);
+            ownerPlanByUserId.set(uid, {
+                title: p.title,
+                memberManagement: !!p.memberManagement,
+                customRoles: !!p.customRoles,
+                multipleAdmins: !!p.multipleAdmins,
+                mediaLibrary: !!p.mediaLibrary,
+                customBranding: !!p.customBranding,
+                canRecord: !!p.canRecord,
+                analytics: !!p.analytics,
+                donations: !!p.donations,
+            });
+        }));
+
         const decorated = workspaces.map((w) => ({
             ...w,
             myRole: roleMap.get(String(w._id)) || 'member',
             rolePermissions: mergeWithDefaults(w.rolePermissions),
+            ownerPlan: ownerPlanByUserId.get(w.ownerUserId) || null,
         }));
         return NextResponse.json({ success: true, workspaces: decorated }, { status: 200 });
     } catch (error) {
@@ -81,6 +105,16 @@ export async function POST(req) {
         if (!user_id || !name?.trim()) {
             return NextResponse.json({ success: false, message: 'user_id and name are required' }, { status: 400 });
         }
+
+        // Plan gate: enforce maxWorkspaces. Free/Pro/Business get one; Enterprise = unlimited.
+        const guard = await canCreateWorkspace(user_id);
+        if (!guard.allowed) {
+            return NextResponse.json(
+                { success: false, message: guard.reason, code: 'plan_workspace_limit' },
+                { status: 402 }
+            );
+        }
+
         const safeMode = VALID_MODES.includes(mode) ? mode : 'worship';
         const slug = await uniqueSlug(makeSlug(name));
 

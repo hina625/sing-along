@@ -2,16 +2,27 @@
 
 import Link from 'next/link';
 import { useContext, useEffect, useRef, useState } from 'react';
-import { ChevronDown, Plus, Check } from 'lucide-react';
+import { useUser } from '@clerk/nextjs';
+import { ChevronDown, Plus, Check, Lock } from 'lucide-react';
 import { WorkspaceContext } from '@/providers/WorkspaceProvider';
+import { subscriptionContext } from '@/providers/SubscriptionProvider';
+import { getPlan } from '@/constants';
 
 const initials = (name: string) =>
   name.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toUpperCase() || '?';
 
 const WorkspaceSwitcher = () => {
   const { workspaces, activeWorkspace, setActive, loading } = useContext(WorkspaceContext);
+  const { subscription } = useContext(subscriptionContext) as { subscription: string };
+  const { user } = useUser();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+
+  const plan = getPlan(subscription);
+  // Count workspaces the current user *owns* — being a teammate elsewhere
+  // doesn't burn their own plan slot. Mirrors canCreateWorkspace server-side.
+  const ownedCount = workspaces.filter((w) => w.ownerUserId === user?.id).length;
+  const atWorkspaceCap = plan.maxWorkspaces > 0 && ownedCount >= plan.maxWorkspaces;
 
   useEffect(() => {
     if (!open) return;
@@ -66,9 +77,20 @@ const WorkspaceSwitcher = () => {
             })}
           </ul>
           <div className="ws-switcher-menu-foot">
-            <Link href="/welcome?new=1" className="ws-switcher-add" onClick={() => setOpen(false)}>
-              <Plus size={14} /> New workspace
-            </Link>
+            {atWorkspaceCap ? (
+              <Link
+                href="/plans"
+                className="ws-switcher-add"
+                onClick={() => setOpen(false)}
+                title={`Your ${plan.title} plan includes ${plan.maxWorkspaces} workspace${plan.maxWorkspaces === 1 ? '' : 's'}. Upgrade for more.`}
+              >
+                <Lock size={14} /> Upgrade for more workspaces
+              </Link>
+            ) : (
+              <Link href="/welcome?new=1" className="ws-switcher-add" onClick={() => setOpen(false)}>
+                <Plus size={14} /> New workspace
+              </Link>
+            )}
           </div>
         </div>
       )}

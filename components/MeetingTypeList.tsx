@@ -49,18 +49,31 @@ const MeetingTypeList = () => {
   const [passcode,setPasscode] = useState('')
   const [status,setStatus] = useState('private')
   const [image,setImage] = useState<string | null>(null);
+  const [displayName, setDisplayName] = useState('');
   const [meetingState, setMeetingState] = useState<
     'isScheduleMeeting' | 'isJoiningMeeting' | 'isInstantMeeting' | undefined
   >(undefined);
   const [values, setValues] = useState(initialValues);
   const {subscription} = useContext(subscriptionContext);
   const { activeWorkspace } = useContext(WorkspaceContext);
- 
 
- 
+
+
 
   const { user } = useUser();
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (user && !displayName) {
+      setDisplayName(user.fullName || user.username || user.primaryEmailAddress?.emailAddress || '');
+    }
+  }, [user, displayName]);
+
+  const persistDisplayName = (name: string) => {
+    const v = name.trim();
+    if (!v || typeof window === 'undefined') return;
+    try { sessionStorage.setItem('pendingDisplayName', v); } catch {}
+  };
 
   async function getRooms() {
     try {
@@ -93,6 +106,11 @@ const MeetingTypeList = () => {
 
   const createMeeting = async () => {
     if ( !user) return;
+    if (!displayName.trim()) {
+      toast({ title: 'Please enter your display name' });
+      return;
+    }
+    persistDisplayName(displayName);
     if(meetings && meetings.length > 0){
       const todayMeetings = meetings.filter(m => isToday(m.start_time));
       const freeLimit = planslist.free.meetingsPerDay;
@@ -244,6 +262,18 @@ const MeetingTypeList = () => {
         >
           <div className="flex flex-col gap-2.5">
             <label className="text-base font-normal leading-[22.4px] text-white/85">
+              Your display name
+            </label>
+            <Input
+              placeholder="How you'll appear in the meeting"
+              type="text"
+              value={displayName}
+              onChange={(e) => setDisplayName(e.target.value)}
+              className="bg-dark-3 text-white placeholder:text-white/40 border border-white/15 focus-visible:border-deep-gold/60 focus-visible:ring-0 focus-visible:ring-offset-0"
+            />
+          </div>
+          <div className="flex flex-col gap-2.5">
+            <label className="text-base font-normal leading-[22.4px] text-white/85">
               Add a description
             </label>
             <Textarea
@@ -346,6 +376,10 @@ const MeetingTypeList = () => {
         className="text-center text-white"
         buttonText={copy.joinModalButton}
         handleClick={() => {
+          if (!displayName.trim()) {
+            toast({ title: 'Please enter your display name' });
+            return;
+          }
           const raw = (values.link || '').trim();
           if (!raw) {
             toast({ title: 'Paste a meeting link or ID' });
@@ -360,14 +394,33 @@ const MeetingTypeList = () => {
             toast({ title: 'That link doesn’t look like a valid meeting' });
             return;
           }
+          persistDisplayName(displayName);
           router.push(`/meeting/${id}`);
         }}
       >
-        <Input
-          placeholder="Meeting link or ID"
-          onChange={(e) => setValues({ ...values, link: e.target.value })}
-          className="bg-dark-3 text-white placeholder:text-white/40 border border-white/15 focus-visible:border-deep-gold/60 focus-visible:ring-0 focus-visible:ring-offset-0"
-        />
+        <div className="flex w-full flex-col gap-2.5 text-left">
+          <label className="text-base font-normal leading-[22.4px] text-white/85">
+            Your display name
+          </label>
+          <Input
+            placeholder="How you'll appear in the meeting"
+            type="text"
+            value={displayName}
+            onChange={(e) => setDisplayName(e.target.value)}
+            className="bg-dark-3 text-white placeholder:text-white/40 border border-white/15 focus-visible:border-deep-gold/60 focus-visible:ring-0 focus-visible:ring-offset-0"
+          />
+        </div>
+        <div className="flex w-full flex-col gap-2.5 text-left">
+          <label className="text-base font-normal leading-[22.4px] text-white/85">
+            Meeting link or ID
+          </label>
+          <Input
+            placeholder="Paste link or meeting ID"
+            value={values.link}
+            onChange={(e) => setValues({ ...values, link: e.target.value })}
+            className="bg-dark-3 text-white placeholder:text-white/40 border border-white/15 focus-visible:border-deep-gold/60 focus-visible:ring-0 focus-visible:ring-offset-0"
+          />
+        </div>
       </MeetingModal>
 
       <MeetingModal
@@ -377,7 +430,20 @@ const MeetingTypeList = () => {
         className="text-center text-white"
         buttonText={copy.instantModalButton}
         handleClick={createMeeting}
-      />
+      >
+        <div className="flex w-full flex-col gap-2.5 text-left">
+          <label className="text-base font-normal leading-[22.4px] text-white/85">
+            Your display name
+          </label>
+          <Input
+            placeholder="How you'll appear in the meeting"
+            type="text"
+            value={displayName}
+            onChange={(e) => setDisplayName(e.target.value)}
+            className="bg-dark-3 text-white placeholder:text-white/40 border border-white/15 focus-visible:border-deep-gold/60 focus-visible:ring-0 focus-visible:ring-offset-0"
+          />
+        </div>
+      </MeetingModal>
     </section>
   );
 };

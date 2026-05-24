@@ -43,6 +43,14 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from './ui/dropdown-menu';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from './ui/dialog';
 
 const HAND_RAISED_ATTR = 'lk_hand_raised';
 // Published by every client on join so other participants (esp. the host
@@ -2663,6 +2671,7 @@ const GoogleMeetBottomBar = ({
   const [showReactions, setShowReactions] = useState(false);
   const [handRaised, setHandRaised] = useState(() => isHandRaised(localParticipant));
   const [moreOpen, setMoreOpen] = useState(false);
+  const [leaveConfirmOpen, setLeaveConfirmOpen] = useState(false);
   const moreWrapRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
@@ -3382,7 +3391,12 @@ const GoogleMeetBottomBar = ({
           <span className="meet-cluster-divider" aria-hidden />
 
           <div className="meet-btn-stack">
-          <button type="button" className="meet-icon-button hangup" title="Leave call" onClick={onLeave}>
+          <button
+            type="button"
+            className="meet-icon-button hangup"
+            title="Leave call"
+            onClick={() => setLeaveConfirmOpen(true)}
+          >
             <PhoneOff />
           </button>
           <span className="meet-btn-label">Leave</span>
@@ -3484,6 +3498,34 @@ const GoogleMeetBottomBar = ({
           </div>
         )}
       </div>
+
+      <Dialog open={leaveConfirmOpen} onOpenChange={setLeaveConfirmOpen}>
+        <DialogContent className="meet-leave-dialog">
+          <DialogHeader>
+            <DialogTitle>Leave meeting?</DialogTitle>
+            <DialogDescription>Are you sure you want to quit the meeting?</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <button
+              type="button"
+              className="meet-leave-dialog-cancel"
+              onClick={() => setLeaveConfirmOpen(false)}
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              className="meet-leave-dialog-confirm"
+              onClick={() => {
+                setLeaveConfirmOpen(false);
+                onLeave();
+              }}
+            >
+              Leave
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
     </div>
   );
@@ -4884,6 +4926,17 @@ const LiveKitMeeting = ({ room, identity, userId, admitKey, onDisconnected }: Li
 
         if (data.token) {
           setToken(data.token);
+        } else if (data.code === 'plan_capacity') {
+          // Room is at the host's plan participant cap — surface the host-
+          // facing reason verbatim so the joiner knows it's not a network
+          // glitch and the host knows what to upgrade to.
+          setError(data.error || 'This room is at capacity. Please try again later or ask the host to upgrade.');
+          toast({
+            title: 'Room at Capacity',
+            description: data.error || 'Ask the host to upgrade for more capacity.',
+            variant: 'destructive',
+          });
+          return;
         } else {
           throw new Error(data.error || 'Failed to fetch token');
         }

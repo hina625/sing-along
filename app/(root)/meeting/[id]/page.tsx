@@ -76,8 +76,19 @@ type WaitState = 'idle' | 'waiting' | 'admitted' | 'denied';
 
 const MeetingPage = ({ params }: PropsType) => {
   const [guestName, setGuestName] = useState('');
+  const [signedInName, setSignedInName] = useState('');
   const [joining, setJoining] = useState(false);
   const { user, isLoaded } = useUser();
+
+  // Prefill the editable name input for signed-in users from sessionStorage
+  // (set by the create/join modal) with a fall-through to the Clerk profile.
+  useEffect(() => {
+    if (!user) return;
+    let stored = '';
+    try { stored = sessionStorage.getItem('pendingDisplayName') || ''; } catch {}
+    const initial = stored.trim() || user.fullName || user.username || user.primaryEmailAddress?.emailAddress || `User-${user.id.slice(-4)}`;
+    setSignedInName((prev) => prev || initial);
+  }, [user]);
   const [roomDetails, setRoomDetails] = useState<IRoomDetails>();
   const [info, setInfo] = useState<MeetingInfo | null>(null);
   const [infoLoading, setInfoLoading] = useState(true);
@@ -118,9 +129,9 @@ const MeetingPage = ({ params }: PropsType) => {
   }, [params.id]);
 
   const identity = useMemo(() => {
-    if (user) return user.fullName || user.username || `User-${user.id.slice(-4)}`;
+    if (user) return signedInName.trim() || user.fullName || user.username || `User-${user.id.slice(-4)}`;
     return guestName.trim();
-  }, [user, guestName]);
+  }, [user, signedInName, guestName]);
 
   const isHostOfThisRoom = !!(user?.id && roomDetails?.user_id && user.id === roomDetails.user_id);
   // The host bypasses the passcode; everyone else must enter it when set.
@@ -313,6 +324,19 @@ const MeetingPage = ({ params }: PropsType) => {
             <p>You're early — refresh closer to the start time, or join now to test your audio &amp; video.</p>
             {user ? (
               <>
+                <div className="join-guest-form" style={{ marginBottom: 0 }}>
+                  <label htmlFor="signedInNameEarly" className="join-guest-label">Your display name</label>
+                  <input
+                    id="signedInNameEarly"
+                    type="text"
+                    placeholder="How you'll appear in the meeting"
+                    value={signedInName}
+                    onChange={(e) => setSignedInName(e.target.value)}
+                    className="join-guest-input"
+                    autoComplete="off"
+                    minLength={2}
+                  />
+                </div>
                 {needsPasscode && (
                   <PasscodeField
                     passcode={passcode}
@@ -325,7 +349,7 @@ const MeetingPage = ({ params }: PropsType) => {
                   type="button"
                   className="hero-start-worship mt-3"
                   onClick={handleSignedInJoin}
-                  disabled={joining || (needsPasscode && !passcode.trim())}
+                  disabled={joining || signedInName.trim().length < 2 || (needsPasscode && !passcode.trim())}
                 >
                   <Mic2 size={20} />{joining ? 'Requesting…' : 'Enter early'}
                 </button>
@@ -346,9 +370,19 @@ const MeetingPage = ({ params }: PropsType) => {
           </div>
         ) : user ? (
           <div className="join-action-block">
-            <p className="join-action-hint">
-              Joining as <span>{user.fullName || user.username || user.primaryEmailAddress?.emailAddress}</span>
-            </p>
+            <div className="join-guest-form" style={{ marginBottom: 0 }}>
+              <label htmlFor="signedInName" className="join-guest-label">Your display name</label>
+              <input
+                id="signedInName"
+                type="text"
+                placeholder="How you'll appear in the meeting"
+                value={signedInName}
+                onChange={(e) => setSignedInName(e.target.value)}
+                className="join-guest-input"
+                autoComplete="off"
+                minLength={2}
+              />
+            </div>
             {needsPasscode && (
               <PasscodeField
                 passcode={passcode}
@@ -361,7 +395,7 @@ const MeetingPage = ({ params }: PropsType) => {
               type="button"
               className="hero-start-worship"
               onClick={handleSignedInJoin}
-              disabled={joining || (needsPasscode && !passcode.trim())}
+              disabled={joining || signedInName.trim().length < 2 || (needsPasscode && !passcode.trim())}
             >
               <Mic2 size={22} />{joining
                 ? 'Requesting…'

@@ -26,6 +26,9 @@ export interface SidebarLink {
   resource?: string;
   /** Action required to see this link (defaults to 'view'). */
   action?: 'view' | 'manage';
+  /** Plan boolean flag required to access this link (e.g. 'mediaLibrary'). When set
+   *  and the user's plan doesn't have it, the link renders locked → /plans. */
+  planFeature?: 'mediaLibrary' | 'canRecord' | 'analytics' | 'donations' | 'customBranding';
 }
 
 export const sidebarLinks: SidebarLink[] = [
@@ -33,12 +36,12 @@ export const sidebarLinks: SidebarLink[] = [
   { Icon: 1, route: '/dashboard/create-meeting', label: 'Start Session', audience: 'all', resource: 'meetings', action: 'manage' },
   { Icon: 2, route: '/dashboard/upcoming', label: 'Upcoming Events', audience: 'all', resource: 'meetings' },
   { Icon: 5, route: '/dashboard/members', label: 'Team', audience: 'all', resource: 'members' },
-  { Icon: 3, route: '/dashboard/recordings', label: 'Recordings', audience: 'all', resource: 'recordings' },
+  { Icon: 3, route: '/dashboard/recordings', label: 'Recordings', audience: 'all', resource: 'recordings', planFeature: 'canRecord' },
   { Icon: 8, route: '/dashboard/prayer-requests', label: 'Requests', audience: 'worship', resource: 'prayerRequests' },
-  { Icon: 10, route: '/dashboard/songs', label: 'Media Library', audience: 'worship', resource: 'songs' },
+  { Icon: 10, route: '/dashboard/songs', label: 'Media Library', audience: 'worship', resource: 'songs', planFeature: 'mediaLibrary' },
   { Icon: 11, route: '/dashboard/daily-verses', label: 'Daily Feed', audience: 'worship', resource: 'dailyVerses' },
   { Icon: 6, route: '/dashboard/donations', label: 'Contributions', audience: 'worship', resource: 'donations' },
-  { Icon: 9, route: '/dashboard/activity', label: 'Activity Center', audience: 'all', resource: 'activity' },
+  { Icon: 9, route: '/dashboard/activity', label: 'Activity Center', audience: 'all', resource: 'activity', planFeature: 'analytics' },
   { Icon: 7, route: '/dashboard/settings', label: 'Settings', audience: 'all', resource: 'settings' },
 ];
 
@@ -88,6 +91,10 @@ export interface Plan {
   participantCap: number;
   /** Daily meeting count cap (server-enforced). 0 = unlimited. */
   meetingsPerDay: number;
+  /** Max workspaces a user may own (server-enforced). 0 = unlimited. */
+  maxWorkspaces: number;
+  /** Cumulative storage cap in MB for uploads (server-enforced). 0 = unlimited. */
+  storageMB: number;
   /** May start a recording. */
   canRecord: boolean;
   /** Recording quality label (display-only for now). */
@@ -102,6 +109,14 @@ export interface Plan {
   customBranding: boolean;
   /** Singalong watermark/branding shown to participants. */
   brandedFooter: boolean;
+  /** Media library (songs / shared media) — Pro+. */
+  mediaLibrary?: boolean;
+  /** Invite teammates into the workspace — Pro+. Free workspaces stay solo. */
+  memberManagement?: boolean;
+  /** Customize the role-permission matrix — Business+. */
+  customRoles?: boolean;
+  /** Allow more than one admin per workspace — Business+. */
+  multipleAdmins?: boolean;
   /** Audience this tier is sold to — drives display grouping on /plans. */
   audience: 'standard' | 'business' | 'enterprise';
 }
@@ -122,6 +137,8 @@ export const planslist: Record<string, Plan> = {
     saving: 0,
     participantCap: 25,
     meetingsPerDay: 20,
+    maxWorkspaces: 1,
+    storageMB: 5 * 1024,
     canRecord: false,
     recordingQuality: 'none',
     analytics: false,
@@ -129,6 +146,10 @@ export const planslist: Record<string, Plan> = {
     multiHost: false,
     customBranding: false,
     brandedFooter: true,
+    mediaLibrary: false,
+    memberManagement: false,
+    customRoles: false,
+    multipleAdmins: false,
     audience: 'standard',
     features: [
       "Up to 25 participants",
@@ -152,6 +173,8 @@ export const planslist: Record<string, Plan> = {
     saving: 2,
     participantCap: 100,
     meetingsPerDay: 0,
+    maxWorkspaces: 1,
+    storageMB: 50 * 1024,
     canRecord: true,
     recordingQuality: 'sd',
     analytics: true,
@@ -159,6 +182,10 @@ export const planslist: Record<string, Plan> = {
     multiHost: false,
     customBranding: true,
     brandedFooter: true,
+    mediaLibrary: true,
+    memberManagement: true,
+    customRoles: false,
+    multipleAdmins: false,
     audience: 'standard',
     features: [
       "Everything in Starter, plus:",
@@ -184,6 +211,8 @@ export const planslist: Record<string, Plan> = {
     saving: 6,
     participantCap: 300,
     meetingsPerDay: 0,
+    maxWorkspaces: 1,
+    storageMB: 250 * 1024,
     canRecord: true,
     recordingQuality: 'hd',
     analytics: true,
@@ -191,6 +220,10 @@ export const planslist: Record<string, Plan> = {
     multiHost: true,
     customBranding: true,
     brandedFooter: false,
+    mediaLibrary: true,
+    memberManagement: true,
+    customRoles: true,
+    multipleAdmins: true,
     audience: 'standard',
     features: [
       "Everything in Professional, plus:",
@@ -214,6 +247,8 @@ export const planslist: Record<string, Plan> = {
     saving: 16,
     participantCap: 1000,
     meetingsPerDay: 0,
+    maxWorkspaces: 1,
+    storageMB: 500 * 1024,
     canRecord: true,
     recordingQuality: 'fhd',
     analytics: true,
@@ -221,6 +256,10 @@ export const planslist: Record<string, Plan> = {
     multiHost: true,
     customBranding: true,
     brandedFooter: false,
+    mediaLibrary: true,
+    memberManagement: true,
+    customRoles: true,
+    multipleAdmins: true,
     audience: 'standard',
     features: [
       "Up to 1,000 participants",
@@ -240,6 +279,8 @@ export const planslist: Record<string, Plan> = {
     saving: 0,
     participantCap: 10000,
     meetingsPerDay: 0,
+    maxWorkspaces: 0,
+    storageMB: 0,
     canRecord: true,
     recordingQuality: 'fhd',
     analytics: true,
@@ -247,6 +288,10 @@ export const planslist: Record<string, Plan> = {
     multiHost: true,
     customBranding: true,
     brandedFooter: false,
+    mediaLibrary: true,
+    memberManagement: true,
+    customRoles: true,
+    multipleAdmins: true,
     audience: 'enterprise',
     features: [
       "Everything in Business, plus:",
@@ -271,6 +316,8 @@ export const planslist: Record<string, Plan> = {
     saving: 6,
     participantCap: 300,
     meetingsPerDay: 0,
+    maxWorkspaces: 1,
+    storageMB: 250 * 1024,
     canRecord: true,
     recordingQuality: 'hd',
     analytics: true,
@@ -278,6 +325,10 @@ export const planslist: Record<string, Plan> = {
     multiHost: true,
     customBranding: true,
     brandedFooter: false,
+    mediaLibrary: true,
+    memberManagement: true,
+    customRoles: true,
+    multipleAdmins: true,
     audience: 'standard',
     features: [
       "Up to 300 participants",

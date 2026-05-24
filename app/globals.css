@@ -1186,6 +1186,65 @@ button.cl-formButtonPrimary.cl-button.🔒️.cl-internal-ttumny {
   line-height: 1 !important;
 }
 
+/* Leave-meeting confirmation dialog — brand-styled (royal-purple title,
+   deep-gold accent, red destructive action). Replaces native window.confirm
+   so text isn't white-on-white in browsers that render system dialogs that way. */
+.meet-leave-dialog {
+  background-color: #ffffff !important;
+  border: 1px solid rgba(90, 45, 130, 0.2) !important;
+  color: #0B1F3A !important;
+}
+
+.meet-leave-dialog h2,
+.meet-leave-dialog [class*="DialogTitle"] {
+  color: #5A2D82 !important;
+  font-family: 'Marcellus', serif !important;
+  font-size: 1.25rem !important;
+}
+
+.meet-leave-dialog p,
+.meet-leave-dialog [class*="DialogDescription"] {
+  color: #334155 !important;
+}
+
+.meet-leave-dialog-cancel,
+.meet-leave-dialog-confirm {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0.5rem 1.25rem !important;
+  border-radius: 0.5rem !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  cursor: pointer !important;
+  transition: background-color 0.15s, transform 0.05s !important;
+  border: 1px solid transparent !important;
+}
+
+.meet-leave-dialog-cancel {
+  background-color: #f1f5f9 !important;
+  color: #0B1F3A !important;
+  border-color: rgba(15, 23, 42, 0.1) !important;
+}
+
+.meet-leave-dialog-cancel:hover {
+  background-color: #e2e8f0 !important;
+}
+
+.meet-leave-dialog-confirm {
+  background-color: #ea4335 !important;
+  color: #ffffff !important;
+}
+
+.meet-leave-dialog-confirm:hover {
+  background-color: #d93025 !important;
+}
+
+.meet-leave-dialog-confirm:active,
+.meet-leave-dialog-cancel:active {
+  transform: scale(0.97) !important;
+}
+
 /* Stacked button + label (used in toolbar) */
 .meet-btn-stack {
   display: flex !important;

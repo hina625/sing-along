@@ -3,6 +3,7 @@ import connectDB from "@/lib/connnectDB";
 import workspaceModel from "@/lib/workspaceModel";
 import workspaceMemberModel from "@/lib/workspaceMemberModel";
 import { mergeWithDefaults, sanitizeRolePermissions } from "@/lib/rolePermissions";
+import { resolveUserPlan } from "@/lib/planLimits";
 
 /**
  * GET   ?workspace_id=...                              read the role × resource matrix
@@ -46,6 +47,22 @@ export async function PATCH(req) {
         if (!(await isAdmin(workspace_id, user_id))) {
             return NextResponse.json({ success: false, message: 'Forbidden — admin only' }, { status: 403 });
         }
+
+        // Plan gate: custom role-permission matrix is a Business+ feature.
+        // Charged against the workspace owner's plan.
+        const ws = await workspaceModel.findById(workspace_id, { ownerUserId: 1 }).lean();
+        if (!ws) {
+            return NextResponse.json({ success: false, message: 'Workspace not found' }, { status: 404 });
+        }
+        const ownerPlan = await resolveUserPlan(ws.ownerUserId);
+        if (!ownerPlan.customRoles) {
+            return NextResponse.json({
+                success: false,
+                code: 'plan_custom_roles',
+                message: `Custom roles & permissions are available on Business and above. This workspace is on the ${ownerPlan.title} plan.`,
+            }, { status: 402 });
+        }
+
         const safe = sanitizeRolePermissions(rolePermissions);
         const updated = await workspaceModel.findByIdAndUpdate(
             workspace_id,

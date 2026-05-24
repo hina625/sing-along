@@ -11,10 +11,11 @@ import { FiUsers } from "react-icons/fi";
 import { BiDonateHeart } from "react-icons/bi";
 import { FaPrayingHands, FaMusic, FaBookOpen } from "react-icons/fa";
 import { TbActivityHeartbeat } from "react-icons/tb";
+import { Lock } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 
-import { planslist, sidebarLinks, isSidebarLinkVisible, sidebarLabelFor } from '@/constants';
+import { planslist, sidebarLinks, isSidebarLinkVisible, sidebarLabelFor, getPlan } from '@/constants';
 import { cn } from '@/lib/utils';
 import { useContext, useMemo } from 'react';
 import { subscriptionContext } from '@/providers/SubscriptionProvider'
@@ -27,11 +28,18 @@ const Sidebar = () => {
   const { activeWorkspace, can } = useContext(WorkspaceContext);
   const wsMode = activeWorkspace?.mode || 'worship';
 
+  // Workspace-scoped features (media library, recordings, analytics, donations,
+  // custom branding) gate against the workspace OWNER's plan — not the viewer's.
+  // A Free user invited into a Business workspace should see those entries
+  // unlocked. Falls back to viewer's plan only when no workspace is active.
+  const viewerPlan = useMemo(() => getPlan(subscription), [subscription]);
+  const plan = activeWorkspace?.ownerPlan ?? viewerPlan;
+
   const visibleLinks = useMemo(
     () =>
       sidebarLinks.filter((l) => {
         if (!isSidebarLinkVisible(l.audience, wsMode)) return false;
-        if (!l.resource) return true; // home, etc — always visible
+        if (!l.resource) return true;
         return can(l.resource, l.action || 'view');
       }),
     [wsMode, can]
@@ -75,14 +83,21 @@ const Sidebar = () => {
           const Icon = icons[item.Icon.toString()];
           // Mode-aware label: community → "Start Gathering", worship/hybrid → "Start Worship", business → "Start Meeting".
           const label = sidebarLabelFor(item, wsMode);
+          // Locked when the link declares a plan flag and the current plan
+          // doesn't include it. Clicking still navigates to /plans so the
+          // upgrade path is obvious.
+          const locked = !!(item.planFeature && !plan[item.planFeature]);
+          const href = locked ? '/plans' : item.route;
           return (
             <Link
-              href={item.route}
+              href={href}
               key={item.label}
+              title={locked ? `Available on ${item.planFeature === 'analytics' ? 'Professional+' : 'paid plans'} — upgrade to unlock` : undefined}
               className={cn(
                 'flex gap-4 items-center p-3 rounded-lg justify-start',
                 {
-                  'bg-orange-500': isActive,
+                  'bg-orange-500': isActive && !locked,
+                  'opacity-60': locked,
                 }
               )}
             >
@@ -90,8 +105,9 @@ const Sidebar = () => {
                 {Icon}
               </span>
 
-              <p className="text-base text-white font-semibold">
+              <p className="text-base text-white font-semibold flex items-center gap-2">
                 {label}
+                {locked && <Lock size={12} className="opacity-80" aria-label="Locked — upgrade required" />}
               </p>
             </Link>
           );

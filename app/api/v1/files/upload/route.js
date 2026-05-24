@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
 import cloudinary from "cloudinary";
+import connectDB from "@/lib/connnectDB";
+import roomModel from "@/lib/roomModel";
+import workspaceModel from "@/lib/workspaceModel";
+import { canUpload } from "@/lib/planLimits";
 
 cloudinary.v2.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -38,6 +42,30 @@ export async function POST(req) {
         }
         if (file.size > MAX_BYTES) {
             return NextResponse.json({ success: false, message: 'File exceeds 25 MB limit' }, { status: 413 });
+        }
+
+        // Storage cap is billed to the billing entity for this room:
+        //   • room with workspaceId → workspace OWNER (so a teammate's upload
+        //     counts against the owner's quota, matching invoicing)
+        //   • personal room (no workspaceId) → room host (user_id)
+        // Guest uploads still attribute correctly because we don't trust the
+        // caller's identity — we always resolve through the room.
+        await connectDB();
+        const room = await roomModel.findOne({ room_id: roomId }, { user_id: 1, workspaceId: 1 }).lean();
+        if (!room) {
+            return NextResponse.json({ success: false, message: 'Room not found' }, { status: 404 });
+        }
+        let billingUserId = room.user_id;
+        if (room.workspaceId) {
+            const ws = await workspaceModel.findById(room.workspaceId, { ownerUserId: 1 }).lean();
+            if (ws?.ownerUserId) billingUserId = ws.ownerUserId;
+        }
+        const storageGuard = await canUpload(billingUserId, file.size);
+        if (!storageGuard.allowed) {
+            return NextResponse.json(
+                { success: false, message: storageGuard.reason, code: 'plan_storage_full' },
+                { status: 402 }
+            );
         }
 
         const buf = Buffer.from(await file.arrayBuffer());

@@ -101,31 +101,31 @@ const page = ({searchParams}:props) => {
   return (
     <div className='zeeshan !bg-bg-dark min-h-screen'>
       <Navbar2 />
-      <section className="slice !bg-bg-dark !pt-[8rem] pb-12 antialiased relative overflow-hidden min-h-screen flex items-center justify-center">
+      <section className="slice !bg-bg-dark !pt-[10rem] md:!pt-[8rem] pb-12 antialiased relative overflow-hidden">
         {/* Background Effects */}
         <div className="light-ray-container opacity-20"></div>
         <div className="pattern-bg absolute inset-0 opacity-10"></div>
-        
-        <div className='absolute bottom-1 left-1 z-0'>
+
+        <div className='absolute bottom-1 left-1 z-0 hidden sm:block'>
           <img src='/images/bottom-box-shape.png' alt="shape" />
         </div>
-        <div className='absolute bottom-0 right-0 z-0'>
+        <div className='absolute bottom-0 right-0 z-0 hidden sm:block'>
           <img src='/images/bottom-line.png' alt="shape" />
         </div>
-        <div className='absolute top-20 left-0 z-0 opacity-20'>
+        <div className='absolute top-20 left-0 z-0 opacity-20 hidden sm:block'>
           <img src='/images/left-plus.png' alt="shape" />
         </div>
 
-        <div className="container relative z-10 px-4">
-          <div className="mx-auto max-w-5xl">
-            <h2 className="main-header text-3xl sm:text-4xl mb-8">
+        <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div>
+            <h2 className="main-header text-2xl sm:text-3xl lg:text-4xl mb-6 sm:mb-8">
               Checkout
             </h2>
-            
-            <div className="mt-6 sm:mt-8 lg:flex lg:items-start lg:gap-12">
+
+            <div className="mt-4 sm:mt-8 lg:flex lg:items-start lg:gap-12">
               <form
                 onSubmit={handlePayment}
-                className="w-full card-awesome-black soft-glow p-6 sm:p-8 lg:max-w-xl"
+                className="w-full card-awesome-black soft-glow !p-4 sm:!p-8 lg:max-w-xl"
               >
                 <h3 className="text-xl font-bold text-white mb-6 border-b border-white/10 pb-4">Payment Details</h3>
                 
@@ -147,13 +147,14 @@ const page = ({searchParams}:props) => {
                   />
                 </div>
 
-                <div className="mb-8 grid grid-cols-2 gap-6">
+                <div className="mb-8 grid grid-cols-2 gap-3 sm:gap-6">
                   <div>
                     <label
                       htmlFor="card-expiration-input"
                       className="mb-2 block text-sm font-medium text-white/90"
                     >
-                      Expiration Date*
+                      <span className="sm:hidden">Expiry*</span>
+                      <span className="hidden sm:inline">Expiration Date*</span>
                     </label>
                     <div className="relative">
                       <input
@@ -201,8 +202,8 @@ const page = ({searchParams}:props) => {
                 </p>
               </form>
 
-              <div className="mt-8 grow lg:mt-0">
-                <div className="space-y-6 card-awesome-black p-8 w-full lg:max-w-md">
+              <div className="mt-6 sm:mt-8 grow lg:mt-0">
+                <div className="space-y-6 card-awesome-black !p-4 sm:!p-8 w-full lg:max-w-md">
                   <h3 className="text-xl font-bold text-white border-b border-white/10 pb-4">Order Summary</h3>
                   
                   <div className="space-y-4">

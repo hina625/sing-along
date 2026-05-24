@@ -6,6 +6,7 @@ import workspaceModel from "@/lib/workspaceModel";
 import workspaceMemberModel from "@/lib/workspaceMemberModel";
 import workspaceInvitationModel from "@/lib/workspaceInvitationModel";
 import sendEmail from "@/lib/sendEmail";
+import { resolveUserPlan } from "@/lib/planLimits";
 
 /**
  * POST   { workspace_id, user_id, email, role? }   create invite (admin only)
@@ -89,6 +90,28 @@ export async function POST(req) {
         const workspace = await workspaceModel.findById(workspace_id).lean();
         if (!workspace) {
             return NextResponse.json({ success: false, message: 'Workspace not found' }, { status: 404 });
+        }
+
+        // Plan gate (member management is Pro+). Bill against the workspace
+        // OWNER's plan — even a Pro admin can't invite into a workspace
+        // owned by a free user, since the owner is the one paying.
+        const ownerPlan = await resolveUserPlan(workspace.ownerUserId);
+        if (!ownerPlan.memberManagement) {
+            return NextResponse.json({
+                success: false,
+                code: 'plan_member_management',
+                message: `Member invites are available on Professional and above. This workspace is on the ${ownerPlan.title} plan.`,
+            }, { status: 402 });
+        }
+
+        // Promotion to admin requires multipleAdmins (Business+). The
+        // workspace creator's seat counts as "the one admin" for Starter/Pro.
+        if (safeRole === 'admin' && !ownerPlan.multipleAdmins) {
+            return NextResponse.json({
+                success: false,
+                code: 'plan_multiple_admins',
+                message: `Multiple admins are available on Business and above. Your ${ownerPlan.title} plan supports one admin.`,
+            }, { status: 402 });
         }
 
         // If a Clerk user with that email already exists AND is already a member → short-circuit.

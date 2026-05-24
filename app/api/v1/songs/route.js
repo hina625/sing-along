@@ -2,7 +2,9 @@ import { NextResponse } from "next/server";
 import cloudinary from "cloudinary";
 import connectDB from "@/lib/connnectDB";
 import songModel from "@/lib/songModel";
+import workspaceModel from "@/lib/workspaceModel";
 import { requirePermission } from "@/lib/permissions";
+import { resolveUserPlan, canUpload } from "@/lib/planLimits";
 
 cloudinary.v2.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -70,6 +72,31 @@ export async function POST(req) {
             workspaceId, userId: uploaderUserId, resource: 'songs', action: 'manage',
         });
         if (denied) return denied;
+
+        // Plan gates are billed against the WORKSPACE OWNER (the entity paying),
+        // not the uploader. A Pro admin invited into a Free workspace must not
+        // be able to upload songs (Free has no media library); conversely a
+        // Free user invited into a Pro workspace SHOULD be able to upload.
+        const ws = await workspaceModel.findById(workspaceId, { ownerUserId: 1 }).lean();
+        if (!ws) {
+            return NextResponse.json({ success: false, message: 'Workspace not found' }, { status: 404 });
+        }
+        const ownerPlan = await resolveUserPlan(ws.ownerUserId);
+        if (!ownerPlan.mediaLibrary) {
+            return NextResponse.json(
+                { success: false, message: `The Media Library is available on Professional and above. This workspace is on the ${ownerPlan.title} plan.`, code: 'plan_media_library' },
+                { status: 402 }
+            );
+        }
+
+        // Storage cap — billed to the owner so teammate uploads count.
+        const storageGuard = await canUpload(ws.ownerUserId, file.size);
+        if (!storageGuard.allowed) {
+            return NextResponse.json(
+                { success: false, message: storageGuard.reason, code: 'plan_storage_full' },
+                { status: 402 }
+            );
+        }
 
         const buf = Buffer.from(await file.arrayBuffer());
         const mime = file.type || 'audio/mpeg';

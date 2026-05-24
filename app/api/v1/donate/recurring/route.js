@@ -3,7 +3,15 @@ import { APIContracts, APIControllers, Constants as SDKConstants } from 'authori
 import connectDB from '@/lib/connnectDB';
 import donationModel from '@/lib/donationModel';
 import { notify } from '@/lib/notify';
+import sendEmail from '@/lib/sendEmail';
 import { getAuth } from '@clerk/nextjs/server';
+
+function formatDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${month}/${day}/${year}`;
+}
 
 /**
  * Recurring donations via Authorize.Net ARB (Automated Recurring Billing).
@@ -149,11 +157,35 @@ export async function POST(req) {
             await notify({
                 userId,
                 type: 'donation.received',
-                title: '💛 Recurring gift set up',
-                body: `Your ${frequency} gift of $${Number(amount).toLocaleString()} is scheduled. Be blessed.`,
+                title: '🎉 Partnership Support Received Successfully!',
+                body: `Thank you for partnering with Hallelujah Gospel Globally. ${frequency[0].toUpperCase() + frequency.slice(1)} Partnership Amount: $${Number(amount).toLocaleString()}.`,
                 link: '/dashboard',
-                icon: '💛',
+                icon: '🎉',
             });
+        }
+
+        // Send confirmation email to donor.
+        if (email) {
+            try {
+                const fullName = `${firstName || ''} ${lastName || ''}`.trim();
+                const message = `🎉 Partnership Support Received Successfully!
+
+Hello ${fullName},
+
+Thank you for partnering with Hallelujah Gospel Globally. Your support and generosity help us continue building meaningful connections and creating a platform that brings people together worldwide.
+
+Partnership Amount: $${amount} (${frequency})
+Date: ${formatDate(today)}
+
+We truly appreciate your trust and support. Thank you for being part of our journey.
+
+Warm regards,
+The Hallelujah Gospel Globally Team`;
+
+                await sendEmail(email, '🎉 Partnership Support Received Successfully!', message);
+            } catch (mailErr) {
+                console.log('error during send mail : ', mailErr.message);
+            }
         }
 
         return NextResponse.json({
