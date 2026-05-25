@@ -335,8 +335,8 @@ const MeetingTypeList = () => {
                   next.setFullYear(y, m - 1, d);
                   setValues({ ...values, dateTime: next });
                 }}
-                style={{ colorScheme: 'dark' }}
-                className="w-full sm:flex-1 rounded !bg-[#1A1A1A] !text-white border border-white/15 p-2 focus:outline-none focus:!border-deep-gold/60"
+                style={{ colorScheme: 'light dark' }}
+                className="w-full sm:flex-1 rounded bg-background-2 text-white border border-white/15 p-2 focus:outline-none focus:border-deep-gold/60"
               />
               <input
                 type="time"
@@ -349,8 +349,8 @@ const MeetingTypeList = () => {
                   next.setHours(h, m, 0, 0);
                   setValues({ ...values, dateTime: next });
                 }}
-                style={{ colorScheme: 'dark' }}
-                className="w-full sm:w-32 rounded !bg-[#1A1A1A] !text-white border border-white/15 p-2 focus:outline-none focus:!border-deep-gold/60"
+                style={{ colorScheme: 'light dark' }}
+                className="w-full sm:w-32 rounded bg-background-2 text-white border border-white/15 p-2 focus:outline-none focus:border-deep-gold/60"
               />
             </div>
           </div>
@@ -363,10 +363,11 @@ const MeetingTypeList = () => {
             <select
               onChange={(e) => setStatus(e.target.value)}
               value={status}
-              className="py-2 px-3 outline-none border rounded-md border-white/15 bg-dark-3 text-white focus:border-deep-gold/60"
+              style={{ colorScheme: 'light dark' }}
+              className="py-2 px-3 outline-none border rounded-md border-white/15 bg-background-2 text-white focus:border-deep-gold/60"
             >
-              <option value={'private'} className="bg-dark-3 text-white">Private</option>
-              <option value={'public'} className="bg-dark-3 text-white">Public</option>
+              <option value={'private'} className="bg-background-2 text-white">Private</option>
+              <option value={'public'} className="bg-background-2 text-white">Public</option>
             </select>
           </div>
 
