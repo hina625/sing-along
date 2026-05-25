@@ -92,9 +92,19 @@ const DashboardPage = () => {
   const startSession = async (kind: 'worship' | 'meeting' | 'gathering') => {
     if (!user || starting) return;
     setStarting(kind);
-    // 'gathering' opens a hybrid room (both worship + business toolsets) — the
-    // default session shape for community workspaces.
-    const roomMode = kind === 'worship' ? 'worship' : kind === 'gathering' ? 'hybrid' : 'business';
+    // Room mode follows the workspace mode so the in-meeting toolset matches
+    // what the user picked in Settings. Mirrors the server's
+    // deriveModeFromWorkspace() in app/api/v1/create-room/route.js — keep in sync.
+    // Without this, a worship/"Organizations & Networks" workspace would still
+    // get a business-mode room (and a whiteboard) just because the dashboard
+    // button is labeled "Start Meeting".
+    const wsMode = activeWorkspace?.mode;
+    const roomMode =
+      wsMode === 'business'
+        ? 'business'
+        : wsMode === 'community' || wsMode === 'hybrid'
+        ? 'hybrid'
+        : 'worship';
     try {
       const id = crypto.randomUUID();
       const minutes = planslist[subscription]?.min || 40;
