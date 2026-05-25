@@ -2,202 +2,442 @@
 import Navbar2 from '@/components/Navbar2'
 import Footer from '@/components/Footer'
 import React from 'react'
-import { motion } from 'framer-motion'
-import { IoMdInformationCircle, IoMdLock, IoMdPerson, IoMdGlobe } from 'react-icons/io'
 
 const PrivacyPolicyPage = () => {
     return (
-        <div className='zeeshan min-h-screen !bg-bg-dark selection:bg-deep-gold/30 overflow-x-hidden'>
+        <div className='zeeshan'>
+            {/* Navbar */}
             <Navbar2 />
-
-            {/* Hero Section */}
-            <section className="slice !pt-28 md:!pt-[10rem] !pb-16 md:!pb-24 !bg-bg-dark relative overflow-hidden">
-                <div className="light-ray-container opacity-25"></div>
-                <div className="pattern-bg absolute inset-0 opacity-5"></div>
-
-                <div className="container relative z-10 mx-auto px-6 text-center">
-                    <motion.div
-                        initial={{y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 1, ease: "easeOut" }}
-                    >
-                        <h1 className="main-header text-4xl md:text-7xl lg:text-8xl mb-4 md:mb-6">
-                            Privacy <span className="text-white">Policy</span>
-                        </h1>
-                        <p className="main-para max-w-2xl mx-auto text-base md:text-xl opacity-80 leading-relaxed font-light">
-                            Committed to protecting your digital presence with transparency, security, and the highest standards of data integrity.
-                        </p>
-                    </motion.div>
-                </div>
-            </section>
-
-            {/* Shape Separator */}
-            <div className="shape-container shape-line shape-position-top shape-orientation-inverse relative z-20">
-                <svg width="2560px" height="100px" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 2560 100" className="fill-section-secondary">
-                    <polygon points="2560 0 2560 100 0 100" fill='#121212' />
-                </svg>
-            </div>
-
-            {/* Section 1: Introduction & Definitions */}
-            <section className="slice slice-lg !bg-[#121212] relative py-12 md:py-20">
-                <div className="container relative z-10 mx-auto px-6">
-                    <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16">
-                        <motion.div
-                            initial={{x: -30 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            className="w-full md:w-1/2"
-                        >
-                            <span className="text-deep-gold font-bold tracking-widest text-xs mb-4 block uppercase">01 / Foundation</span>
-                            <h2 className="text-2xl md:text-5xl text-gradient mb-6 leading-tight">Definitions & <br />Scope</h2>
-                            <p className="main-para !text-white/80 mb-6 leading-relaxed">
-                                This Privacy Policy explains how Hallelujah Gospel Sing-Along collects and manages your information. "Services" refers to our video conferencing, collaboration tools, and software platforms.
-                            </p>
-                            <div className="space-y-4">
-                                <div className="p-4 rounded-xl bg-white/5 border border-white/5 flex items-center gap-4">
-                                    <div className="text-deep-gold text-2xl"><IoMdInformationCircle /></div>
-                                    <p className="text-sm text-white/60">Effective July 6, 2026</p>
-                                </div>
-                                <div className="p-4 rounded-xl bg-white/5 border border-white/5 flex items-center gap-4">
-                                    <div className="text-royal-purple text-2xl"><IoMdGlobe /></div>
-                                    <p className="text-sm text-white/60">Global Virtual Operations Compliance</p>
-                                </div>
-                            </div>
-                        </motion.div>
-                        <motion.div
-                            initial={{scale: 0.9 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                            className="w-full md:w-1/2 grid grid-cols-2 gap-3 md:gap-4"
-                        >
-                            <div className="p-3 md:p-8 rounded-2xl bg-white/[0.03] border border-white/5 backdrop-blur-sm flex flex-col items-center text-center min-w-0">
-                                <h4 className="text-white font-bold mb-2">Policy</h4>
-                                <p className="text-[9px] md:text-[10px] text-white/40 uppercase tracking-wider break-words">Core Document</p>
-                            </div>
-                            <div className="p-3 md:p-8 rounded-2xl bg-white/[0.03] border border-white/5 backdrop-blur-sm flex flex-col items-center text-center min-w-0">
-                                <h4 className="text-white font-bold mb-2">Services</h4>
-                                <p className="text-[9px] md:text-[10px] text-white/40 uppercase tracking-wider break-words">Meeting Suite</p>
-                            </div>
-                            <div className="p-3 md:p-8 rounded-2xl bg-white/[0.03] border border-white/5 backdrop-blur-sm flex flex-col items-center text-center min-w-0">
-                                <h4 className="text-white font-bold mb-2">Users</h4>
-                                <p className="text-[9px] md:text-[10px] text-white/40 uppercase tracking-wider break-words">Participants</p>
-                            </div>
-                            <div className="p-3 md:p-8 rounded-2xl bg-white/[0.03] border border-white/5 backdrop-blur-sm flex flex-col items-center text-center min-w-0">
-                                <h4 className="text-white font-bold mb-2">Data</h4>
-                                <p className="text-[9px] md:text-[10px] text-white/40 uppercase tracking-wider break-words">Personal Info</p>
-                            </div>
-                        </motion.div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Shape Separator */}
-            <div className="shape-container shape-line shape-position-top relative z-20">
-                <svg width="2560px" height="100px" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 2560 100">
-                    <polygon points="2560 0 2560 100 0 100" fill='#0A0A0A' />
-                </svg>
-            </div>
-
-            {/* Section 2: Why We Process Data */}
-            <section className="slice slice-lg !bg-bg-dark relative py-12 md:py-20">
-                <div className="container relative z-10 mx-auto px-6">
-                    <div className="flex flex-col md:flex-row-reverse items-center gap-10 md:gap-16">
-                        <motion.div
-                            initial={{x: 30 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            className="w-full md:w-1/2"
-                        >
-                            <span className="text-royal-purple font-bold tracking-widest text-xs mb-4 block uppercase">02 / Processing</span>
-                            <h2 className="text-2xl md:text-5xl text-gradient mb-6 leading-tight">Reasons for <br />Processing</h2>
-                            <p className="main-para !text-white/80 mb-8 leading-relaxed">
-                                We process your information to fulfill contractual obligations, provide technical support, and ensure a personalized, secure meeting experience for your organization.
-                            </p>
-                            <ul className="space-y-4">
-                                {["Transactional fulfillment", "Service security verification", "Proactive technical support", "Feature optimization"].map((txt, i) => (
-                                    <li key={i} className="flex items-center gap-4 text-white/70">
-                                        <div className="w-2 h-2 rounded-full bg-deep-gold"></div>
-                                        <span>{txt}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        </motion.div>
-                        <motion.div
-                            initial={{x: -30 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            className="w-full md:w-1/2"
-                        >
-                            <div className="card-awesome-black !p-6 md:!p-10 rounded-3xl border border-white/10 relative overflow-hidden">
-                                <div className="absolute top-0 right-0 p-4 md:p-8 text-4xl md:text-6xl text-white/5 pointer-events-none"><IoMdLock /></div>
-                                <h3 className="text-xl md:text-2xl font-bold text-white mb-3 md:mb-6 relative z-10">Security First</h3>
-                                <p className="text-sm md:text-base text-white/60 leading-relaxed italic relative z-10">
-                                    "We prioritize data integrity through advanced encryption and regular audits, ensuring your virtual interactions remain private."
+            <>
+                <section className="slice !pt-[8rem] md:!pt-[10rem] pb-lg-5 bg-dark">
+                    {/* Container */}
+                    <div className="container">
+                        <div className="row row-grid align-items-center">
+                            <div className="col-lg-12">
+                                {/* Heading */}
+                                <h1 className="h1 text-gradient text-center text-lg-left my-4">
+                                    Privacy Policy
+                                </h1>
+                                {/* Text */}
+                                <p className="lead text-white text-center text-lg-left opacity-8">
+                                    This Privacy Policy explains how SingAlong Connect collects, uses,
+                                    discloses, stores, and protects your information when you use our
+                                    website, applications, software, meetings, webinars, communications
+                                    tools, and related services.
                                 </p>
                             </div>
-                        </motion.div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Shape Separator */}
-            <div className="shape-container shape-line shape-position-top shape-orientation-inverse relative z-20">
-                <svg width="2560px" height="100px" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 2560 100" className="fill-section-secondary">
-                    <polygon points="2560 0 2560 100 0 100" fill='#121212' />
-                </svg>
-            </div>
-
-            {/* Section 3: Data Protection & EU Rights */}
-            <section className="slice slice-lg !bg-[#121212] relative py-12 md:py-20">
-                <div className="container relative z-10 mx-auto px-6">
-                    <div className="text-center mb-10 md:mb-16">
-                        <span className="text-deep-gold font-bold tracking-widest text-xs mb-4 block uppercase">03 / Protection</span>
-                        <h2 className="text-2xl md:text-5xl text-gradient mb-4">Your Data Rights</h2>
-                        <p className="text-white/60 max-w-xl mx-auto">Providing users with full control over their digital information in accordance with global privacy laws.</p>
-                    </div>
-
-                    <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
-                        {[
-                            { title: "Review", desc: "Access your provided information anytime" },
-                            { title: "Correction", desc: "Request updates to your data record" },
-                            { title: "Removal", desc: "Permanent deletion upon request" },
-                            { title: "Restriction", desc: "Control how your data is processed" },
-                            { title: "Portability", desc: "Transfer data in structured formats" },
-                            { title: "Opt-Out", desc: "Withdraw consent from marketing" }
-                        ].map((right, i) => (
-                            <motion.div
-                                key={i}
-                                initial={{y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ delay: i * 0.05 }}
-                                viewport={{ once: true }}
-                                className="flex flex-col p-3 md:p-6 rounded-xl bg-white/5 border border-white/5 group hover:bg-white/10 transition-all cursor-default"
-                            >
-                                <h4 className="text-white font-bold text-sm md:text-lg mb-1 md:mb-2">{right.title}</h4>
-                                <p className="text-[11px] md:text-xs text-white/50 leading-snug">{right.desc}</p>
-                                <div className="mt-2 md:mt-4 w-6 md:w-8 h-1 bg-deep-gold/30 rounded-full group-hover:w-full transition-all"></div>
-                            </motion.div>
-                        ))}
-                    </div>
-
-                    <motion.div
-                        initial={{y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="mt-12 md:mt-20 p-6 md:p-8 rounded-3xl bg-gradient-to-r from-royal-purple/10 to-burgundy/10 border border-white/10 text-center"
-                    >
-                        <div className="text-4xl text-deep-gold flex justify-center mb-4"><IoMdPerson /></div>
-                        <h3 className="text-xl md:text-2xl font-bold text-white mb-3 md:mb-4">Contact Privacy Team</h3>
-                        <p className="text-sm md:text-base text-white/70 mb-6">Have specific questions regarding your data or our practices?</p>
-                        <div className="flex justify-center">
-                            <a
-                                href="mailto:info@hgsingalong.com"
-                                className="inline-flex items-center justify-center w-fit px-4 md:px-10 py-2.5 md:py-4 rounded-full bg-gradient-to-r from-royal-purple to-burgundy text-white font-bold text-[11px] md:text-base leading-none shadow-xl shadow-royal-purple/20 hover:scale-105 transition-transform"
-                            >info@hgsingalong.com</a>
                         </div>
-                    </motion.div>
-                </div>
-            </section>
+                    </div>
+                </section>
+                <section className="slice slice-sm bg-dark">
+                    <div className="container">
+                        <div className="row mt-4">
+                            <div className="col-lg-12 text-white">
+                                <p>
+                                    <strong>SINGALONG CONNECT PRIVACY POLICY</strong>
+                                </p>
+                                <p>
+                                    <strong>Effective Date: July 6, 2026</strong>
+                                </p>
+                                <p>
+                                    SingAlong Connect (&ldquo;SingAlong Connect,&rdquo; &ldquo;we,&rdquo;
+                                    &ldquo;our,&rdquo; or &ldquo;us&rdquo;) is a communications and online
+                                    meeting platform owned and operated by Hallelujah Gospel Globally,
+                                    headquartered in San Ramon, California, USA.
+                                </p>
+                                <p>
+                                    This Privacy Policy explains how we collect, use, disclose, store, and
+                                    protect your information when you use our website, applications,
+                                    software, meetings, webinars, communications tools, and related
+                                    services (collectively, the &ldquo;Services&rdquo;).
+                                </p>
+                                <p>
+                                    By using the Services, you acknowledge that you have read and
+                                    understood this Privacy Policy.
+                                </p>
+
+                                <p>
+                                    <strong>1. INFORMATION WE COLLECT</strong>
+                                </p>
+                                <p>We may collect the following categories of information:</p>
+
+                                <p>
+                                    <strong>A. Account Information</strong>
+                                </p>
+                                <p>When you create or manage an account, we may collect:</p>
+                                <ul>
+                                    <li>Name</li>
+                                    <li>Email address</li>
+                                    <li>Username</li>
+                                    <li>Password credentials (encrypted)</li>
+                                    <li>Organization or company name</li>
+                                    <li>Billing or subscription information</li>
+                                    <li>Account preferences and settings</li>
+                                </ul>
+
+                                <p>
+                                    <strong>B. Meeting and Webinar Information</strong>
+                                </p>
+                                <p>When you use the Services, we may collect:</p>
+                                <ul>
+                                    <li>Meeting titles and descriptions</li>
+                                    <li>Meeting IDs and links</li>
+                                    <li>Participant names and attendance information</li>
+                                    <li>Device and connection information</li>
+                                    <li>Chat messages and shared files</li>
+                                    <li>Poll responses</li>
+                                    <li>Screen sharing activity</li>
+                                    <li>Audio, video, and recordings (if enabled by the Host)</li>
+                                </ul>
+
+                                <p>
+                                    <strong>C. Technical and Usage Information</strong>
+                                </p>
+                                <p>We may automatically collect:</p>
+                                <ul>
+                                    <li>IP address</li>
+                                    <li>Browser type</li>
+                                    <li>Device type</li>
+                                    <li>Operating system</li>
+                                    <li>Language settings</li>
+                                    <li>Time zone</li>
+                                    <li>Log data</li>
+                                    <li>Crash reports</li>
+                                    <li>Usage statistics and feature interactions</li>
+                                </ul>
+
+                                <p>
+                                    <strong>D. Communications Information</strong>
+                                </p>
+                                <p>If you contact us, we may collect:</p>
+                                <ul>
+                                    <li>Customer support requests</li>
+                                    <li>Emails and communications</li>
+                                    <li>Feedback and survey responses</li>
+                                </ul>
+
+                                <p>
+                                    <strong>2. HOW WE USE INFORMATION</strong>
+                                </p>
+                                <p>We use information to:</p>
+                                <ul>
+                                    <li>provide and operate the Services;</li>
+                                    <li>create and manage accounts;</li>
+                                    <li>host meetings, webinars, and communications;</li>
+                                    <li>process recordings and cloud storage;</li>
+                                    <li>improve platform performance and security;</li>
+                                    <li>troubleshoot technical issues;</li>
+                                    <li>prevent fraud, abuse, and unauthorized access;</li>
+                                    <li>communicate with users;</li>
+                                    <li>comply with legal obligations;</li>
+                                    <li>and enforce our Terms of Use.</li>
+                                </ul>
+                                <p>
+                                    We may also use aggregated or anonymized information for analytics,
+                                    research, and service improvement.
+                                </p>
+
+                                <p>
+                                    <strong>3. RECORDINGS AND CONTENT</strong>
+                                </p>
+                                <p>Hosts may choose to record meetings or webinars.</p>
+                                <p>
+                                    When recording is enabled, participants may receive a notice through
+                                    the platform.
+                                </p>
+                                <p>Recordings may include:</p>
+                                <ul>
+                                    <li>audio,</li>
+                                    <li>video,</li>
+                                    <li>chat messages,</li>
+                                    <li>screen shares,</li>
+                                    <li>shared files,</li>
+                                    <li>participant names,</li>
+                                    <li>and other meeting content.</li>
+                                </ul>
+                                <p>
+                                    Hosts are responsible for obtaining any legally required consent from
+                                    participants.
+                                </p>
+                                <p>
+                                    Cloud recordings may be stored temporarily or for limited durations
+                                    depending on:
+                                </p>
+                                <ul>
+                                    <li>account type,</li>
+                                    <li>storage availability,</li>
+                                    <li>user settings,</li>
+                                    <li>or operational requirements.</li>
+                                </ul>
+                                <p>Users should maintain their own backups of important Content.</p>
+
+                                <p>
+                                    <strong>4. PUBLIC MEETINGS AND SHARED LINKS</strong>
+                                </p>
+                                <p>Hosts may choose to publicly share meeting or webinar links.</p>
+                                <p>
+                                    Information shared during public sessions may be visible or accessible
+                                    to participants and attendees beyond the Host&rsquo;s organization.
+                                </p>
+                                <p>
+                                    Users should exercise caution when sharing confidential, sensitive, or
+                                    personal information in public meetings or publicly accessible
+                                    sessions.
+                                </p>
+
+                                <p>
+                                    <strong>5. COOKIES AND SIMILAR TECHNOLOGIES</strong>
+                                </p>
+                                <p>We may use cookies and similar technologies to:</p>
+                                <ul>
+                                    <li>maintain login sessions,</li>
+                                    <li>remember user preferences,</li>
+                                    <li>analyze traffic and usage patterns,</li>
+                                    <li>improve functionality,</li>
+                                    <li>and enhance security.</li>
+                                </ul>
+                                <p>
+                                    You may control cookies through your browser settings, though disabling
+                                    cookies may affect functionality.
+                                </p>
+
+                                <p>
+                                    <strong>6. HOW WE SHARE INFORMATION</strong>
+                                </p>
+                                <p>We do not sell personal information.</p>
+                                <p>We may share information:</p>
+                                <ul>
+                                    <li>
+                                        with service providers and infrastructure partners who help operate
+                                        the Services;
+                                    </li>
+                                    <li>with affiliates of Hallelujah Gospel Globally;</li>
+                                    <li>
+                                        with Hosts, administrators, or account owners managing organizational
+                                        accounts;
+                                    </li>
+                                    <li>when required by law or legal process;</li>
+                                    <li>to protect rights, safety, or security;</li>
+                                    <li>
+                                        or in connection with a merger, acquisition, restructuring, or sale of
+                                        assets.
+                                    </li>
+                                </ul>
+                                <p>
+                                    We may also share anonymized or aggregated information that does not
+                                    identify individuals.
+                                </p>
+
+                                <p>
+                                    <strong>7. INTERNATIONAL DATA TRANSFERS</strong>
+                                </p>
+                                <p>SingAlong Connect operates globally.</p>
+                                <p>
+                                    Your information may be transferred to, processed, and stored in
+                                    countries outside your country of residence, including the United
+                                    States.
+                                </p>
+                                <p>
+                                    These countries may have different data protection laws than your local
+                                    jurisdiction.
+                                </p>
+                                <p>
+                                    Where required by applicable law, we implement reasonable safeguards
+                                    for international data transfers, including contractual protections and
+                                    organizational security measures.
+                                </p>
+                                <p>
+                                    By using the Services, you acknowledge and consent to such transfers
+                                    where permitted by law.
+                                </p>
+
+                                <p>
+                                    <strong>8. GDPR AND INTERNATIONAL PRIVACY RIGHTS</strong>
+                                </p>
+                                <p>
+                                    If you are located in the European Economic Area (&ldquo;EEA&rdquo;),
+                                    United Kingdom, or another jurisdiction with similar privacy laws, you
+                                    may have rights including:
+                                </p>
+                                <ul>
+                                    <li>access to your personal data;</li>
+                                    <li>correction of inaccurate data;</li>
+                                    <li>deletion of certain data;</li>
+                                    <li>restriction of processing;</li>
+                                    <li>objection to certain processing activities;</li>
+                                    <li>portability of certain data;</li>
+                                    <li>
+                                        and the right to lodge a complaint with a supervisory authority.
+                                    </li>
+                                </ul>
+                                <p>
+                                    We process personal information only where we have a lawful basis to do
+                                    so, including:
+                                </p>
+                                <ul>
+                                    <li>performance of a contract,</li>
+                                    <li>legitimate interests,</li>
+                                    <li>legal obligations,</li>
+                                    <li>consent,</li>
+                                    <li>or other lawful grounds.</li>
+                                </ul>
+
+                                <p>
+                                    <strong>9. CALIFORNIA PRIVACY RIGHTS</strong>
+                                </p>
+                                <p>
+                                    California residents may have additional rights under California
+                                    privacy laws, including rights related to:
+                                </p>
+                                <ul>
+                                    <li>access,</li>
+                                    <li>deletion,</li>
+                                    <li>correction,</li>
+                                    <li>
+                                        and certain disclosures regarding personal information practices.
+                                    </li>
+                                </ul>
+                                <p>
+                                    We do not sell personal information as defined under California law.
+                                </p>
+
+                                <p>
+                                    <strong>10. DATA RETENTION</strong>
+                                </p>
+                                <p>We retain information only for as long as reasonably necessary for:</p>
+                                <ul>
+                                    <li>providing the Services,</li>
+                                    <li>legitimate business operations,</li>
+                                    <li>legal compliance,</li>
+                                    <li>dispute resolution,</li>
+                                    <li>security purposes,</li>
+                                    <li>and enforcement of agreements.</li>
+                                </ul>
+                                <p>Retention periods may vary depending on:</p>
+                                <ul>
+                                    <li>account type,</li>
+                                    <li>user settings,</li>
+                                    <li>Content type,</li>
+                                    <li>legal obligations,</li>
+                                    <li>and operational requirements.</li>
+                                </ul>
+                                <p>
+                                    Some recordings, logs, backups, or system archives may remain
+                                    temporarily stored even after deletion requests due to technical or
+                                    legal limitations.
+                                </p>
+
+                                <p>
+                                    <strong>11. DATA DELETION REQUESTS</strong>
+                                </p>
+                                <p>
+                                    Users may request deletion of certain personal information by
+                                    contacting us at:
+                                </p>
+                                <p>
+                                    <em>
+                                        <strong>info@hgsingalong.com</strong>
+                                    </em>
+                                </p>
+                                <p>We may retain certain information where necessary for:</p>
+                                <ul>
+                                    <li>legal compliance,</li>
+                                    <li>fraud prevention,</li>
+                                    <li>dispute resolution,</li>
+                                    <li>security purposes,</li>
+                                    <li>backup integrity,</li>
+                                    <li>or enforcement of agreements.</li>
+                                </ul>
+
+                                <p>
+                                    <strong>12. SECURITY</strong>
+                                </p>
+                                <p>
+                                    We use commercially reasonable administrative, technical, and
+                                    organizational safeguards designed to protect information against
+                                    unauthorized access, loss, misuse, or disclosure.
+                                </p>
+                                <p>
+                                    However, no online platform or transmission method can be guaranteed
+                                    completely secure.
+                                </p>
+                                <p>Users are responsible for:</p>
+                                <ul>
+                                    <li>protecting account credentials,</li>
+                                    <li>maintaining device security,</li>
+                                    <li>and using secure networks when accessing the Services.</li>
+                                </ul>
+
+                                <p>
+                                    <strong>13. CHILDREN&rsquo;S PRIVACY</strong>
+                                </p>
+                                <p>
+                                    The Services are not directed to children under 16 years of age.
+                                </p>
+                                <p>
+                                    We do not knowingly collect personal information from children under 16
+                                    without appropriate legal authorization.
+                                </p>
+                                <p>
+                                    If we become aware that personal information has been collected from a
+                                    child in violation of applicable law, we may delete such information.
+                                </p>
+
+                                <p>
+                                    <strong>14. THIRD-PARTY SERVICES</strong>
+                                </p>
+                                <p>
+                                    The Services may contain links or integrations with third-party
+                                    websites, applications, or services.
+                                </p>
+                                <p>
+                                    We are not responsible for the privacy practices or content of
+                                    third-party services.
+                                </p>
+                                <p>
+                                    Users should review the privacy policies of those third parties
+                                    separately.
+                                </p>
+
+                                <p>
+                                    <strong>15. CHANGES TO THIS PRIVACY POLICY</strong>
+                                </p>
+                                <p>We may update this Privacy Policy from time to time.</p>
+                                <p>
+                                    If material changes are made, we will make reasonable efforts to
+                                    provide notice through the website, application, or other
+                                    communications.
+                                </p>
+                                <p>
+                                    Continued use of the Services after updates become effective
+                                    constitutes acceptance of the revised Privacy Policy.
+                                </p>
+
+                                <p>
+                                    <strong>16. CONTACT US</strong>
+                                </p>
+                                <p>
+                                    If you have questions, requests, or concerns regarding this Privacy
+                                    Policy or privacy practices, please contact:
+                                </p>
+                                <p>
+                                    SingAlong Connect
+                                    <br />
+                                    A Service of Hallelujah Gospel Globally
+                                    <br />
+                                    San Ramon, California, USA
+                                </p>
+                                <p>
+                                    Email:{" "}
+                                    <em>
+                                        <strong>info@hgsingalong.com</strong>
+                                    </em>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </>
 
             <Footer />
         </div>

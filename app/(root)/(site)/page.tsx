@@ -584,7 +584,7 @@ const page = () => {
                   <span className='text-white text-3xl'><IoDiamondOutline /></span>
 
                 </div>
-                <h2 className='absolute !-right-[300%] md:!-right-[210%] top-[25%] w-[10rem] !text-[10px] md:!text-xl !font-[700] !text-white hidden md:block'>Features Rich</h2>
+                <h2 className='absolute !-right-[300%] md:!-right-[210%] top-[25%] w-[10rem] !text-[10px] md:!text-xl !font-[700] !text-white hidden md:block'>Rich Features</h2>
               </div>
             </div>
             <div className='secvice-box flex' style={getStyle(5)} data-target="content5">
