@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 
 
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { planslist, sidebarLinks, isSidebarLinkVisible, sidebarLabelFor } from '@/constants';
+import { planslist, sidebarLinks, isSidebarLinkVisible, sidebarLabelFor, getPlan } from '@/constants';
 import { cn } from '@/lib/utils';
 import { BsCalendar2Check } from "react-icons/bs";
 import { BsCalendar2Minus } from "react-icons/bs";
@@ -17,6 +17,7 @@ import { FiUsers, FiMenu } from "react-icons/fi";
 import { BiDonateHeart } from "react-icons/bi";
 import { FaPrayingHands, FaMusic, FaBookOpen } from "react-icons/fa";
 import { TbActivityHeartbeat } from "react-icons/tb";
+import { Lock } from 'lucide-react';
 import { useContext, useMemo } from 'react';
 import { subscriptionContext } from '@/providers/SubscriptionProvider'
 import { WorkspaceContext } from '@/providers/WorkspaceProvider';
@@ -34,6 +35,13 @@ const MobileNav = () => {
   const { subscription } = useContext(subscriptionContext)
   const { activeWorkspace, can } = useContext(WorkspaceContext);
   const wsMode = activeWorkspace?.mode || 'worship';
+
+  // Mirror Sidebar.tsx: workspace-scoped features gate against the workspace
+  // OWNER's plan, falling back to the viewer's plan only when no workspace is
+  // active. Without this, free viewers in a paid workspace would see entries
+  // as locked even though the workspace already unlocks them.
+  const viewerPlan = useMemo(() => getPlan(subscription), [subscription]);
+  const plan = activeWorkspace?.ownerPlan ?? viewerPlan;
 
   const visibleLinks = useMemo(
     () =>
@@ -93,22 +101,32 @@ const MobileNav = () => {
                   const ss: string = String(item.Icon);
                   const Icon = icons[ss];
                   const label = sidebarLabelFor(item, wsMode);
+                  // Locked when the link declares a plan flag and the current plan
+                  // doesn't include it. Clicking still navigates to /plans so the
+                  // upgrade path is obvious.
+                  const locked = !!(item.planFeature && !plan[item.planFeature]);
+                  const href = locked ? '/plans' : item.route;
                   return (
                     <SheetClose asChild key={item.route}>
                       <Link
-                        href={item.route}
+                        href={href}
                         key={item.label}
+                        title={locked ? `Available on ${item.planFeature === 'analytics' ? 'Professional+' : 'paid plans'} — upgrade to unlock` : undefined}
                         className={cn(
                           'flex gap-4 items-center p-4 rounded-lg w-full max-w-60',
                           {
-                            'bg-orange-500': isActive,
+                            'bg-orange-500': isActive && !locked,
+                            'opacity-60': locked,
                           }
                         )}
                       >
                         <span className="text-white">
                           {Icon}
                         </span>
-                        <p className="font-semibold">{label}</p>
+                        <p className="font-semibold flex items-center gap-2">
+                          {label}
+                          {locked && <Lock size={12} className="opacity-80" aria-label="Locked — upgrade required" />}
+                        </p>
                       </Link>
                     </SheetClose>
                   );
