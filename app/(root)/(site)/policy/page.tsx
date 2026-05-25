@@ -17,7 +17,7 @@ const PrivacyPolicyPage = () => {
 
                 <div className="container relative z-10 mx-auto px-6 text-center">
                     <motion.div
-                        initial={{ opacity: 0, y: 30 }}
+                        initial={{y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 1, ease: "easeOut" }}
                     >
@@ -43,7 +43,7 @@ const PrivacyPolicyPage = () => {
                 <div className="container relative z-10 mx-auto px-6">
                     <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16">
                         <motion.div
-                            initial={{ opacity: 0, x: -30 }}
+                            initial={{x: -30 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
                             className="w-full md:w-1/2"
@@ -65,7 +65,7 @@ const PrivacyPolicyPage = () => {
                             </div>
                         </motion.div>
                         <motion.div
-                            initial={{ opacity: 0, scale: 0.9 }}
+                            initial={{scale: 0.9 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}
                             className="w-full md:w-1/2 grid grid-cols-2 gap-3 md:gap-4"
@@ -103,7 +103,7 @@ const PrivacyPolicyPage = () => {
                 <div className="container relative z-10 mx-auto px-6">
                     <div className="flex flex-col md:flex-row-reverse items-center gap-10 md:gap-16">
                         <motion.div
-                            initial={{ opacity: 0, x: 30 }}
+                            initial={{x: 30 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
                             className="w-full md:w-1/2"
@@ -123,7 +123,7 @@ const PrivacyPolicyPage = () => {
                             </ul>
                         </motion.div>
                         <motion.div
-                            initial={{ opacity: 0, x: -30 }}
+                            initial={{x: -30 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
                             className="w-full md:w-1/2"
@@ -167,7 +167,7 @@ const PrivacyPolicyPage = () => {
                         ].map((right, i) => (
                             <motion.div
                                 key={i}
-                                initial={{ opacity: 0, y: 20 }}
+                                initial={{y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ delay: i * 0.05 }}
                                 viewport={{ once: true }}
@@ -181,7 +181,7 @@ const PrivacyPolicyPage = () => {
                     </div>
 
                     <motion.div
-                        initial={{ opacity: 0, y: 30 }}
+                        initial={{y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         className="mt-12 md:mt-20 p-6 md:p-8 rounded-3xl bg-gradient-to-r from-royal-purple/10 to-burgundy/10 border border-white/10 text-center"

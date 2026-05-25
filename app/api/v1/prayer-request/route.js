@@ -70,8 +70,17 @@ export const GET = async (req) => {
         } else if (visibilityCap) {
             filter.visibility = visibilityCap;
         }
-        if (status) filter.status = status;
-        if (prayedBy) filter.prayedBy = prayedBy;
+        // The Supported tab sends `prayed_by=<user.id>` instead of a status. It
+        // should union two flows so nothing supported is hidden:
+        //   1. requests the user has personally heart-tapped (prayedBy includes them)
+        //   2. requests an admin has globally marked supported (status === 'prayed')
+        // Without (2), older admin "Mark Supported" actions become invisible because
+        // they leave Pending but never registered the user in prayedBy.
+        if (prayedBy) {
+            filter.$or = [{ prayedBy }, { status: 'prayed' }];
+        } else if (status) {
+            filter.status = status;
+        }
 
         const requests = await prayerRequestModel.find(filter)
             .sort({ timestamp: -1 })
@@ -185,7 +194,15 @@ export const PATCH = async (req) => {
             });
             if (denied) return denied;
         }
-        const updated = await prayerRequestModel.findByIdAndUpdate(id, { status }, { new: true });
+        // When an admin marks a request as supported, also record their personal
+        // support so the request shows up on their "Supported" tab (which filters
+        // by prayedBy, not by global status). Without this, the request leaves
+        // Pending but becomes invisible to the admin who actioned it.
+        const updateOp =
+            status === 'prayed' && user_id
+                ? { $set: { status }, $addToSet: { prayedBy: user_id } }
+                : { status };
+        const updated = await prayerRequestModel.findByIdAndUpdate(id, updateOp, { new: true });
         return NextResponse.json({ success: true, request: updated }, { status: 200 });
     } catch (error) {
         console.error("PATCH /api/v1/prayer-request error:", error);

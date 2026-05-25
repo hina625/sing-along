@@ -17,7 +17,7 @@ const AboutPage = () => {
 
                 <div className="container relative z-10 mx-auto px-6 text-center">
                     <motion.div
-                        initial={{ opacity: 0, y: 30 }}
+                        initial={{y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 1, ease: "easeOut" }}
                     >
@@ -43,7 +43,7 @@ const AboutPage = () => {
                 <div className="container relative z-10 mx-auto px-6">
                     <div className="flex flex-col md:flex-row items-center gap-16">
                         <motion.div
-                            initial={{ opacity: 0, x: -30 }}
+                            initial={{x: -30 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
                             className="w-full md:w-1/2"
@@ -65,7 +65,7 @@ const AboutPage = () => {
                             </div>
                         </motion.div>
                         <motion.div
-                            initial={{ opacity: 0, scale: 0.9 }}
+                            initial={{scale: 0.9 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}
                             className="w-full md:w-1/2"
@@ -96,7 +96,7 @@ const AboutPage = () => {
                 <div className="container relative z-10 mx-auto px-6">
                     <div className="text-center mb-16">
                         <motion.div
-                            initial={{ opacity: 0, y: 20 }}
+                            initial={{y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                         >
@@ -128,7 +128,7 @@ const AboutPage = () => {
                         ].map((value, index) => (
                             <motion.div
                                 key={index}
-                                initial={{ opacity: 0, y: 30 }}
+                                initial={{y: 30 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: index * 0.1 }}
@@ -150,7 +150,7 @@ const AboutPage = () => {
                 <div className="container relative z-10 mx-auto px-6">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                         <motion.div
-                            initial={{ opacity: 0, x: -30 }}
+                            initial={{x: -30 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
                         >
@@ -186,7 +186,7 @@ const AboutPage = () => {
                             </div>
                         </motion.div>
                         <motion.div
-                            initial={{ opacity: 0, x: 30 }}
+                            initial={{x: 30 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
                             className="relative"

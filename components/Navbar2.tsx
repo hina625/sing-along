@@ -1,11 +1,12 @@
 "use client"
-import { useUser } from '@clerk/nextjs'
+import { useUser, useClerk } from '@clerk/nextjs'
 import { Link } from 'lucide-react';
 import React, { useState, useEffect } from 'react'
 import { GiHamburgerMenu } from 'react-icons/gi'
 
 const Navbar2 = () => {
   const { user } = useUser();
+  const { signOut } = useClerk();
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -122,6 +123,27 @@ const Navbar2 = () => {
                 Contact
               </a>
             </li>
+            {isMounted && user && (
+              <li className="nav-item d-lg-none">
+                <button
+                  type="button"
+                  onClick={() => signOut({ redirectUrl: '/' })}
+                  className="nav-link !text-red-600 hover:!text-red-700 !font-medium !text-[18px] bg-transparent border-0 p-2 w-full text-left"
+                >
+                  Logout
+                </button>
+              </li>
+            )}
+            {isMounted && !user && (
+              <li className="nav-item d-lg-none">
+                <a
+                  className="nav-link !text-foregroud-primary hover:!text-foregroud-primary !font-bold !text-[18px]"
+                  href={`/sign-in?redirect_url=${process.env.NEXT_PUBLIC_BASE_URL}/dashboard`}
+                >
+                  Sign In
+                </a>
+              </li>
+            )}
           </ul>
           {/* Button */}
           {isMounted && !user && (

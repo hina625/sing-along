@@ -2,14 +2,13 @@
 'use client';
 
 import { useContext, useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import HomeCard from './HomeCard';
 import MeetingModal from './MeetingModal';
 import { useUser } from '@clerk/nextjs';
 import Loader from './Loader';
 import { Textarea } from './ui/textarea';
-import ReactDatePicker from 'react-datepicker';
 import { useToast } from './ui/use-toast';
 import { Input } from './ui/input';
 import axios from 'axios';
@@ -34,6 +33,21 @@ function isToday(dateString: string): boolean {
   );
 }
 
+// Helpers for the native <input type="date"> and <input type="time"> values,
+// which are local-time strings (YYYY-MM-DD and HH:MM) — toISOString() would
+// shift by the user's UTC offset and silently roll the day on midnight edges.
+const toDateInput = (d: Date) => {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+};
+const toTimeInput = (d: Date) => {
+  const h = String(d.getHours()).padStart(2, '0');
+  const m = String(d.getMinutes()).padStart(2, '0');
+  return `${h}:${m}`;
+};
+
 
 const initialValues = {
   dateTime: new Date(),
@@ -43,6 +57,7 @@ const initialValues = {
 
 const MeetingTypeList = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [id, setId] = useState('')
   const [meetings, setMeetings] = useState<IRoomDetails[]>([]);
   const [description,setDesc] = useState('')
@@ -68,6 +83,21 @@ const MeetingTypeList = () => {
       setDisplayName(user.fullName || user.username || user.primaryEmailAddress?.emailAddress || '');
     }
   }, [user, displayName]);
+
+  // Auto-open the Schedule modal when the user lands here via a CTA elsewhere
+  // (e.g. the "Schedule a Meeting" button on the empty Upcoming page) with
+  // ?schedule=open. Strip the param after consuming — preserves the current
+  // pathname so we don't bounce the user away from where they landed.
+  useEffect(() => {
+    if (searchParams.get('schedule') === 'open') {
+      setMeetingState('isScheduleMeeting');
+      const next = new URLSearchParams(searchParams.toString());
+      next.delete('schedule');
+      const qs = next.toString();
+      const pathname = typeof window !== 'undefined' ? window.location.pathname : '/dashboard/create-meeting';
+      router.replace(qs ? `${pathname}?${qs}` : pathname);
+    }
+  }, [searchParams, router]);
 
   const persistDisplayName = (name: string) => {
     const v = name.trim();
@@ -169,7 +199,8 @@ const MeetingTypeList = () => {
   const meetingLink = `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/beforemeet/${id}`;
 
   // Mode-aware copy: business → team meetings, community → blended "gathering"
-  // wording, worship/hybrid → worship copy. Mirrors the split in dashboard/page.tsx.
+  // wording, worship/hybrid → neutral default (no religion-specific phrasing).
+  // Mirrors the split in dashboard/page.tsx.
   const wsMode = activeWorkspace?.mode;
   const isBusinessWs = wsMode === 'business';
   const isCommunityWs = wsMode === 'community';
@@ -206,19 +237,19 @@ const MeetingTypeList = () => {
         instantModalButton: 'Start Gathering',
       }
     : {
-        startTitle: 'Start Worship',
-        startDesc: 'Go live with your congregation',
-        joinTitle: 'Join Worship',
+        startTitle: 'Start Meeting',
+        startDesc: 'Open a room with one click',
+        joinTitle: 'Join Meeting',
         joinDesc: 'via invitation link',
-        scheduleTitle: 'Schedule Service',
-        scheduleDesc: 'Plan Sunday or midweek service',
-        pastTitle: 'Past Services',
-        pastDesc: 'Recorded worship & sermons',
-        scheduleModalTitle: 'Schedule Worship Service',
-        joinModalTitle: 'Paste the worship link',
-        joinModalButton: 'Join Worship',
-        instantModalTitle: 'Start Worship Now',
-        instantModalButton: 'Start Worship',
+        scheduleTitle: 'Schedule Meeting',
+        scheduleDesc: 'Plan your next session',
+        pastTitle: 'Past Meetings',
+        pastDesc: 'Recorded sessions',
+        scheduleModalTitle: 'Schedule Meeting',
+        joinModalTitle: 'Paste the meeting link',
+        joinModalButton: 'Join Meeting',
+        instantModalTitle: 'Start Meeting Now',
+        instantModalButton: 'Start Meeting',
       };
 
   return (
@@ -287,24 +318,41 @@ const MeetingTypeList = () => {
             <label className="text-base font-normal leading-[22.4px] text-white/85">
               Select Date and Time
             </label>
-            <ReactDatePicker
-              selected={values.dateTime}
-              onChange={(date) => setValues({ ...values, dateTime: date as Date })}
-              showTimeSelect
-              timeFormat="HH:mm"
-              timeIntervals={15}
-              timeCaption="time"
-              dateFormat="MMMM d, yyyy h:mm aa"
-              minDate={new Date()}
-              // When picking today, only show time slots that haven't passed yet.
-              filterTime={(time) => {
-                const selected = values.dateTime || new Date();
-                if (!isToday(selected.toISOString())) return true;
-                return time.getTime() >= Date.now();
-              }}
-              wrapperClassName="w-full"
-              className="w-full rounded !bg-[#1A1A1A] !text-white border border-white/15 p-2 focus:outline-none focus:border-deep-gold/60"
-            />
+            {/* Custom date + time picker — native HTML5 inputs render the OS-
+                level picker (calendar on desktop, wheel on mobile). No popup
+                positioning, no floating-ui, no Tailwind preflight conflicts.
+                Min attributes block past dates and (when scheduling for today)
+                past times automatically — the browser enforces it. */}
+            <div className="flex w-full flex-col gap-2 sm:flex-row">
+              <input
+                type="date"
+                value={toDateInput(values.dateTime)}
+                min={toDateInput(new Date())}
+                onChange={(e) => {
+                  if (!e.target.value) return;
+                  const [y, m, d] = e.target.value.split('-').map(Number);
+                  const next = new Date(values.dateTime);
+                  next.setFullYear(y, m - 1, d);
+                  setValues({ ...values, dateTime: next });
+                }}
+                style={{ colorScheme: 'dark' }}
+                className="w-full sm:flex-1 rounded !bg-[#1A1A1A] !text-white border border-white/15 p-2 focus:outline-none focus:!border-deep-gold/60"
+              />
+              <input
+                type="time"
+                value={toTimeInput(values.dateTime)}
+                min={isToday(values.dateTime.toISOString()) ? toTimeInput(new Date()) : undefined}
+                onChange={(e) => {
+                  if (!e.target.value) return;
+                  const [h, m] = e.target.value.split(':').map(Number);
+                  const next = new Date(values.dateTime);
+                  next.setHours(h, m, 0, 0);
+                  setValues({ ...values, dateTime: next });
+                }}
+                style={{ colorScheme: 'dark' }}
+                className="w-full sm:w-32 rounded !bg-[#1A1A1A] !text-white border border-white/15 p-2 focus:outline-none focus:!border-deep-gold/60"
+              />
+            </div>
           </div>
 
 
@@ -315,10 +363,10 @@ const MeetingTypeList = () => {
             <select
               onChange={(e) => setStatus(e.target.value)}
               value={status}
-              className="py-2 px-3 outline-none border rounded-md border-white/15 !bg-[#1A1A1A] !text-white focus:border-deep-gold/60"
+              className="py-2 px-3 outline-none border rounded-md border-white/15 bg-dark-3 text-white focus:border-deep-gold/60"
             >
-              <option value={'private'} className="bg-[#1A1A1A] text-white">Private</option>
-              <option value={'public'} className="bg-[#1A1A1A] text-white">Public</option>
+              <option value={'private'} className="bg-dark-3 text-white">Private</option>
+              <option value={'public'} className="bg-dark-3 text-white">Public</option>
             </select>
           </div>
 

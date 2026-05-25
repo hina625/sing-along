@@ -31,7 +31,7 @@ import {
   LayoutTemplate, Shield, X, ChevronUp,
   Pin, Monitor, AppWindow, Copy, Check, Send,
   CircleDashed, Eraser, Music, HandHeart, HeartHandshake, Disc, CircleDot,
-  StickyNote, PenTool, Paperclip, BookOpen, Share2, Cross, Group, ArrowLeft,
+  StickyNote, PenTool, Paperclip, BookOpen, Share2, Group, ArrowLeft,
   Play, Pause, FileMusic, Volume2, SkipForward, MoreHorizontal
 } from 'lucide-react';
 
@@ -355,17 +355,17 @@ const PrayerRequestModal = ({
       const data = await resp.json();
       if (!data.success) throw new Error(data.message || 'Failed');
       toast({
-        title: '🙏 Prayer received',
+        title: '🙏 Request received',
         description: visibility === 'public'
-          ? 'Shared with everyone in worship.'
-          : 'Sent privately to the pastor.',
+          ? 'Shared with everyone in the meeting.'
+          : 'Sent privately to the admin.',
         className: 'bg-white/10 border-none text-white',
       });
       onSubmitted();
       onClose();
     } catch (e) {
       toast({
-        title: 'Could not submit prayer',
+        title: 'Could not submit request',
         description: e instanceof Error ? e.message : 'Try again.',
         variant: 'destructive',
       });
@@ -378,13 +378,13 @@ const PrayerRequestModal = ({
     <div className="worship-modal-backdrop" onClick={onClose}>
       <div className="worship-modal" onClick={(e) => e.stopPropagation()}>
         <div className="worship-modal-head">
-          <span>🙏 Submit Prayer Request</span>
+          <span>🙏 Submit Request</span>
           <button type="button" onClick={onClose} aria-label="Close"><X size={18} /></button>
         </div>
-        <p className="worship-modal-hint">Your request will be lifted up by the leadership team.</p>
+        <p className="worship-modal-hint">Your request will be reviewed by the leadership team.</p>
         <textarea
           className="worship-modal-input"
-          placeholder="Write your prayer request..."
+          placeholder="Write your request..."
           value={text}
           onChange={(e) => setText(e.target.value)}
           maxLength={1000}
@@ -407,7 +407,7 @@ const PrayerRequestModal = ({
               checked={visibility === 'private'}
               onChange={() => setVisibility('private')}
             />
-            Private — pastor only
+            Private — admin only
           </label>
         </div>
         <button
@@ -416,7 +416,7 @@ const PrayerRequestModal = ({
           disabled={!text.trim() || submitting}
           onClick={submit}
         >
-          {submitting ? 'Submitting...' : 'Submit Prayer'}
+          {submitting ? 'Submitting...' : 'Submit Request'}
         </button>
       </div>
     </div>
@@ -624,6 +624,19 @@ const MeetCaptionsStrip = ({
   );
 };
 
+// Rewrite a Cloudinary delivery URL into a forced-download URL with the given
+// filename. The <a download> attribute is ignored cross-origin, so we rely on
+// Cloudinary's `fl_attachment` flag to set Content-Disposition. The flag goes
+// after `/upload/` (or `/authenticated/` / `/private/`) and before the version
+// segment. Non-Cloudinary URLs pass through unchanged.
+const cloudinaryDownloadUrl = (url: string | undefined, fileName?: string): string => {
+  if (!url) return '';
+  if (!/res\.cloudinary\.com/.test(url)) return url;
+  const baseName = (fileName || '').replace(/\.[^./\\]+$/, '').replace(/[^a-zA-Z0-9._-]+/g, '_').slice(0, 80);
+  const flag = baseName ? `fl_attachment:${baseName}` : 'fl_attachment';
+  return url.replace(/\/(upload|authenticated|private)\/(?!.*\bfl_attachment\b)/, `/$1/${flag}/`);
+};
+
 /**
  * Custom Chat Component for Google Meet Experience
  */
@@ -813,7 +826,7 @@ const CustomChat = ({ roomId }: { roomId: string }) => {
                       <span className="chat-file-image-cap">{msg.fileName}</span>
                     </a>
                   ) : (
-                    <a href={msg.fileUrl} target="_blank" rel="noopener" className="chat-file-card mt-1" download={msg.fileName || true}>
+                    <a href={cloudinaryDownloadUrl(msg.fileUrl, msg.fileName)} target="_blank" rel="noopener" className="chat-file-card mt-1">
                       <span className="chat-file-icon" aria-hidden>📎</span>
                       <span className="chat-file-meta">
                         <span className="chat-file-name">{msg.fileName || 'file'}</span>
@@ -888,7 +901,7 @@ const sidebarTitle = (t: SidePanel) => {
   if (t === 'people') return 'People';
   if (t === 'notes') return 'Meeting notes';
   if (t === 'bible') return 'Bible';
-  if (t === 'waiting') return 'Waiting room';
+  if (t === 'waiting') return 'Waiting room and permission';
   return 'Meeting details';
 };
 
@@ -1325,14 +1338,14 @@ const BreakoutStarter = ({
         </div>
         <p className="worship-modal-hint">Split the room into smaller circles. Pre-assign people if you want, or leave them to pick.</p>
 
-        <label className="altar-prompt-label">Number of groups (2–12)</label>
+        <label className="meet-prompt-label">Number of groups (2–12)</label>
         <div className="breakout-count-row">
           <button type="button" onClick={() => setGroupCount(count - 1)} disabled={count <= 2} className="breakout-count-btn">−</button>
           <span className="breakout-count-num">{count}</span>
           <button type="button" onClick={() => setGroupCount(count + 1)} disabled={count >= 12} className="breakout-count-btn">+</button>
         </div>
 
-        <label className="altar-prompt-label">Group names</label>
+        <label className="meet-prompt-label">Group names</label>
         <div className="breakout-name-list">
           {Array.from({ length: count }).map((_, i) => (
             <input
@@ -1350,7 +1363,7 @@ const BreakoutStarter = ({
         {assignableRoster.length > 0 && (
           <>
             <div className="breakout-roster-head">
-              <label className="altar-prompt-label" style={{ margin: 0 }}>Pre-assign participants ({assignableRoster.length})</label>
+              <label className="meet-prompt-label" style={{ margin: 0 }}>Pre-assign participants ({assignableRoster.length})</label>
               <div className="breakout-roster-actions">
                 <button type="button" className="breakout-roster-btn" onClick={autoDistribute}>Auto-distribute</button>
                 <button type="button" className="breakout-roster-btn" onClick={clearAssignments}>Clear all</button>
@@ -1592,224 +1605,6 @@ const BreakoutManagePanel = ({
         {session.groups.map((g) => renderColumn(g.index, g.name, g.roomId))}
       </div>
       <p className="breakout-manage-hint">Tap ⋯ on a participant to move them. Moves take effect within ~5 seconds on their device.</p>
-    </div>
-  );
-};
-
-/**
- * Altar Call data shape used across the in-call UI.
- */
-interface AltarCallResponder {
-  userId: string | null;
-  name: string;
-  note: string;
-  respondedAt: string;
-}
-interface AltarCallShape {
-  _id: string;
-  roomId: string;
-  type: string;
-  prompt: string;
-  status: 'active' | 'closed';
-  responders: AltarCallResponder[];
-  startedAt: string;
-}
-
-const ALTAR_PRESETS: { id: string; label: string; prompt: string; emoji: string }[] = [
-  { id: 'salvation',    label: 'Salvation',     prompt: 'Come forward to give your life to Jesus.', emoji: '✝️' },
-  { id: 'rededication', label: 'Rededication',  prompt: 'Step forward to rededicate your life to the Lord.', emoji: '🙌' },
-  { id: 'healing',      label: 'Healing',       prompt: 'Come and receive prayer for healing.', emoji: '💫' },
-  { id: 'prayer',       label: 'Prayer',        prompt: 'Come forward — we will pray with you.', emoji: '🙏' },
-  { id: 'baptism',      label: 'Baptism',       prompt: 'Respond if the Spirit is moving you to take the next step in baptism.', emoji: '💧' },
-];
-
-/**
- * AltarCallStarter — host-only modal to launch an altar call.
- */
-const AltarCallStarter = ({
-  onStart,
-  onClose,
-}: {
-  onStart: (type: string, prompt: string) => void;
-  onClose: () => void;
-}) => {
-  const [type, setType] = useState<string>('salvation');
-  const [prompt, setPrompt] = useState<string>(ALTAR_PRESETS[0].prompt);
-  const [submitting, setSubmitting] = useState(false);
-
-  const setPreset = (preset: typeof ALTAR_PRESETS[number]) => {
-    setType(preset.id);
-    setPrompt(preset.prompt);
-  };
-
-  return (
-    <div className="worship-modal-backdrop" onClick={onClose}>
-      <div className="worship-modal" onClick={(e) => e.stopPropagation()}>
-        <div className="worship-modal-head">
-          <span>✝️ Call to Altar</span>
-          <button type="button" onClick={onClose} aria-label="Close"><X size={18} /></button>
-        </div>
-        <p className="worship-modal-hint">Invite the congregation forward. Pick a moment.</p>
-        <div className="altar-presets">
-          {ALTAR_PRESETS.map((p) => (
-            <button
-              key={p.id}
-              type="button"
-              onClick={() => setPreset(p)}
-              className={`altar-preset ${type === p.id ? 'is-active' : ''}`}
-            >
-              <span className="altar-preset-emoji">{p.emoji}</span>
-              <span className="altar-preset-label">{p.label}</span>
-            </button>
-          ))}
-        </div>
-        <label className="altar-prompt-label">Invitation</label>
-        <textarea
-          className="worship-modal-input"
-          rows={3}
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
-          maxLength={500}
-        />
-        <button
-          type="button"
-          className="worship-modal-cta"
-          disabled={!prompt.trim() || submitting}
-          onClick={async () => {
-            setSubmitting(true);
-            await onStart(type, prompt.trim());
-            setSubmitting(false);
-            onClose();
-          }}
-        >
-          {submitting ? 'Calling…' : 'Open Altar'}
-        </button>
-      </div>
-    </div>
-  );
-};
-
-/**
- * AltarCallOverlay — visible to everyone when an altar call is active.
- * Hosts see live responder list + close button. Members see prompt + Respond button.
- */
-const AltarCallOverlay = ({
-  call,
-  isHost,
-  selfUserId,
-  selfName,
-  onClose,
-  onRefresh,
-}: {
-  call: AltarCallShape;
-  isHost: boolean;
-  selfUserId?: string;
-  selfName: string;
-  onClose: () => void;
-  onRefresh: () => void;
-}) => {
-  const { toast } = useToast();
-  const [submitting, setSubmitting] = useState(false);
-  const [hasResponded, setHasResponded] = useState(false);
-  const [note, setNote] = useState('');
-
-  // Detect if the local user has already responded.
-  useEffect(() => {
-    if (!selfUserId) return;
-    setHasResponded(call.responders.some((r) => r.userId === selfUserId));
-  }, [call.responders, selfUserId]);
-
-  const respond = async () => {
-    if (submitting || hasResponded) return;
-    setSubmitting(true);
-    try {
-      const res = await fetch('/api/v1/altar-call/respond', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: call._id, userId: selfUserId || null, name: selfName, note }),
-      });
-      const data = await res.json();
-      if (!data.success) throw new Error(data.message || 'Could not record response');
-      setHasResponded(true);
-      // Local broadcast hint — parent will fan it out.
-      window.dispatchEvent(new CustomEvent('singalong:altar-response', { detail: { name: selfName } }));
-      onRefresh();
-      toast({
-        title: '✝️ Thank you',
-        description: 'Your response has been received.',
-        className: 'bg-white/10 border-none text-white',
-      });
-    } catch (e: any) {
-      toast({ title: 'Could not record response', description: e?.message, variant: 'destructive' });
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  return (
-    <div className="altar-overlay" role="region" aria-label="Altar Call">
-      <div className="altar-overlay-rays" aria-hidden />
-      <div className="altar-overlay-card">
-        <Cross size={36} className="altar-overlay-cross" aria-hidden />
-        <div className="altar-overlay-eyebrow">CALL TO ALTAR</div>
-        <h2 className="altar-overlay-prompt">{call.prompt}</h2>
-
-        {!isHost && (
-          hasResponded ? (
-            <div className="altar-responded">
-              <span className="altar-responded-mark">✓</span>
-              <p>You've responded. Be blessed.</p>
-            </div>
-          ) : (
-            <div className="altar-respond-block">
-              <input
-                type="text"
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-                placeholder="Optional note for the pastor (e.g. 'asking for healing')"
-                className="altar-respond-note"
-                maxLength={300}
-              />
-              <button
-                type="button"
-                className="altar-respond-btn"
-                onClick={respond}
-                disabled={submitting}
-              >
-                {submitting ? 'Responding…' : 'I Respond 🙌'}
-              </button>
-            </div>
-          )
-        )}
-
-        {isHost && (
-          <div className="altar-host-block">
-            <div className="altar-host-count">
-              <span className="altar-host-count-num">{call.responders.length}</span>
-              <span className="altar-host-count-label">
-                {call.responders.length === 1 ? 'person responding' : 'people responding'}
-              </span>
-            </div>
-            <div className="altar-responders">
-              {call.responders.length === 0 ? (
-                <p className="altar-responders-empty">Waiting for responses…</p>
-              ) : (
-                <ul>
-                  {call.responders.slice().reverse().map((r, i) => (
-                    <li key={`${r.userId || r.name}-${i}`} className="altar-responder">
-                      <span className="altar-responder-name">{r.name}</span>
-                      {r.note && <span className="altar-responder-note">"{r.note}"</span>}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-            <button type="button" className="altar-close-btn" onClick={onClose}>
-              Close Altar Call
-            </button>
-          </div>
-        )}
-      </div>
     </div>
   );
 };
@@ -2621,9 +2416,6 @@ const GoogleMeetBottomBar = ({
   whiteboardOpen,
   onToggleWhiteboard,
   whiteboardAccessState,
-  altarActive,
-  onOpenAltarStarter,
-  onCloseAltar,
   breakoutActive,
   onOpenBreakoutStarter,
   onCloseBreakout,
@@ -2656,9 +2448,6 @@ const GoogleMeetBottomBar = ({
   whiteboardOpen: boolean,
   onToggleWhiteboard: () => void,
   whiteboardAccessState: 'host' | 'idle' | 'pending' | 'granted' | 'denied',
-  altarActive: boolean,
-  onOpenAltarStarter: () => void,
-  onCloseAltar: () => void,
   breakoutActive: boolean,
   onOpenBreakoutStarter: () => void,
   onCloseBreakout: () => void,
@@ -3224,12 +3013,12 @@ const GoogleMeetBottomBar = ({
             <button
               type="button"
               className="meet-icon-button meet-icon-button-prayer"
-              title="Submit Prayer Request"
+              title="Submit Request"
               onClick={onOpenPrayer}
             >
               <HandHeart />
             </button>
-            <span className="meet-btn-label">Prayer</span>
+            <span className="meet-btn-label">Request</span>
             </div>
           )}
 
@@ -3244,21 +3033,6 @@ const GoogleMeetBottomBar = ({
               <HeartHandshake />
             </button>
             <span className="meet-btn-label">Give</span>
-            </div>
-          )}
-
-          {isWorshipMode && isHost && (
-            <div className="meet-btn-stack">
-            <button
-              type="button"
-              className={`meet-icon-button meet-icon-button-altar ${altarActive ? 'is-active' : ''}`}
-              title={altarActive ? 'Close altar call' : 'Call to altar'}
-              aria-pressed={altarActive}
-              onClick={altarActive ? onCloseAltar : onOpenAltarStarter}
-            >
-              <Cross />
-            </button>
-            <span className="meet-btn-label">Altar</span>
             </div>
           )}
 
@@ -3311,13 +3085,13 @@ const GoogleMeetBottomBar = ({
                 <button
                   type="button"
                   className={`meet-icon-button meet-utility-with-badge ${activePanel === 'waiting' ? 'meet-icon-button-active' : ''}`}
-                  title={waitingCount > 0 ? `${waitingCount} waiting to join` : 'Waiting room'}
+                  title={waitingCount > 0 ? `${waitingCount} waiting to join` : 'Waiting room and permission'}
                   onClick={() => setActivePanel(activePanel === 'waiting' ? null : 'waiting')}
                 >
                   <Hand />
                   {waitingCount > 0 && <span className="meet-badge">{waitingCount}</span>}
                 </button>
-                <span className="meet-btn-label">Waiting</span>
+                <span className="meet-btn-label">{waitingCount > 0 ? 'Waiting' : 'Permissions'}</span>
               </div>
             )}
             <div className="meet-btn-stack">
@@ -3360,8 +3134,15 @@ const GoogleMeetBottomBar = ({
           </div>
           </div>
 
-          {isWorshipMode && (
-          <div className="meet-btn-stack meet-more-toggle-stack">
+          {/* "More" toggle. On desktop, only worship mode has anything to put in
+              the dropdown (Prayer / Give), so the CSS hides the stack via
+              `data-worship="false"` at >1024px. On tablet/mobile it's always
+              visible because the responsive rules override that — the click
+              flips `moreOpen`, which the `.meet-overflow[data-open]` dropup
+              reads to surface the overflow buttons (Chat, People, Raise hand,
+              Present, etc.). Without this button, those buttons have no entry
+              point on small screens. */}
+          <div className="meet-btn-stack meet-more-toggle-stack" data-worship={isWorshipMode ? 'true' : 'false'}>
             <DropdownMenu modal={false} open={moreOpen} onOpenChange={setMoreOpen}>
               <DropdownMenuTrigger asChild>
                 <button
@@ -3375,18 +3156,19 @@ const GoogleMeetBottomBar = ({
                   <MoreHorizontal />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent {...dropdownContentProps} className="meet-dropdown-content meet-more-menu">
-                <DropdownMenuItem className="meet-dropdown-item meet-dropdown-item-prayer" onClick={onOpenPrayer}>
-                  <HandHeart className="shrink-0" /> Prayer
-                </DropdownMenuItem>
-                <DropdownMenuItem className="meet-dropdown-item meet-dropdown-item-give" onClick={onOpenGive}>
-                  <HeartHandshake className="shrink-0" /> Give
-                </DropdownMenuItem>
-              </DropdownMenuContent>
+              {isWorshipMode && (
+                <DropdownMenuContent {...dropdownContentProps} className="meet-dropdown-content meet-more-menu">
+                  <DropdownMenuItem className="meet-dropdown-item meet-dropdown-item-prayer" onClick={onOpenPrayer}>
+                    <HandHeart className="shrink-0" /> Prayer
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="meet-dropdown-item meet-dropdown-item-give" onClick={onOpenGive}>
+                    <HeartHandshake className="shrink-0" /> Give
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              )}
             </DropdownMenu>
             <span className="meet-btn-label">More</span>
           </div>
-          )}
 
           <span className="meet-cluster-divider" aria-hidden />
 
@@ -3451,13 +3233,13 @@ const GoogleMeetBottomBar = ({
           <button
             type="button"
             className={`meet-utility-button meet-utility-with-badge ${activePanel === 'waiting' ? 'meet-utility-active' : ''}`}
-            title={waitingCount > 0 ? `${waitingCount} waiting to join` : 'Waiting room'}
+            title={waitingCount > 0 ? `${waitingCount} waiting to join` : 'Waiting room and permission'}
             onClick={() => setActivePanel(activePanel === 'waiting' ? null : 'waiting')}
           >
             <Hand size={22} />
             {waitingCount > 0 && <span className="meet-badge">{waitingCount}</span>}
           </button>
-          <span className="meet-btn-label">Waiting</span>
+          <span className="meet-btn-label">{waitingCount > 0 ? 'Waiting' : 'Permissions'}</span>
           </div>
         )}
         <div className="meet-btn-stack">
@@ -4208,67 +3990,6 @@ const GoogleMeetLayout = ({ room, onLeave, userId }: { room: string, onLeave: ()
     }
   };
 
-  // --- Altar Call state (host triggers; broadcast to all; persisted to DB) ---
-  const [altarCall, setAltarCall] = useState<AltarCallShape | null>(null);
-  const [showAltarStarter, setShowAltarStarter] = useState(false);
-
-  const refetchAltar = useCallback(async () => {
-    try {
-      const res = await fetch(`/api/v1/altar-call?roomId=${encodeURIComponent(room)}`);
-      const data = await res.json();
-      if (data?.success) setAltarCall(data.call || null);
-    } catch (e) {
-      console.error('altar refetch failed', e);
-    }
-  }, [room]);
-
-  // Look up active altar on mount so re-joiners see it immediately.
-  useEffect(() => {
-    refetchAltar();
-  }, [refetchAltar]);
-
-  const startAltarCall = async (type: string, promptText: string) => {
-    if (!userId) {
-      toast({ title: 'Sign in required to call to altar', variant: 'destructive' });
-      return;
-    }
-    try {
-      const res = await fetch('/api/v1/altar-call', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'start', roomId: room, hostUserId: userId, type, prompt: promptText }),
-      });
-      const data = await res.json();
-      if (!data.success) throw new Error(data.message || 'Could not start altar call');
-      setAltarCall(data.call);
-      broadcast({ type: 'altar:open', id: data.call._id });
-      toast({
-        title: '✝️ Altar is open',
-        description: 'The congregation can now respond.',
-        className: 'bg-white/10 border-none text-white',
-      });
-    } catch (e: any) {
-      toast({ title: 'Could not start altar call', description: e?.message, variant: 'destructive' });
-    }
-  };
-
-  const closeAltarCall = async () => {
-    if (!altarCall || !userId) return;
-    try {
-      const res = await fetch('/api/v1/altar-call', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: altarCall._id, hostUserId: userId, status: 'closed' }),
-      });
-      const data = await res.json();
-      if (!data.success) throw new Error(data.message || 'Could not close');
-      setAltarCall(null);
-      broadcast({ type: 'altar:close' });
-    } catch (e: any) {
-      toast({ title: 'Could not close altar', description: e?.message, variant: 'destructive' });
-    }
-  };
-
   // Host-only: end the call for everyone. Deletes the LiveKit room — every
   // participant (including host) is disconnected immediately by the server.
   const endCallForAll = async () => {
@@ -4507,9 +4228,6 @@ const GoogleMeetLayout = ({ room, onLeave, userId }: { room: string, onLeave: ()
           }
         } else if (data.type === 'bible:clear') {
           setSharedBible(null);
-        } else if (data.type === 'altar:open' || data.type === 'altar:close' || data.type === 'altar:response') {
-          // Any altar event triggers a refetch — keeps overlay + responders fresh.
-          refetchAltar();
         } else if (data.type === 'breakout:open' || data.type === 'breakout:close' || data.type === 'breakout:assigned') {
           refetchBreakout();
         } else if (data.type === 'music:now-playing') {
@@ -4537,16 +4255,11 @@ const GoogleMeetLayout = ({ room, onLeave, userId }: { room: string, onLeave: ()
     const onLocalNoteAdded = () => {
       broadcast({ type: 'note:new' });
     };
-    // Same bridge pattern for altar responses.
-    const onLocalAltarResponse = () => {
-      broadcast({ type: 'altar:response' });
-    };
 
     lkRoom.on(RoomEvent.ParticipantAttributesChanged, onAttrs);
     lkRoom.on(RoomEvent.DataReceived, onData);
     if (typeof window !== 'undefined') {
       window.addEventListener('singalong:note-broadcast', onLocalNoteAdded);
-      window.addEventListener('singalong:altar-response', onLocalAltarResponse);
     }
 
     return () => {
@@ -4554,10 +4267,9 @@ const GoogleMeetLayout = ({ room, onLeave, userId }: { room: string, onLeave: ()
       lkRoom.off(RoomEvent.DataReceived, onData);
       if (typeof window !== 'undefined') {
         window.removeEventListener('singalong:note-broadcast', onLocalNoteAdded);
-        window.removeEventListener('singalong:altar-response', onLocalAltarResponse);
       }
     };
-  }, [lkRoom, toast, refetchAltar, refetchBreakout]);
+  }, [lkRoom, toast, refetchBreakout]);
 
   const tracks = useTracks(
     [
@@ -4670,24 +4382,6 @@ const GoogleMeetLayout = ({ room, onLeave, userId }: { room: string, onLeave: ()
             // overlay locally (the host's broadcast still controls everyone).
             if (isHost) broadcast({ type: 'whiteboard:close' });
           }}
-        />
-      )}
-
-      {altarCall && isWorshipMode && (
-        <AltarCallOverlay
-          call={altarCall}
-          isHost={canModerate}
-          selfUserId={userId}
-          selfName={localParticipant?.identity || 'Friend'}
-          onClose={closeAltarCall}
-          onRefresh={refetchAltar}
-        />
-      )}
-
-      {showAltarStarter && canModerate && (
-        <AltarCallStarter
-          onStart={startAltarCall}
-          onClose={() => setShowAltarStarter(false)}
         />
       )}
 
@@ -4879,9 +4573,6 @@ const GoogleMeetLayout = ({ room, onLeave, userId }: { room: string, onLeave: ()
         whiteboardOpen={showWhiteboard}
         onToggleWhiteboard={toggleWhiteboard}
         whiteboardAccessState={isHost ? 'host' : myWhiteboardAccess}
-        altarActive={!!altarCall}
-        onOpenAltarStarter={() => setShowAltarStarter(true)}
-        onCloseAltar={closeAltarCall}
         breakoutActive={!!breakoutSession}
         onOpenBreakoutStarter={() => setShowBreakoutStarter(true)}
         onCloseBreakout={closeBreakout}

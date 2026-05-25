@@ -6,14 +6,14 @@ interface LoaderProps {
 
 const Loader = ({ label }: LoaderProps) => {
   return (
-    <div className="flex flex-col items-center justify-center h-screen w-full gap-4">
+    <div className="flex flex-col items-center justify-center h-screen w-full gap-4 bg-[#111] text-white">
       <Image
         src="/icons/loading-circle.svg"
         alt="Loading..."
         width={50}
         height={50}
       />
-      {label && <p className="text-white/70 text-lg font-medium animate-pulse">{label}</p>}
+      {label && <p className="text-white text-lg font-medium">{label}</p>}
     </div>
   );
 };

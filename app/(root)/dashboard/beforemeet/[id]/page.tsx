@@ -145,8 +145,8 @@ const page = ({ params }: PropsType) => {
                     <button className='bg-foregroud-primary px-4 py-2 rounded-md text-white flex items-center gap-3 w-[9rem] hover:scale-105' onClick={() => setOpen(true)}>Share Now <IoMdShareAlt /></button>
                     <button className='bg-foregroud-primary px-4 py-2 rounded-md text-white flex items-center gap-3  hover:scale-105' onClick={() => setIsOpen(true)}>Invite <IoMdShareAlt /></button>
                 </div>
-                <div className='py-4 px-2 w-full rounded-md border border-gray-100 flex items-center bg-gray-200' aria-readonly>
-                    <input value={url} className='text-gray-500 outline-none border-none bg-transparent w-full' />
+                <div className='py-4 px-2 w-full rounded-md border border-gray-100 flex items-center bg-gray-200'>
+                    <input value={url} readOnly className='text-gray-500 outline-none border-none bg-transparent w-full' />
                     <button className='text-gray-800 bg-none outline-none border-none' onClick={handleCopy}><MdOutlineContentCopy /></button>
                 </div>
                 <CalendarShare

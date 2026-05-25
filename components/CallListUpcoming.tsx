@@ -92,6 +92,13 @@ const CallListUpcoming = () => {
           <p className="text-white/55 mt-1.5 text-sm">
             Schedule a service or meeting and it will appear here.
           </p>
+          <Link
+            href="/dashboard/create-meeting?schedule=open"
+            className="btn-primary-worship mt-5 inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold text-sm"
+          >
+            <Calendar size={16} />
+            Schedule a Meeting
+          </Link>
         </div>
       </div>
     );

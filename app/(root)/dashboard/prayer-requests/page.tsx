@@ -105,9 +105,11 @@ const PrayerRequestsPage = () => {
       const serverPrayedBy: string[] = res.data.request?.prayedBy || [];
       const nowSupporting: boolean = !!res.data.praying;
       setRequests((cur) => {
-        // On the Supported tab, drop the row when the user un-supports — it no longer
-        // belongs in that filter.
-        if (tab === 'prayed' && !nowSupporting) {
+        // On the Supported tab, drop the row when the user un-supports IF the
+        // request isn't also globally supported (status === 'prayed'). Globally
+        // supported requests stay visible on the tab regardless of personal heart.
+        const serverStatus = res.data.request?.status;
+        if (tab === 'prayed' && !nowSupporting && serverStatus !== 'prayed') {
           return cur.filter((r) => r._id !== req._id);
         }
         return cur.map((r) => (r._id === req._id ? { ...r, prayedBy: serverPrayedBy } : r));

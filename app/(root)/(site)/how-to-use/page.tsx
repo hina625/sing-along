@@ -17,7 +17,7 @@ const HowToUsePage = () => {
                 
                 <div className="container relative z-10 mx-auto px-4 md:px-6 text-center">
                     <motion.div
-                        initial={{ opacity: 0, y: 30 }}
+                        initial={{y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 1, ease: "easeOut" }}
                     >
@@ -37,7 +37,7 @@ const HowToUsePage = () => {
                 <div className="container relative z-10 mx-auto px-4 md:px-6">
                     <div className="flex flex-col md:flex-row items-center gap-16">
                         <motion.div 
-                            initial={{ opacity: 0, x: -30 }}
+                            initial={{x: -30 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
                             className="w-full md:w-1/2"
@@ -62,7 +62,7 @@ const HowToUsePage = () => {
                             </ul>
                         </motion.div>
                         <motion.div 
-                            initial={{ opacity: 0, scale: 0.9 }}
+                            initial={{scale: 0.9 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}
                             className="w-full md:w-1/2 relative"
@@ -86,7 +86,7 @@ const HowToUsePage = () => {
                 <div className="container relative z-10 mx-auto px-4 md:px-6">
                     <div className="flex flex-col md:flex-row-reverse items-center gap-16">
                         <motion.div 
-                            initial={{ opacity: 0, x: 30 }}
+                            initial={{x: 30 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.8 }}
@@ -114,7 +114,7 @@ const HowToUsePage = () => {
                             </div>
                         </motion.div>
                         <motion.div 
-                            initial={{ opacity: 0, x: -30 }}
+                            initial={{x: -30 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
                             className="w-full md:w-1/2"
@@ -137,7 +137,7 @@ const HowToUsePage = () => {
                 <div className="container relative z-10 mx-auto px-4 md:px-6">
                     <div className="flex flex-col md:flex-row items-center gap-16">
                         <motion.div 
-                            initial={{ opacity: 0, y: 30 }}
+                            initial={{y: 30 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             className="w-full md:w-1/2"
@@ -168,7 +168,7 @@ const HowToUsePage = () => {
                             </div>
                         </motion.div>
                         <motion.div 
-                             initial={{ opacity: 0, scale: 0.9 }}
+                             initial={{scale: 0.9 }}
                              whileInView={{ opacity: 1, scale: 1 }}
                              viewport={{ once: true }}
                              className="w-full md:w-1/2"
@@ -183,7 +183,7 @@ const HowToUsePage = () => {
              <section className="py-20 !bg-[#121212] relative overflow-hidden">
                 <div className="container relative z-10 mx-auto px-4 md:px-6 text-center">
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
+                        initial={{scale: 0.95 }}
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
                         className="max-w-3xl mx-auto p-5 md:p-8 rounded-3xl bg-white/[0.02] border border-white/5 shadow-2xl"

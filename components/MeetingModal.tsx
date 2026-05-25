@@ -1,6 +1,6 @@
 "use client";
 import { ReactNode } from "react";
-import { Dialog, DialogContent } from "./ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "./ui/dialog";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
 import Image from "next/image";
@@ -45,14 +45,15 @@ const MeetingModal = ({
               <Image src={image} alt="checked" width={72} height={72} />
             </div>
           )}
-          <h1
+          <DialogTitle
             className={cn(
               "text-xl sm:text-2xl md:text-3xl font-bold leading-tight sm:leading-snug md:leading-[42px] break-words pr-8",
               className,
             )}
           >
             {title}
-          </h1>
+          </DialogTitle>
+          <DialogDescription className="sr-only">{title}</DialogDescription>
           {children}
           {
             isButtonShow &&

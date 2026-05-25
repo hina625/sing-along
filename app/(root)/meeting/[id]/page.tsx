@@ -66,7 +66,7 @@ interface MeetingInfo {
 }
 
 const MODE_LABEL: Record<string, { eyebrow: string; pill: string; emoji: string }> = {
-  worship:  { eyebrow: 'Live worship',   pill: 'Worship',   emoji: '🎶' },
+  worship:  { eyebrow: 'Live meeting',   pill: 'Meeting',   emoji: '💼' },
   business: { eyebrow: 'Live meeting',   pill: 'Meeting',   emoji: '💼' },
   // 'hybrid' is the both-toolsets room shape — the default for community workspaces.
   hybrid:   { eyebrow: 'Live gathering', pill: 'Gathering', emoji: '🌍' },
@@ -248,8 +248,8 @@ const MeetingPage = ({ params }: PropsType) => {
           </div>
           <h1 className="join-card-title">
             {info?.title || (info?.hostFirstName
-              ? `${info.hostFirstName}'s ${(info?.mode || 'worship') === 'business' ? 'meeting room' : 'worship room'}`
-              : (info?.mode === 'business' ? 'Singalong Meeting' : 'Singalong Worship'))}
+              ? `${info.hostFirstName}'s meeting room`
+              : 'Singalong Meeting')}
           </h1>
           {info?.hostFirstName && (
             <p className="join-card-host">

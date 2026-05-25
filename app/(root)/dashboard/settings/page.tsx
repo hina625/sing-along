@@ -1,8 +1,10 @@
 'use client';
 
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useUser } from '@clerk/nextjs';
+import axios from 'axios';
 import { subscriptionContext } from '@/providers/SubscriptionProvider';
+import { WorkspaceContext } from '@/providers/WorkspaceProvider';
 import { planslist } from '@/constants';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -10,14 +12,81 @@ import Loader from '@/components/Loader';
 import PermissionGate from '@/components/PermissionGate';
 import { useToast } from '@/components/ui/use-toast';
 
+const WORKSPACE_MODES: Array<{ value: 'worship' | 'business' | 'community'; label: string; hint: string }> = [
+  { value: 'business',  label: 'Teams & Business',         hint: 'For meetings, collaboration, and project management.' },
+  { value: 'community', label: 'Communities & Groups',     hint: 'For memberships, events, and engagement.' },
+  { value: 'worship',   label: 'Organizations & Networks', hint: 'For recurring sessions, content, and audience management.' },
+];
+
 const SettingsPage = () => {
   const { user, isLoaded } = useUser();
   const { subscription } = useContext(subscriptionContext);
+  const { activeWorkspace, refresh: refreshWorkspaces } = useContext(WorkspaceContext);
   const { toast } = useToast();
 
   const [firstName, setFirstName] = useState(user?.firstName || '');
   const [lastName, setLastName] = useState(user?.lastName || '');
   const [updating, setUpdating] = useState(false);
+
+  // Workspace editing state — admin-only.
+  const isWorkspaceAdmin = activeWorkspace?.myRole === 'admin';
+  const canCustomizeBranding = activeWorkspace?.ownerPlan?.customBranding !== false;
+  const [wsName, setWsName] = useState('');
+  const [wsMode, setWsMode] = useState<'worship' | 'business' | 'community'>('worship');
+  const [wsPrimary, setWsPrimary] = useState('#5A2D82');
+  const [wsAccent, setWsAccent] = useState('#D4AF37');
+  const [wsLogo, setWsLogo] = useState('');
+  const [wsUpdating, setWsUpdating] = useState(false);
+
+  // Keep the form synced with whichever workspace is currently active. Re-runs
+  // when the user switches workspaces in the switcher so the form reflects the
+  // workspace being edited, not a stale earlier one.
+  useEffect(() => {
+    if (!activeWorkspace) return;
+    setWsName(activeWorkspace.name || '');
+    const m = activeWorkspace.mode;
+    setWsMode(m === 'worship' || m === 'business' || m === 'community' ? m : 'worship');
+    setWsPrimary(activeWorkspace.branding?.primaryColor || '#5A2D82');
+    setWsAccent(activeWorkspace.branding?.accentColor || '#D4AF37');
+    setWsLogo(activeWorkspace.branding?.logoUrl || '');
+  }, [activeWorkspace?._id, activeWorkspace?.name, activeWorkspace?.mode, activeWorkspace?.branding]);
+
+  const handleUpdateWorkspace = async () => {
+    if (!activeWorkspace?._id || !user?.id) return;
+    if (!wsName.trim()) {
+      toast({ title: 'Workspace name is required', variant: 'destructive' });
+      return;
+    }
+    try {
+      setWsUpdating(true);
+      const body: Record<string, unknown> = {
+        id: activeWorkspace._id,
+        user_id: user.id,
+        name: wsName.trim(),
+        mode: wsMode,
+      };
+      if (canCustomizeBranding) {
+        body.branding = {
+          logoUrl: wsLogo.trim() || null,
+          primaryColor: wsPrimary,
+          accentColor: wsAccent,
+        };
+      }
+      const res = await axios.patch('/api/v1/workspace', body);
+      if (res.data?.success) {
+        await refreshWorkspaces();
+        toast({ title: 'Workspace Updated', description: 'Your changes have been saved.' });
+      } else {
+        throw new Error(res.data?.message || 'Update failed');
+      }
+    } catch (error: any) {
+      console.error(error);
+      const msg = error?.response?.data?.message || error.message || 'Update failed';
+      toast({ title: 'Update Failed', description: msg, variant: 'destructive' });
+    } finally {
+      setWsUpdating(false);
+    }
+  };
 
   if (!isLoaded) return <Loader />;
 
@@ -169,6 +238,133 @@ const SettingsPage = () => {
             Manage Subscription
           </Link>
         </div>
+
+        {/* Workspace Card — admin-only. Spans both columns on lg so it gets
+            enough width for the name + mode + branding row. */}
+        {activeWorkspace && (
+          <div className='lg:col-span-2 bg-background-3/40 backdrop-blur-xl border border-white/10 rounded-xl sm:rounded-2xl p-3 sm:p-6 shadow-2xl card-premium flex flex-col gap-4 h-fit'>
+            <div className='flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2'>
+              <div>
+                <h3 className='text-xl sm:text-2xl font-bold'>Workspace</h3>
+                <p className='text-sm text-white/60 mt-1'>
+                  {isWorkspaceAdmin
+                    ? 'Edit the name, mode, and branding for this workspace.'
+                    : 'Only workspace admins can edit these details.'}
+                </p>
+              </div>
+              <span className='text-[10px] uppercase tracking-widest font-bold text-white/45'>
+                Slug: {activeWorkspace.slug}
+              </span>
+            </div>
+
+            <div className='space-y-4'>
+              <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
+                <div className='flex flex-col gap-2'>
+                  <label className='text-xs sm:text-sm text-white/60 font-medium uppercase tracking-wider'>Workspace Name</label>
+                  <input
+                    type='text'
+                    value={wsName}
+                    onChange={(e) => setWsName(e.target.value)}
+                    disabled={!isWorkspaceAdmin}
+                    maxLength={80}
+                    className='bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-orange-500/50 transition-all text-sm sm:text-base disabled:opacity-60 disabled:cursor-not-allowed'
+                    placeholder="e.g. Zainab's Workspace"
+                  />
+                </div>
+                <div className='flex flex-col gap-2'>
+                  <label className='text-xs sm:text-sm text-white/60 font-medium uppercase tracking-wider'>Mode</label>
+                  <select
+                    value={wsMode}
+                    onChange={(e) => setWsMode(e.target.value as typeof wsMode)}
+                    disabled={!isWorkspaceAdmin}
+                    style={{ colorScheme: 'dark' }}
+                    className='role-select bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-orange-500/50 transition-all text-sm sm:text-base disabled:opacity-60 disabled:cursor-not-allowed'
+                  >
+                    {WORKSPACE_MODES.map((m) => (
+                      <option key={m.value} value={m.value}>{m.label}</option>
+                    ))}
+                  </select>
+                  <p className='text-xs text-white/50'>
+                    {WORKSPACE_MODES.find((m) => m.value === wsMode)?.hint}
+                  </p>
+                </div>
+              </div>
+
+              {/* Branding — visible to all admins, but the inputs disable + an
+                  upsell hint shows if the workspace's plan doesn't include
+                  custom branding. */}
+              <div className='border-t border-white/10 pt-4'>
+                <div className='flex items-center justify-between mb-3'>
+                  <h4 className='text-sm sm:text-base font-bold uppercase tracking-wider text-white/80'>Branding</h4>
+                  {!canCustomizeBranding && (
+                    <span className='text-[10px] uppercase tracking-widest font-bold text-orange-400'>Upgrade to customize</span>
+                  )}
+                </div>
+                <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
+                  <div className='flex flex-col gap-2'>
+                    <label className='text-xs text-white/60 font-medium uppercase tracking-wider'>Primary Color</label>
+                    <div className='flex items-center gap-2'>
+                      <input
+                        type='color'
+                        value={wsPrimary}
+                        onChange={(e) => setWsPrimary(e.target.value)}
+                        disabled={!isWorkspaceAdmin || !canCustomizeBranding}
+                        className='h-10 w-12 rounded cursor-pointer border border-white/10 bg-transparent disabled:opacity-60 disabled:cursor-not-allowed'
+                      />
+                      <input
+                        type='text'
+                        value={wsPrimary}
+                        onChange={(e) => setWsPrimary(e.target.value)}
+                        disabled={!isWorkspaceAdmin || !canCustomizeBranding}
+                        className='flex-1 bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 outline-none focus:border-orange-500/50 text-sm disabled:opacity-60 disabled:cursor-not-allowed'
+                      />
+                    </div>
+                  </div>
+                  <div className='flex flex-col gap-2'>
+                    <label className='text-xs text-white/60 font-medium uppercase tracking-wider'>Accent Color</label>
+                    <div className='flex items-center gap-2'>
+                      <input
+                        type='color'
+                        value={wsAccent}
+                        onChange={(e) => setWsAccent(e.target.value)}
+                        disabled={!isWorkspaceAdmin || !canCustomizeBranding}
+                        className='h-10 w-12 rounded cursor-pointer border border-white/10 bg-transparent disabled:opacity-60 disabled:cursor-not-allowed'
+                      />
+                      <input
+                        type='text'
+                        value={wsAccent}
+                        onChange={(e) => setWsAccent(e.target.value)}
+                        disabled={!isWorkspaceAdmin || !canCustomizeBranding}
+                        className='flex-1 bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 outline-none focus:border-orange-500/50 text-sm disabled:opacity-60 disabled:cursor-not-allowed'
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={handleUpdateWorkspace}
+                disabled={!isWorkspaceAdmin || wsUpdating}
+                className='w-full py-3.5 sm:py-4 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-orange-900/20 text-sm sm:text-base mt-2'
+              >
+                {wsUpdating ? (
+                  <>
+                    <svg className='animate-spin h-5 w-5 text-white' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'>
+                      <circle className='opacity-25' cx='12' cy='12' r='10' stroke='currentColor' strokeWidth='4'></circle>
+                      <path className='opacity-75' fill='currentColor' d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'></path>
+                    </svg>
+                    Saving Changes...
+                  </>
+                ) : 'Save Workspace Changes'}
+              </button>
+              {!isWorkspaceAdmin && (
+                <p className='text-xs text-white/50 text-center'>
+                  Read-only — you don&apos;t have admin rights on this workspace.
+                </p>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

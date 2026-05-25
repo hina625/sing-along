@@ -21,7 +21,7 @@ import {
 } from 'chart.js';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Mic2, Briefcase, HandHeart, Calendar, Disc, Radio, Clock, DollarSign, Users } from 'lucide-react';
+import { Mic2, Briefcase, HandHeart, Calendar, Disc, Radio, Clock, DollarSign, Users, CheckCircle2, Sparkles, ArrowRight, UserPlus, Video } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { WorkspaceContext } from '@/providers/WorkspaceProvider';
 import { ThemeContext } from '@/providers/ThemeProvider';
@@ -221,6 +221,12 @@ const DashboardPage = () => {
   const isBusinessWs = wsMode === 'business';
   const isCommunityWs = wsMode === 'community';
 
+  // New free users (free plan, zero sessions logged) see a guided onboarding
+  // instead of empty stat tiles + charts + an upfront upgrade tile.
+  const isNewFreeUser =
+    subscription === 'free' && !statsLoading && (stats?.totals.sessions ?? 0) === 0;
+  const freePlan = planslist.free;
+
   const heroCopy = isBusinessWs
     ? {
         eyebrow: 'Go Live',
@@ -305,7 +311,18 @@ const DashboardPage = () => {
       {/* === Daily Verse — opt-in: only renders if the workspace has curated verses. === */}
       {(activeWorkspace?.mode !== 'business') && <DailyVerseCard />}
 
+      {/* === New-free-user onboarding === */}
+      {isNewFreeUser && (
+        <OnboardingPanel
+          isBusinessWs={isBusinessWs}
+          isCommunityWs={isCommunityWs}
+          freeFeatures={freePlan?.features || []}
+          freeTitle={freePlan?.title || 'Starter'}
+        />
+      )}
+
       {/* === Live stats grid === */}
+      {!isNewFreeUser && (
       <div className="px-4 max-w-6xl mx-auto w-full">
         <div className="dash-stats-grid grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           <StatTile
@@ -339,8 +356,10 @@ const DashboardPage = () => {
           )}
         </div>
       </div>
+      )}
 
       {/* === Charts === */}
+      {!isNewFreeUser && (
       <div className="px-4 max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className={`card-premium p-5 ${isBusinessWs ? 'lg:col-span-3' : 'lg:col-span-2'}`}>
           <h4 className="text-deep-gold font-semibold mb-2">Sessions — last 30 days</h4>
@@ -369,8 +388,10 @@ const DashboardPage = () => {
           </div>
         )}
       </div>
+      )}
 
-      {/* === Plan info === */}
+      {/* === Plan info — hidden during onboarding; replaced by the bottom "Want more?" card. === */}
+      {!isNewFreeUser && (
       <div className="dash-plan-grid px-4 max-w-6xl mx-auto w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         <div className="card-premium p-5 flex flex-col gap-2">
           <span className="text-xs uppercase tracking-wider text-white/55">Current plan</span>
@@ -404,6 +425,32 @@ const DashboardPage = () => {
           </div>
         )}
       </div>
+      )}
+
+      {/* === "Want more?" — single quiet upgrade nudge for free users, no prices on dash. === */}
+      {subscription === 'free' && (
+        <div className="px-4 max-w-6xl mx-auto w-full">
+          <Link
+            href="/plans"
+            className="card-premium p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 hover:no-underline"
+          >
+            <div className="flex flex-col gap-1">
+              <span className="text-deep-gold uppercase tracking-[0.25em] text-[10px] font-semibold flex items-center gap-1.5">
+                <Sparkles size={12} /> Want more?
+              </span>
+              <span className="text-white text-base sm:text-lg font-semibold">
+                Unlock recording, unlimited duration, and more.
+              </span>
+              <span className="text-white/55 text-xs sm:text-sm">
+                See what each plan includes — no card details on this page.
+              </span>
+            </div>
+            <span className="hero-quick-link hero-quick-link-gold self-start sm:self-auto">
+              Explore plans <ArrowRight size={14} />
+            </span>
+          </Link>
+        </div>
+      )}
     </section>
   );
 };
@@ -431,6 +478,95 @@ const StatTile = ({ icon, label, value, sub, tone = 'default', loading }: StatTi
         {loading ? <span className="opacity-40">…</span> : value}
       </div>
       {sub && <div className="text-[11px] text-white/45">{sub}</div>}
+    </div>
+  );
+};
+
+interface OnboardingPanelProps {
+  isBusinessWs: boolean;
+  isCommunityWs: boolean;
+  freeFeatures: string[];
+  freeTitle: string;
+}
+
+const OnboardingPanel = ({ isBusinessWs, isCommunityWs, freeFeatures, freeTitle }: OnboardingPanelProps) => {
+  const sessionWord = isBusinessWs ? 'meeting' : isCommunityWs ? 'gathering' : 'session';
+  const inviteWord = isBusinessWs ? 'teammates' : isCommunityWs ? 'community' : 'people';
+
+  const steps = [
+    {
+      icon: <Video size={18} />,
+      title: `Start your first ${sessionWord}`,
+      body: 'Tap "Go Live" above to open a room with notes, files, and whiteboard.',
+      href: null,
+      cta: null,
+    },
+    {
+      icon: <UserPlus size={18} />,
+      title: `Invite your ${inviteWord}`,
+      body: 'Share an invite link or add members from the Team page.',
+      href: '/dashboard/members',
+      cta: 'Open Team',
+    },
+    {
+      icon: <Calendar size={18} />,
+      title: `Schedule a ${sessionWord}`,
+      body: 'Plan ahead — set a time and we\'ll send reminders.',
+      href: '/dashboard/upcoming',
+      cta: 'Schedule one',
+    },
+  ];
+
+  return (
+    <div className="px-4 max-w-6xl mx-auto w-full flex flex-col gap-4">
+      {/* Getting started checklist */}
+      <div className="card-premium p-5">
+        <div className="flex items-center gap-2 mb-4">
+          <Sparkles size={16} className="text-deep-gold" />
+          <h4 className="text-deep-gold font-semibold text-sm uppercase tracking-[0.2em]">Getting started</h4>
+        </div>
+        <ol className="flex flex-col gap-3">
+          {steps.map((step, i) => (
+            <li key={i} className="flex items-start gap-3 sm:gap-4">
+              <span className="shrink-0 w-7 h-7 rounded-full border border-white/15 flex items-center justify-center text-white/80 text-sm font-semibold">
+                {i + 1}
+              </span>
+              <div className="flex-1 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <div className="flex items-start gap-2.5">
+                  <span className="text-deep-gold mt-0.5">{step.icon}</span>
+                  <div>
+                    <p className="text-white text-sm font-semibold">{step.title}</p>
+                    <p className="text-white/55 text-xs mt-0.5">{step.body}</p>
+                  </div>
+                </div>
+                {step.href && (
+                  <Link href={step.href} className="hero-quick-link self-start sm:self-auto shrink-0">
+                    {step.cta} <ArrowRight size={14} />
+                  </Link>
+                )}
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      {/* What's included on Free */}
+      <div className="card-premium p-5">
+        <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+          <h4 className="text-deep-gold font-semibold text-sm uppercase tracking-[0.2em]">
+            What’s included in {freeTitle} (Free)
+          </h4>
+          <span className="text-white/45 text-[11px]">No credit card needed</span>
+        </div>
+        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
+          {freeFeatures.map((f, i) => (
+            <li key={i} className="flex items-start gap-2 text-sm text-white/80">
+              <CheckCircle2 size={16} className="text-deep-gold shrink-0 mt-0.5" />
+              <span>{f}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };

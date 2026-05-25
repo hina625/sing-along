@@ -21,7 +21,7 @@ const ContactUsPage = () => {
 
           {/* Header */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             className="text-center mb-12"
@@ -36,7 +36,7 @@ const ContactUsPage = () => {
 
           <div className="flex justify-center">
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
+              initial={{scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               className="w-full max-w-2xl"
@@ -59,7 +59,7 @@ const ContactUsPage = () => {
                       <input
                         className="w-full bg-white/[0.05] border border-white/10 rounded-xl px-3 py-3 md:px-5 md:py-4 text-white placeholder:text-white/20 focus:outline-none focus:border-deep-gold/50 focus:bg-white/[0.08] transition-all"
                         type="text"
-                        placeholder="Manan Rajpout"
+                        placeholder="Enter your full name"
                         name="name"
                         required
                         minLength={3}
@@ -85,7 +85,7 @@ const ContactUsPage = () => {
                       className="w-full bg-white/[0.05] border border-white/10 rounded-xl px-5 py-4 text-white placeholder:text-white/20 focus:outline-none focus:border-deep-gold/50 focus:bg-white/[0.08] transition-all"
                       name="country"
                       type="text"
-                      placeholder="e.g. Pakistan"
+                      placeholder="Enter your country"
                       required
                       minLength={2}
                     />

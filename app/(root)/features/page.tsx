@@ -101,7 +101,7 @@ const FeaturesPage = () => {
                 
                 <div className="container relative z-10 px-4 md:px-6 mx-auto">
                     <motion.div 
-                        initial={{ opacity: 0, x: -20 }}
+                        initial={{x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8 }}
                         className="max-w-3xl"

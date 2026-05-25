@@ -69,6 +69,10 @@ export async function POST(req) {
             { new: true, projection: { _id: 1 } }
         );
         if (!updated) {
+            // TEMP DIAGNOSTIC: distinguish "no doc" from "endedAt already set" so we
+            // can see why heartbeats are 404ing for a room the client is actively in.
+            const probe = await roomModel.findOne({ room_id: room }, { _id: 1, endedAt: 1, endedReason: 1 }).lean();
+            console.log(`[activity] 404 room=${room} cause=${probe ? `ended at ${probe.endedAt?.toISOString?.() || probe.endedAt} reason=${probe.endedReason}` : 'no-doc'}`);
             return NextResponse.json({ success: false, message: 'Room not found or already ended' }, { status: 404 });
         }
         return NextResponse.json({ success: true }, { status: 200 });

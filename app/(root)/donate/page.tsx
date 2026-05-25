@@ -371,15 +371,33 @@ const page = ({ searchParams }: props) => {
                     </p>
                   </div>
 
-                  <div className="mt-6 grid grid-cols-3 gap-6 items-center opacity-60 hover:opacity-100 transition-opacity">
-                    <img className="h-6 w-auto mx-auto grayscale invert" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/brand-logos/paypal.svg" alt="PayPal" />
-                    <img className="h-6 w-auto mx-auto grayscale invert" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/brand-logos/visa.svg" alt="Visa" />
-                    <img className="h-6 w-auto mx-auto grayscale invert" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/brand-logos/mastercard.svg" alt="Mastercard" />
+                  <div className="mt-6 rounded-xl border border-emerald-500/20 bg-emerald-500/[0.04] p-4">
+                    <div className="flex items-center gap-2 text-emerald-400">
+                      <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path fillRule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clipRule="evenodd" />
+                      </svg>
+                      <span className="text-xs font-bold uppercase tracking-wider">Secure Checkout</span>
+                    </div>
+                    <p className="mt-2 text-xs text-white/60 leading-relaxed">
+                      Your information is protected with <span className="text-white/85 font-semibold">256-bit SSL encryption</span>. Card details are tokenized by our payment gateway and are never stored on our servers.
+                    </p>
+                    <div className="mt-3 flex flex-col items-center text-center gap-2 pt-3 border-t border-white/10 sm:flex-row sm:text-left sm:gap-3">
+                      <img
+                        src="/images/an.svg"
+                        alt="Authorize.Net — Secure Payment Processor"
+                        className="logo-an h-6 w-auto shrink-0"
+                      />
+                      <p className="text-xs text-white/60">
+                        Secure payments powered by <span className="text-orange-400 font-semibold">Authorize.Net</span>
+                      </p>
+                    </div>
                   </div>
 
-                  <p className="mt-4 text-sm text-white/40 text-center lg:text-left">
-                    Securely processed via <span className="text-orange-500/80 font-semibold">Authorize.net</span>
-                  </p>
+                  <div className="mt-4 grid grid-cols-3 gap-6 items-center opacity-70 hover:opacity-100 transition-opacity">
+                    <img className="logo-brand h-6 w-auto mx-auto" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/brand-logos/paypal.svg" alt="PayPal" />
+                    <img className="logo-brand h-6 w-auto mx-auto" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/brand-logos/visa.svg" alt="Visa" />
+                    <img className="logo-brand h-6 w-auto mx-auto" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/brand-logos/mastercard.svg" alt="Mastercard" />
+                  </div>
                 </div>
               </div>
             </div>

@@ -338,7 +338,7 @@ const MembersPage = () => {
                       <select
                         value={m.role}
                         onChange={(e) => changeRole(m, e.target.value as Role)}
-                        className="bg-background-3/60 border border-white/15 rounded-md text-sm px-2.5 py-1.5 text-white focus:outline-none focus:border-[#D4AF37]"
+                        className="role-select bg-background-3/60 border border-white/15 rounded-md text-sm px-2.5 py-1.5 text-white focus:outline-none focus:border-[#D4AF37]"
                         title={!canMultipleAdmins ? adminUpsellTitle : undefined}
                       >
                         {ROLES.map((r) => {
@@ -348,7 +348,6 @@ const MembersPage = () => {
                               key={r}
                               value={r}
                               disabled={lockAdmin}
-                              className="bg-[#1A1A1A]"
                             >
                               {ROLE_LABEL[r]}{lockAdmin ? ' 🔒' : ''}
                             </option>
@@ -567,7 +566,7 @@ const InviteModal = ({ workspaceId, workspaceName, userId, canMultipleAdmins, ad
               <select
                 value={role}
                 onChange={(e) => setRole(e.target.value as Role)}
-                className="w-full bg-background-3/60 border border-white/15 rounded-lg px-3 py-2.5 text-white focus:outline-none focus:border-[#D4AF37]"
+                className="role-select w-full bg-background-3/60 border border-white/15 rounded-lg px-3 py-2.5 text-white focus:outline-none focus:border-[#D4AF37]"
                 title={!canMultipleAdmins ? adminUpsellTitle : undefined}
               >
                 {ROLES.map((r) => {
@@ -577,7 +576,6 @@ const InviteModal = ({ workspaceId, workspaceName, userId, canMultipleAdmins, ad
                       key={r}
                       value={r}
                       disabled={lockAdmin}
-                      className="bg-[#1A1A1A]"
                     >
                       {ROLE_LABEL[r]}{lockAdmin ? ' 🔒' : ''}
                     </option>

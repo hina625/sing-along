@@ -125,14 +125,14 @@ const page = ({searchParams}:props) => {
             <div className="mt-4 sm:mt-8 lg:flex lg:items-start lg:gap-12">
               <form
                 onSubmit={handlePayment}
-                className="w-full card-awesome-black soft-glow !p-4 sm:!p-8 lg:max-w-xl"
+                className="w-full card-awesome-black soft-glow !p-4 sm:!p-6 lg:max-w-xl"
               >
-                <h3 className="text-xl font-bold text-white mb-6 border-b border-white/10 pb-4">Payment Details</h3>
-                
-                <div className="col-span-2 sm:col-span-1 mb-6">
+                <h3 className="text-lg sm:text-xl font-bold text-white border-b border-white/10 pb-3">Payment Details</h3>
+
+                <div className="col-span-2 sm:col-span-1">
                   <label
                     htmlFor="card-number-input"
-                    className="mb-2 block text-sm font-medium text-white/90"
+                    className="mb-1.5 block text-sm font-medium text-white/90"
                   >
                     Card Number*
                   </label>
@@ -147,11 +147,11 @@ const page = ({searchParams}:props) => {
                   />
                 </div>
 
-                <div className="mb-8 grid grid-cols-2 gap-3 sm:gap-6">
+                <div className="grid grid-cols-2 gap-3 sm:gap-4">
                   <div>
                     <label
                       htmlFor="card-expiration-input"
-                      className="mb-2 block text-sm font-medium text-white/90"
+                      className="mb-1.5 block text-sm font-medium text-white/90"
                     >
                       <span className="sm:hidden">Expiry*</span>
                       <span className="hidden sm:inline">Expiration Date*</span>
@@ -172,7 +172,7 @@ const page = ({searchParams}:props) => {
                   <div>
                     <label
                       htmlFor="cvv-input"
-                      className="mb-2 flex items-center gap-1 text-sm font-medium text-white/90"
+                      className="mb-1.5 flex items-center gap-1 text-sm font-medium text-white/90"
                     >
                       CVV*
                     </label>
@@ -192,43 +192,61 @@ const page = ({searchParams}:props) => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="btn-primary-worship w-full py-4 text-lg"
+                  className="btn-primary-worship w-full py-3.5 text-base sm:text-lg"
                 >
                   {loading ? 'Processing...' : `Pay $${currentPlan?.price || 0}.00 Now`}
                 </button>
-                
-                <p className="mt-6 text-center text-sm text-white/50">
-                  Payment processed securely by <span className="text-deep-gold font-semibold">Authorize.net</span>
-                </p>
+
+                <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/[0.04] p-3 sm:p-4">
+                  <div className="flex items-center justify-center gap-2 text-emerald-400">
+                    <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                      <path fillRule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clipRule="evenodd" />
+                    </svg>
+                    <span className="text-xs font-bold uppercase tracking-wider">Secure Checkout</span>
+                  </div>
+                  <p className="mt-2 text-center text-xs text-white/60 leading-relaxed">
+                    Your information is protected with <span className="text-white/85 font-semibold">256-bit SSL encryption</span>. Card details are tokenized by our payment gateway and are never stored on our servers.
+                  </p>
+                  <div className="mt-3 flex flex-col items-center text-center gap-2 pt-3 border-t border-white/10 sm:flex-row sm:justify-center sm:gap-3">
+                    <img
+                      src="/images/an.svg"
+                      alt="Authorize.Net — Secure Payment Processor"
+                      className="logo-an h-7 w-auto shrink-0"
+                    />
+                    <p className="text-xs text-white/60">
+                      Secure payments powered by <span className="text-deep-gold font-semibold">Authorize.Net</span>
+                    </p>
+                  </div>
+                </div>
               </form>
 
               <div className="mt-6 sm:mt-8 grow lg:mt-0">
-                <div className="space-y-6 card-awesome-black !p-4 sm:!p-8 w-full lg:max-w-md">
-                  <h3 className="text-xl font-bold text-white border-b border-white/10 pb-4">Order Summary</h3>
-                  
-                  <div className="space-y-4">
+                <div className="space-y-3 card-awesome-black !p-4 sm:!p-6 w-full lg:max-w-md">
+                  <h3 className="text-lg sm:text-xl font-bold text-white border-b border-white/10 pb-2 whitespace-nowrap">Order Summary</h3>
+
+                  <div className="space-y-2.5">
                     <div className="flex items-center justify-between">
                       <span className="text-white/60">Selected Plan</span>
                       <span className="text-white font-semibold uppercase">{currentPlan?.title || 'None'}</span>
                     </div>
-                    
+
                     <div className="flex items-center justify-between">
                       <span className="text-white/60">Base Price</span>
                       <span className="text-white font-medium">
                         ${(currentPlan?.price || 0) + (currentPlan?.saving || 0)}.00
                       </span>
                     </div>
-                    
+
                     <div className="flex items-center justify-between">
                       <span className="text-white/60">Savings</span>
                       <span className="text-green-500 font-medium">
                         -${currentPlan?.saving || 0}.00
                       </span>
                     </div>
-                    
-                    <div className="pt-4 border-t border-white/10 flex items-center justify-between">
-                      <span className="text-xl font-bold text-white">Total</span>
-                      <span className="text-2xl font-bold text-gradient">
+
+                    <div className="pt-3 mt-1 border-t border-white/10 flex items-center justify-between">
+                      <span className="text-lg sm:text-xl font-bold text-white">Total</span>
+                      <span className="text-xl sm:text-2xl font-bold text-gradient">
                         ${currentPlan?.price || 0}.00
                       </span>
                     </div>
@@ -237,17 +255,17 @@ const page = ({searchParams}:props) => {
 
                 <div className="mt-8 flex items-center justify-center gap-6 opacity-60">
                   <img
-                    className="h-8 w-auto filter grayscale invert"
+                    className="logo-brand h-8 w-auto"
                     src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/brand-logos/paypal.svg"
                     alt="paypal"
                   />
                   <img
-                    className="h-8 w-auto filter grayscale invert"
+                    className="logo-brand h-8 w-auto"
                     src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/brand-logos/visa.svg"
                     alt="visa"
                   />
                   <img
-                    className="h-8 w-auto filter grayscale invert"
+                    className="logo-brand h-8 w-auto"
                     src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/brand-logos/mastercard.svg"
                     alt="mastercard"
                   />

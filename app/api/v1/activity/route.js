@@ -60,6 +60,8 @@ export async function GET(req) {
             scheduleTime: 1,
             start_time: 1,
             isSchedule: 1,
+            endedAt: 1,
+            lastActivityAt: 1,
         }).lean();
         const ourRoomIds = rooms.map((r) => r.room_id);
         const roomById = new Map(rooms.map((r) => [r.room_id, r]));
@@ -98,20 +100,97 @@ export async function GET(req) {
 
         const events = [];
 
-        // Sessions (created or scheduled).
+        // Sessions — emit ONE event per room reflecting its current lifecycle
+        // state so users can immediately tell whether something is Live now,
+        // already Completed, just Scheduled for later, or simply Started.
+        // Precedence: completed > live > scheduled > started.
+        const nowMs = Date.now();
+        const LIVE_WINDOW_MS = 5 * 60 * 1000; // heartbeat within 5 min = live
         for (const r of rooms) {
+            // Always label sessions as "Meeting" regardless of room mode
+            // (worship / business / hybrid) per product decision — the activity
+            // feed surfaces them all as a single "Meeting" lifecycle stream.
+            const sessionType = 'Meeting';
+            const desc = r.description ? `: ${r.description}` : '';
+
+            // 1. Completed — endedAt is set
+            if (r.endedAt) {
+                events.push({
+                    type: 'session.completed',
+                    ts: new Date(r.endedAt).toISOString(),
+                    actor: null,
+                    title: `${sessionType} completed${desc}`,
+                    body: r.start_time
+                        ? `Ran from ${new Date(r.start_time).toLocaleString()} to ${new Date(r.endedAt).toLocaleString()}`
+                        : null,
+                    status: 'completed',
+                    statusLabel: 'Completed',
+                    link: `/meeting/${r.room_id}`,
+                    icon: '✅',
+                });
+                continue;
+            }
+
+            // 2. Live — recent heartbeat and not ended
+            if (
+                r.lastActivityAt &&
+                nowMs - new Date(r.lastActivityAt).getTime() < LIVE_WINDOW_MS
+            ) {
+                events.push({
+                    type: 'session.live',
+                    ts: new Date(r.lastActivityAt).toISOString(),
+                    actor: null,
+                    title: `${sessionType} live now${desc}`,
+                    body: 'Currently in progress — click to join',
+                    status: 'live',
+                    statusLabel: 'Live now',
+                    link: `/meeting/${r.room_id}`,
+                    icon: '🔴',
+                });
+                continue;
+            }
+
+            // 3. Scheduled — a future-dated scheduled meeting that hasn't started
+            if (
+                r.isSchedule &&
+                r.scheduleTime &&
+                new Date(r.scheduleTime).getTime() > nowMs
+            ) {
+                const ts = r.start_time ? new Date(r.start_time) : new Date();
+                events.push({
+                    type: 'session.scheduled',
+                    ts: ts.toISOString(),
+                    actor: null,
+                    title: `${sessionType} scheduled${desc}`,
+                    body: `For ${new Date(r.scheduleTime).toLocaleString(undefined, {
+                        weekday: 'short',
+                        month: 'short',
+                        day: 'numeric',
+                        hour: 'numeric',
+                        minute: '2-digit',
+                    })}`,
+                    status: 'scheduled',
+                    statusLabel: 'Scheduled',
+                    link: `/meeting/${r.room_id}`,
+                    icon: '📅',
+                });
+                continue;
+            }
+
+            // 4. Started — instant or past-due-scheduled room that's not currently
+            // live and has no endedAt. Catches sessions that were started and went
+            // quiet without a formal end event.
             const ts = r.start_time ? new Date(r.start_time) : null;
             if (!ts || isNaN(ts.getTime())) continue;
-            const isWorship = (r.mode || 'worship') === 'worship';
             events.push({
-                type: r.isSchedule ? 'session.scheduled' : 'session.started',
+                type: 'session.started',
                 ts: ts.toISOString(),
-                actor: null, // creator user id known via r.user_id but no name
-                title: r.isSchedule
-                    ? `Service scheduled${r.description ? `: ${r.description}` : ''}`
-                    : `${isWorship ? 'Worship' : 'Meeting'} started${r.description ? `: ${r.description}` : ''}`,
+                actor: null,
+                title: `${sessionType} started${desc}`,
+                status: 'past',
+                statusLabel: 'Past',
                 link: `/meeting/${r.room_id}`,
-                icon: r.isSchedule ? '📅' : (isWorship ? '🎶' : '💼'),
+                icon: '💼',
             });
         }
 
@@ -133,12 +212,22 @@ export async function GET(req) {
         }
 
         for (const n of notes) {
+            const r = roomById.get(n.roomId);
+            const meetingRef = r
+                ? (r.description || (r.isSchedule ? 'Scheduled meeting' : 'Meeting'))
+                : 'Meeting';
+            const content = (n.content || '').slice(0, 140) + ((n.content || '').length > 140 ? '…' : '');
             events.push({
                 type: 'note.added',
                 ts: new Date(n.timestamp).toISOString(),
                 actor: n.authorName || 'Someone',
-                title: `${n.authorName || 'Someone'} added a note`,
-                body: (n.content || '').slice(0, 140) + ((n.content || '').length > 140 ? '…' : ''),
+                title: `Meeting note added by ${n.authorName || 'Someone'}`,
+                body: content,
+                // Per-note metadata so the UI can render a source pill + meeting ref.
+                // Today the only origin is the in-meeting Notes panel (manually
+                // typed by participants). Reserved for AI/Whiteboard sources later.
+                source: 'Meeting Notes',
+                meetingRef,
                 link: `/meeting/${n.roomId}`,
                 icon: '📝',
             });
@@ -149,7 +238,7 @@ export async function GET(req) {
                 type: 'prayer.new',
                 ts: new Date(p.timestamp).toISOString(),
                 actor: p.senderName || 'Someone',
-                title: `${p.senderName || 'Someone'} submitted a prayer request`,
+                title: `${p.senderName || 'Someone'} submitted a request`,
                 body: (p.content || '').slice(0, 140) + ((p.content || '').length > 140 ? '…' : ''),
                 link: '/dashboard/prayer-requests',
                 icon: '🙏',
@@ -169,13 +258,25 @@ export async function GET(req) {
         }
 
         for (const f of files) {
+            // Activity row links straight to a download. For Cloudinary URLs we
+            // inject `fl_attachment:<name>` so the browser saves the file with
+            // its original name (cross-origin <a download> is ignored, and old
+            // rows have random `file_xxx` URL tails — this is the only reliable
+            // way to make them download with the proper name). Non-Cloudinary
+            // URLs pass through unchanged.
+            const baseName = (f.fileName || '').replace(/\.[^./\\]+$/, '').replace(/[^a-zA-Z0-9._-]+/g, '_').slice(0, 80);
+            const flag = baseName ? `fl_attachment:${baseName}` : 'fl_attachment';
+            const downloadLink = /res\.cloudinary\.com/.test(f.fileUrl || '')
+                ? f.fileUrl.replace(/\/(upload|authenticated|private)\/(?!.*\bfl_attachment\b)/, `/$1/${flag}/`)
+                : f.fileUrl;
             events.push({
                 type: 'file.shared',
                 ts: new Date(f.timestamp).toISOString(),
                 actor: f.senderName || 'Someone',
                 title: `${f.senderName || 'Someone'} shared a file`,
                 body: f.fileName || 'attachment',
-                link: `/meeting/${f.roomId}`,
+                link: downloadLink || `/meeting/${f.roomId}`,
+                linkExternal: !!downloadLink,
                 icon: '📎',
             });
         }

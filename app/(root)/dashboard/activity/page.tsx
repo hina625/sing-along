@@ -11,9 +11,11 @@ import { useToast } from '@/components/ui/use-toast';
 import { WorkspaceContext } from '@/providers/WorkspaceProvider';
 
 type EventType =
-  | 'session.started' | 'session.scheduled'
+  | 'session.started' | 'session.scheduled' | 'session.live' | 'session.completed'
   | 'recording.started' | 'recording.ready' | 'recording.failed'
   | 'note.added' | 'prayer.new' | 'donation.received' | 'file.shared';
+
+type SessionStatus = 'live' | 'scheduled' | 'completed' | 'past';
 
 interface Event {
   type: EventType;
@@ -22,13 +24,25 @@ interface Event {
   title: string;
   body?: string | null;
   link?: string;
+  // True when `link` points off-site (e.g. a Cloudinary file download). Render
+  // with a plain <a target="_blank"> instead of Next <Link>, otherwise Next
+  // tries to client-route to the absolute URL and the download never fires.
+  linkExternal?: boolean;
   icon: string;
   severity?: 'warn';
+  // Session lifecycle status — drives the colored pill on session rows.
+  status?: SessionStatus;
+  statusLabel?: string;
+  // Notes only — labels the origin and the meeting the note belongs to.
+  source?: string;
+  meetingRef?: string;
 }
 
 const TYPE_LABEL: Record<EventType, string> = {
   'session.started':   'Session',
-  'session.scheduled': 'Schedule',
+  'session.scheduled': 'Session',
+  'session.live':      'Session',
+  'session.completed': 'Session',
   'recording.started': 'Recording',
   'recording.ready':   'Recording',
   'recording.failed':  'Recording',
@@ -36,6 +50,15 @@ const TYPE_LABEL: Record<EventType, string> = {
   'prayer.new':        'Request',
   'donation.received': 'Contribution',
   'file.shared':       'File',
+};
+
+// Status pill styles for session lifecycle. Inline so they survive without
+// adding new CSS classes. Live pulses; the others are static.
+const STATUS_STYLES: Record<SessionStatus, string> = {
+  live:      'bg-emerald-500/15 text-emerald-300 border border-emerald-500/40',
+  scheduled: 'bg-sky-500/15 text-sky-300 border border-sky-500/40',
+  completed: 'bg-white/[0.06] text-white/65 border border-white/15',
+  past:      'bg-amber-500/10 text-amber-300/90 border border-amber-500/30',
 };
 
 const formatRelative = (iso: string) => {
@@ -164,7 +187,7 @@ const ActivityPage = () => {
         <div className="card-premium p-10 text-center text-white/60">
           <Activity size={40} className="mx-auto mb-4 text-deep-gold/60" />
           <p className="text-lg">No activity to show.</p>
-          <p className="text-sm mt-2">As your team meets, records, prays, and gives, it'll appear here.</p>
+          <p className="text-sm mt-2">As your team meets, records, submits requests, and contributes, it&apos;ll appear here.</p>
         </div>
       ) : (
         <div className="flex flex-col gap-6">
@@ -178,10 +201,32 @@ const ActivityPage = () => {
                       <span className={`activity-icon ${e.severity === 'warn' ? 'is-warn' : ''}`} aria-hidden>{e.icon}</span>
                       <div className="activity-body">
                         <div className="activity-row">
-                          <span className="activity-label">{TYPE_LABEL[e.type] || 'Event'}</span>
+                          <span className="flex items-center gap-2 flex-wrap">
+                            <span className="activity-label">{TYPE_LABEL[e.type] || 'Event'}</span>
+                            {e.status && e.statusLabel && (
+                              <span
+                                className={`inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${STATUS_STYLES[e.status]}`}
+                              >
+                                {e.status === 'live' && (
+                                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                                )}
+                                {e.statusLabel}
+                              </span>
+                            )}
+                            {e.source && (
+                              <span className="activity-source-pill">
+                                {e.source}
+                              </span>
+                            )}
+                          </span>
                           <span className="activity-time">{formatRelative(e.ts)}</span>
                         </div>
                         <div className="activity-title">{e.title}</div>
+                        {e.meetingRef && (
+                          <div className="text-[11px] text-white/50 mt-0.5 italic">
+                            In meeting: {e.meetingRef}
+                          </div>
+                        )}
                         {e.body && <div className="activity-body-text">{e.body}</div>}
                       </div>
                     </>
@@ -189,7 +234,18 @@ const ActivityPage = () => {
                   if (e.link) {
                     return (
                       <li key={`${e.type}-${e.ts}-${i}`} className="activity-item-wrap">
-                        <Link href={e.link} className="activity-item">{Inner}</Link>
+                        {e.linkExternal ? (
+                          <a
+                            href={e.link}
+                            target="_blank"
+                            rel="noopener"
+                            className="activity-item"
+                          >
+                            {Inner}
+                          </a>
+                        ) : (
+                          <Link href={e.link} className="activity-item">{Inner}</Link>
+                        )}
                       </li>
                     );
                   }

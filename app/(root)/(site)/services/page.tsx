@@ -50,7 +50,7 @@ const ServicesPage = () => {
                 
                 <div className="container relative z-10 mx-auto px-4 md:px-6 text-center">
                     <motion.div
-                        initial={{ opacity: 0, y: 30 }}
+                        initial={{y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 1, ease: "easeOut" }}
                     >
@@ -70,7 +70,7 @@ const ServicesPage = () => {
                 <div className="container relative z-10 mx-auto px-4 md:px-6">
                     <div className="flex flex-col md:flex-row items-center gap-16">
                         <motion.div 
-                            initial={{ opacity: 0, x: -30 }}
+                            initial={{x: -30 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
                             className="w-full md:w-1/2"
@@ -86,7 +86,7 @@ const ServicesPage = () => {
                             </div>
                         </motion.div>
                         <motion.div 
-                            initial={{ opacity: 0, scale: 0.9 }}
+                            initial={{scale: 0.9 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}
                             className="w-full md:w-1/2"
@@ -109,7 +109,7 @@ const ServicesPage = () => {
                 <div className="container relative z-10 mx-auto px-4 md:px-6">
                     <div className="flex flex-col md:flex-row-reverse items-center gap-16">
                         <motion.div 
-                            initial={{ opacity: 0, x: 30 }}
+                            initial={{x: 30 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
                             className="w-full md:w-1/2"
@@ -130,7 +130,7 @@ const ServicesPage = () => {
                             </div>
                         </motion.div>
                         <motion.div 
-                            initial={{ opacity: 0, x: -30 }}
+                            initial={{x: -30 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
                             className="w-full md:w-1/2"
@@ -153,7 +153,7 @@ const ServicesPage = () => {
                 <div className="container relative z-10 mx-auto px-4 md:px-6">
                     <div className="flex flex-col md:flex-row items-center gap-16">
                         <motion.div 
-                            initial={{ opacity: 0, x: -30 }}
+                            initial={{x: -30 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
                             className="w-full md:w-1/2"
@@ -168,7 +168,7 @@ const ServicesPage = () => {
                             </div>
                         </motion.div>
                         <motion.div 
-                            initial={{ opacity: 0, scale: 0.9 }}
+                            initial={{scale: 0.9 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}
                             className="w-full md:w-1/2"
@@ -198,7 +198,7 @@ const ServicesPage = () => {
                         {keyFeatures.map((feature, i) => (
                             <motion.div 
                                 key={i}
-                                initial={{ opacity: 0, y: 20 }}
+                                initial={{y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ delay: i * 0.05 }}
                                 viewport={{ once: true }}
@@ -224,7 +224,7 @@ const ServicesPage = () => {
                         {supportOptions.map((opt, i) => (
                             <motion.div
                                 key={i}
-                                initial={{ opacity: 0, y: 40 }}
+                                initial={{y: 40 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 whileHover={{ y: -8 }}
